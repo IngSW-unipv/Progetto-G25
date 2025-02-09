@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"it.unipv.ingsfw.bitebyte.models","l":"Amministratore"},{"p":"it.unipv.ingsfw.bitebyte.models","l":"Cliente"},{"p":"it.unipv.ingsfw.bitebyte.models","l":"PortafoglioVirtuale"},{"p":"it.unipv.ingsfw.bitebyte.models","l":"Utente"}];updateSearchResults();
