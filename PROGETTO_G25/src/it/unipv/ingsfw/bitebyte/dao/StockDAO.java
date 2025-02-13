@@ -6,11 +6,9 @@ import it.unipv.ingsfw.bitebyte.models.Stock;
 
 public class StockDAO implements IStockDAO {
 	
-
 	    private Connection connection;
 	    private String schema; 
 
-	    
 	    // Costruttore
 	    public StockDAO() {
 	        super();
@@ -38,8 +36,9 @@ public class StockDAO implements IStockDAO {
 	        } catch (SQLException e) {
 	            System.err.println("Errore durante il recupero dello stock: " + e.getMessage());
 	            e.printStackTrace();
+	        } finally {
+	        	DBConnection.closeConnection(connection);
 	        }
-	        DBConnection.closeConnection(connection);
 	        return stocks;
 	    }
 
@@ -56,8 +55,10 @@ public class StockDAO implements IStockDAO {
 	        } catch (SQLException e) {
 	            System.err.println("Errore durante l'inserimento dello stock: " + e.getMessage());
 	            e.printStackTrace();
+	        } finally {
+	        	DBConnection.closeConnection(connection);
 	        }
-	        DBConnection.closeConnection(connection);
+	  
 	    }
 
 	    @Override
@@ -72,8 +73,10 @@ public class StockDAO implements IStockDAO {
 	        } catch (SQLException e) {
 	            System.err.println("Errore durante l'aggiornamento dello stock: " + e.getMessage());
 	            e.printStackTrace();
+	        } finally {
+	        	DBConnection.closeConnection(connection);
 	        }
-	        DBConnection.closeConnection(connection);
+	   
 	    }
 
 	    @Override
@@ -86,9 +89,10 @@ public class StockDAO implements IStockDAO {
 	        } catch (SQLException e) {
 	            System.err.println("Errore durante l'eliminazione dello stock: " + e.getMessage());
 	            e.printStackTrace();
+	        } finally {
+	        	DBConnection.closeConnection(connection);
 	        }
-	        DBConnection.closeConnection(connection);
-
+	      
 	    }
 
 	
