@@ -14,7 +14,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <right>
-      <AnchorPane prefHeight="400.0" prefWidth="420.0" style="-fx-background-color: #66cdaa;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="400.0" prefWidth="448.0" style="-fx-background-color: #66cdaa;" BorderPane.alignment="CENTER">
          <children>
             <TextField layoutX="45.0" layoutY="56.0" promptText="Nome" style="-fx-background-color: ;" />
             <Label layoutX="45.0" layoutY="31.0" text="Dati principali associati all'account">
@@ -47,7 +47,12 @@
                   <Font name="System Bold Italic" size="12.0" />
                </font>
             </Label>
-            <Button layoutX="164.0" layoutY="305.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="92.0" style="-fx-background-color: #EEB729;" text="Registrati!">
+            <Button layoutX="42.0" layoutY="303.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="149.0" style="-fx-background-color: #EEB729;" text="Registrati!">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="223.0" layoutY="303.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="149.0" style="-fx-background-color: #EEB729;" text="Torna al login">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -63,7 +68,7 @@
                   <Image url="@../resources/Icona_registrazione-removebg-preview.png" />
                </image>
             </ImageView>
-            <Circle fill="#1f93ff00" layoutX="102.0" layoutY="194.0" radius="101.0" stroke="#dca628" strokeType="INSIDE" strokeWidth="3.0" />
+            <Circle fill="#1f93ff00" layoutX="102.0" layoutY="194.0" radius="101.0" stroke="#dba62a" strokeType="INSIDE" strokeWidth="3.0" />
          </children>
       </AnchorPane>
    </left>
