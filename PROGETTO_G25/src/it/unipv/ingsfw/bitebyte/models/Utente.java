@@ -13,7 +13,7 @@ import java.time.LocalDate;
  * @see Cliente 
  * @see Amministratore 
  */
-//Prova branch 2 11/02 ciaoooooooo speriamo
+
 public abstract class Utente {
 
     // Attributi
