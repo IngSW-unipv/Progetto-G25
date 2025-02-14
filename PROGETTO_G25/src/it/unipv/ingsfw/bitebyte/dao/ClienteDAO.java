@@ -1,6 +1,8 @@
 package it.unipv.ingsfw.bitebyte.dao;
 import java.sql.*;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
+import java.time.LocalDate;
+
 
 public class ClienteDAO implements IClienteDAO{
 
@@ -53,15 +55,18 @@ public class ClienteDAO implements IClienteDAO{
 	    @Override
 	    public void registraCliente(Cliente cliente) {
 	        connection = DBConnection.startConnection(connection, schema);
-	        String query = "INSERT INTO cliente (username, nome, cognome, email, password) VALUES (?, ?, ?, ?, ?)";
+	        String query = "INSERT INTO cliente (Cf, Nome, Cognome, Username, Data_N, Email, Password) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	    	
 	    	try {
 	            PreparedStatement ps = connection.prepareStatement(query);
-	            ps.setString(1, cliente.getUsername());
+	            
+	            ps.setString(1, cliente.getCf());
 	            ps.setString(2, cliente.getNome());
 	            ps.setString(3, cliente.getCognome());
-	            ps.setString(4, cliente.getEmail());
-	            ps.setString(5, cliente.getPassword());
+	            ps.setString(4, cliente.getUsername());
+	            ps.setDate(5, java.sql.Date.valueOf(cliente.getDataN()));
+	            ps.setString(6, cliente.getEmail());
+	            ps.setString(7, cliente.getPassword());
 	            ps.executeUpdate();
 	        } catch (SQLException e) {
 	        	System.err.println("Errore durante l'inserimento del cliente: " + e.getMessage());

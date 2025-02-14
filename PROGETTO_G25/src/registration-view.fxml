@@ -12,54 +12,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <right>
-      <AnchorPane prefHeight="400.0" prefWidth="448.0" style="-fx-background-color: #66cdaa;" BorderPane.alignment="CENTER">
-         <children>
-            <TextField layoutX="45.0" layoutY="56.0" promptText="Nome" style="-fx-background-color: ;" />
-            <Label layoutX="45.0" layoutY="31.0" text="Dati principali associati all'account">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <TextField layoutX="210.0" layoutY="56.0" promptText="Cognome" style="-fx-background-color: ;" />
-            <DatePicker layoutX="43.0" layoutY="116.0" promptText="AAAA-MM-GG" style="-fx-background-color: #EEB729;" />
-            <Label layoutX="45.0" layoutY="91.0" text="Data di nascita">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="46.0" layoutY="158.0" text="Indirizzo Email">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <TextField layoutX="43.0" layoutY="187.0" prefHeight="26.0" prefWidth="254.0" promptText="E-mail" style="-fx-background-color: ;" />
-            <PasswordField layoutX="43.0" layoutY="257.0" style="-fx-background-color: ;" />
-            <PasswordField layoutX="223.0" layoutY="257.0" style="-fx-background-color: ;" />
-            <Label layoutX="43.0" layoutY="229.0" text="Password">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="223.0" layoutY="229.0" text="Conferma Password">
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Button layoutX="42.0" layoutY="303.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="149.0" style="-fx-background-color: #EEB729;" text="Registrati!">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Button>
-            <Button layoutX="223.0" layoutY="303.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="149.0" style="-fx-background-color: #EEB729;" text="Torna al login">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
-   </right>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipv.ingsfw.bitebyte.controller.Authcontroller">
    <left>
       <AnchorPane prefHeight="400.0" prefWidth="205.0" style="-fx-background-color: #dc143c;" BorderPane.alignment="CENTER">
          <children>
@@ -68,8 +21,67 @@
                   <Image url="@../resources/Icona_registrazione-removebg-preview.png" />
                </image>
             </ImageView>
-            <Circle fill="#1f93ff00" layoutX="102.0" layoutY="194.0" radius="101.0" stroke="#dba62a" strokeType="INSIDE" strokeWidth="3.0" />
+            <Circle fill="#1f93ff00" layoutX="103.0" layoutY="193.0" radius="101.0" stroke="#dba62a" strokeType="INSIDE" strokeWidth="3.0" />
+            <Button id="pulsanteVaiALogin" layoutX="21.0" layoutY="346.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="115.0" style="-fx-background-color: #EEB729;" text="Torna al login" >
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </left>
+   <center>
+      <AnchorPane prefHeight="400.0" prefWidth="448.0" style="-fx-background-color: #66cdaa;" BorderPane.alignment="CENTER">
+         <children>
+            <TextField id="nomeReg" layoutX="22.0" layoutY="53.0" promptText="Nome" style="-fx-background-color: ;" />
+            <Label layoutX="22.0" layoutY="30.0" text="Dati principali associati all'account">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <TextField id="cognomeReg" layoutX="186.0" layoutY="53.0" promptText="Cognome" style="-fx-background-color: ;" />
+            <DatePicker id="dataNReg" layoutX="21.0" layoutY="110.0" promptText="AAAA-MM-GG" style="-fx-background-color: #EEB729;" />
+            <Label layoutX="23.0" layoutY="87.0" text="Data di nascita">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="24.0" layoutY="201.0" text="Indirizzo Email">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <TextField id="emailReg" layoutX="21.0" layoutY="224.0" prefHeight="26.0" prefWidth="254.0" promptText="E-mail" style="-fx-background-color: ;" />
+            <PasswordField id="passwordReg" layoutX="22.0" layoutY="279.0" promptText="Password" style="-fx-background-color: ;" />
+            <PasswordField id="passwordConfReg" layoutX="200.0" layoutY="279.0" promptText="Conferma password" style="-fx-background-color: ;" />
+            <Label layoutX="22.0" layoutY="259.0" text="Password">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="205.0" layoutY="259.0" text="Conferma Password">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Button id="pulsanteRegistrati" layoutX="200.0" layoutY="328.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="149.0" style="-fx-background-color: #EEB729;" text="Registrati!" onAction="#controlloCampi">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <TextField id="usernameReg" layoutX="20.0" layoutY="168.0" promptText="Username" style="-fx-background-color: ;" />
+            <Label layoutX="23.0" layoutY="144.0" text="Nome utente">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="186.0" layoutY="144.0" text="Codice Fiscale">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <TextField id="cfReg" layoutX="186.0" layoutY="168.0" promptText="Codice Fiscale" style="-fx-background-color: ;" />
+         </children>
+      </AnchorPane>
+   </center>
 </BorderPane>
