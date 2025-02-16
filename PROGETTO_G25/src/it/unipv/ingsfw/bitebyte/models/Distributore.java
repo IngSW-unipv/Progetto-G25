@@ -1,4 +1,7 @@
+
 package it.unipv.ingsfw.bitebyte.models;
+
+import java.util.List;
 
 /**
  * Classe che rappresenta un distributore automatico.
@@ -13,8 +16,9 @@ public class Distributore {
     private String tipo;
     private String citta;
     private String via;
-    private short nCivico;
+    private String nCivico;
     private int idInventario;
+    private List<Stock> stockList;
     
     /**
      * Costruttore della classe Distributore.
@@ -26,7 +30,7 @@ public class Distributore {
      * @param nCivico Numero civico del distributore
      * @param idInventario
      */
-    public Distributore(int idDistr, String tipo, String citta, String via, short nCivico, int idInventario) {
+    public Distributore(int idDistr, String tipo, String citta, String via, String nCivico, int idInventario) {
         this.idDistr = idDistr;
         this.tipo = tipo;
         this.citta = citta;
@@ -112,7 +116,7 @@ public class Distributore {
      * 
      * @return Numero civico del distributore
      */
-    public short getnCivico() {
+    public String getNCivico() {
         return nCivico;
     }
 
@@ -121,7 +125,7 @@ public class Distributore {
      * 
      * @param nCivico Nuovo numero civico del distributore
      */
-    public void setnCivico(short nCivico) {
+    public void setNCivico(String nCivico) {
         this.nCivico = nCivico;
     }
 
@@ -142,7 +146,27 @@ public class Distributore {
 	public void setIdInventario(int idInventario) {
 		this.idInventario = idInventario;
 	}
+
+	public List<Stock> getStockList() {
+		return stockList;
+	}
+
+	public void setStockList(List<Stock> stockList) {
+		this.stockList = stockList;
+	}
     
+	@Override
+	public String toString() {
+	    return "Distributore{" +
+	            "ID=" + idDistr +
+	            ", Tipo='" + tipo + '\'' +
+	            ", Città='" + citta + '\'' +
+	            ", Via='" + via + '\'' +
+	            ", N. Civico='" + nCivico + '\'' +
+	            ", ID Inventario=" + idInventario +
+	            '}';
+	}
+
     
 }
 

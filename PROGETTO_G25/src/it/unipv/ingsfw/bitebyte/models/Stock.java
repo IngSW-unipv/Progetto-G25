@@ -1,22 +1,20 @@
 
 package it.unipv.ingsfw.bitebyte.models;
 public class Stock {
-    private int idInventario;          // Identificativo univoco dello stock
-    private int quantitàDisp;          // Quantità disponibile
-    private int qMaxInseribile;       // Quantità massima inseribile
-    private int prodottoId;        // ID del prodotto (riferimento al prodotto nella tabella Prodotto)
-       
+    private int idInventario;
+    private int quantitaDisp;
+    private int qMaxInseribile;
+    private String stato;
+    private Prodotto prodotto;
 
-    // Costruttore
-    public Stock(int idInventario, int quantitàDisp, int qMaxInseribile, int prodottoId) {
+    public Stock(int idInventario, int quantitaDisp, int qMaxInseribile,  String stato, Prodotto prodotto) {
         this.idInventario = idInventario;
-        this.quantitàDisp = quantitàDisp;
+        this.quantitaDisp = quantitaDisp;
         this.qMaxInseribile = qMaxInseribile;
-        this.prodottoId = prodottoId;
-    
+        this.stato = stato;
+        this.prodotto = prodotto;
     }
 
-    // Getter e Setter per gli attributi
     public int getIdInventario() {
         return idInventario;
     }
@@ -25,29 +23,49 @@ public class Stock {
         this.idInventario = idInventario;
     }
 
-    public int getQuantitàDisp() {
-        return quantitàDisp;
+    public int getQuantitaDisp() {
+        return quantitaDisp;
     }
 
-    public void setQuantitàDisp(int quantitàDisp) {
-        this.quantitàDisp = quantitàDisp;
+    public void setQuantitaDisp(int quantitaDisp) {
+        this.quantitaDisp = quantitaDisp;
     }
 
-    public int getqMaxInseribile() {
+    public int getQMaxInseribile() {
         return qMaxInseribile;
     }
 
-    public void setqMaxInseribile(int qMaxInseribile) {
+    public void setQMaxInseribile(int qMaxInseribile) {
         this.qMaxInseribile = qMaxInseribile;
     }
+    
+    
+  
+    public String getStato() {
+		return stato;
+	}
 
-    public int getProdottoId() {
-        return prodottoId;
+	public void setStato(String stato) {
+		this.stato = stato;
+	}
+
+	public Prodotto getProdotto() {
+        return prodotto;
     }
 
-    public void setProdottoId(int prodottoId) {
-        this.prodottoId = prodottoId;
+    public void setProdotto(Prodotto prodotto) {
+        this.prodotto = prodotto;
     }
-
-
+    
+    
+    @Override
+    public String toString() {
+        return "Stock{" +
+               "idInventario=" + idInventario +
+               ", quantitaDisp=" + quantitaDisp +
+               ", qMaxInseribile=" + qMaxInseribile +
+               ", stato=" + stato +
+               ", prodotto=" + prodotto +
+               '}';
+    }
 }
