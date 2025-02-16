@@ -107,6 +107,17 @@ public class Prodotto {
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
+    
+    
+    @Override
+    public String toString() {
+        return "Prodotto{" +
+               "id='" + idProdotto + '\'' +
+               ", nome='" + nome + '\'' +
+               ", prezzo=" + prezzo +
+               ", categoria=" + categoria +
+               '}';
+    }
 }
 
 

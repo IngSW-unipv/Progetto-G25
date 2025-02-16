@@ -18,6 +18,7 @@ public interface IStockDAO {
 
 	    // Recupera uno stock specifico tramite ID inventario
 	    ArrayList<Stock> getStockByInventario(int idInventario) throws SQLException;
+
 	}
 
 
