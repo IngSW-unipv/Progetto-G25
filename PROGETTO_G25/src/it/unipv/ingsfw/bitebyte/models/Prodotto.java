@@ -108,6 +108,9 @@ public class Prodotto {
         this.categoria = categoria;
     }
     
+    public String getPercorsoImmagine() {
+        return "/resources/immaginiDB/" + idProdotto + ".jpg"; 
+    }
     
     @Override
     public String toString() {
