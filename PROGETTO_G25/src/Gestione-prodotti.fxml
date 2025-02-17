@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="it.unipv.ingsfw.bitebyte.controller.ProdottiController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="it.unipv.ingsfw.bitebyte.controller.ProdottiController" stylesheets="@/css/StileAmministratore.css">
     <children>
         <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true">
             <content>

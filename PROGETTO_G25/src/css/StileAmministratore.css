@@ -1,0 +1,81 @@
+/* Stile generale */
+.root {
+    -fx-background-color: #dc143c; /* Rosso */
+}
+
+/* Stile dell'AnchorPane */
+.anchor-pane {
+    -fx-background-color: #dc143c; /* Rosso */
+}
+
+/* Stile dello ScrollPane */
+.scroll-pane {
+    -fx-background-color: transparent; /* Evita che copra il colore */
+}
+
+/* Forza il colore anche dentro lo ScrollPane */
+.scroll-pane .viewport {
+    -fx-background-color: #dc143c; /* Rosso */
+}
+
+/* Stile del FlowPane */
+.flow-pane {
+    -fx-background-color: #dc143c; /* Rosso */
+    -fx-padding: 10;
+    -fx-hgap: 15;
+    -fx-vgap: 15;
+}
+
+/* Stile del box prodotto */
+.product-box {
+    -fx-padding: 15;
+    -fx-background-color: #EEB729; /* Giallo per i box prodotto */
+    -fx-border-color: #000000;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 2, 2);
+}
+
+/* Stili per le Label */
+
+/* Nome del prodotto */
+.product-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-text-fill: #222222;
+}
+
+/* Prezzo */
+.product-price {
+    -fx-font-size: 15px;
+    -fx-text-fill: 	#FFFFFF;
+    -fx-font-weight: bold;
+}
+
+/* Quantità disponibile */
+.product-quantity {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+    -fx-font-weight: bold;
+}
+
+/* Stato del prodotto */
+.product-status {
+    -fx-font-size: 14px;
+    -fx-text-fill: #008000; /* Verde per disponibile */
+    -fx-font-weight: bold;
+}
+
+/* Bottone di rifornimento */
+.restock-button {
+    -fx-background-color: #66cdaa;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+
+.restock-button:hover {
+    -fx-background-color: #2e8b57;
+}
