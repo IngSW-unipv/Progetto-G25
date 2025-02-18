@@ -40,6 +40,7 @@ public class Authcontroller {
 	    @FXML private Button pulsanteVaiALogin;
 
 	    @FXML
+	   //commento di prova
 	    public void inizializza() {
 	        // Controllo in tempo reale mentre l'utente digita
 	    	emailReg.setOnKeyReleased(this::controllaEmail);
