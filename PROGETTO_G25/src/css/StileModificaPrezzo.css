@@ -1,0 +1,73 @@
+.root {
+    -fx-font-family: "Arial";
+    -fx-background-color: #EEB729;
+}
+
+.label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-text-fill: #000000;
+}
+
+.text-field {
+    -fx-pref-width: 150px;
+    -fx-font-size: 14px;
+    -fx-border-color: #999;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.button {
+    -fx-background-color: #66cdaa;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-color: #000000;   /* Bordo nero */
+    -fx-border-width: 1px;     /* Bordo sottile */
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+.custom-alert {
+    -fx-background-color: #EEB729;
+    -fx-border-color: #ff0000;
+    -fx-border-width: 2px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.dialog-pane {
+    -fx-font-family: "Arial";
+    -fx-background-color: #EEB729;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: #b00000;
+}
+
+.dialog-pane .button {
+    -fx-min-width: 80px;
+    -fx-padding: 5px 12px;
+}
+
+.dialog-pane .button-bar {
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+#confermaButton {
+    -fx-background-color: #66cdaa;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px; /* Assicura spazio interno */
+    -fx-border-radius: 5px;
+    -fx-min-height: 40px;
+    -fx-pref-height: 40px;
+    -fx-max-height: 40px;
+}

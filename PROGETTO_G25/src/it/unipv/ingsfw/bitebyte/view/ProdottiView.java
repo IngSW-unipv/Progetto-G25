@@ -117,10 +117,7 @@ public class ProdottiView {
         } else if (stock.getQuantitaDisp() == 0) {
             statusLabel.setText("Stato: Esaurito");
             statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-        } else {
-            statusLabel.setText("Stato: Bassa Disponibilità");
-            statusLabel.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
-        }
+        } 
 
         Button restockButton = creaBottoneConIcona("resources/icona spedizione.png", e -> controller.handleRestock(stock));
         Button replaceButton = creaBottoneConIcona("resources/icona-switch (1).png", e -> controller.handleSostituzione(stock));

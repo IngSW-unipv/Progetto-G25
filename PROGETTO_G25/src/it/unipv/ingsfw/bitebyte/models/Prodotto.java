@@ -15,7 +15,7 @@ public class Prodotto {
     
     // ATTRIBUTI
 
-    private String idProdotto;
+    private int idProdotto;
     private String nome;
     private BigDecimal prezzo;
     private Categoria categoria;
@@ -29,7 +29,7 @@ public class Prodotto {
      * @param prezzo Prezzo del prodotto.
      * @param categoria Categoria del prodotto.
      */
-    public Prodotto(String idProdotto, String nome, BigDecimal prezzo, Categoria categoria) {
+    public Prodotto(int idProdotto, String nome, BigDecimal prezzo, Categoria categoria) {
         this.idProdotto = idProdotto;
         this.nome = nome;
         this.prezzo = prezzo;
@@ -41,7 +41,7 @@ public class Prodotto {
      * 
      * @return ID del prodotto.
      */
-    public String getIdProdotto() {
+    public int getIdProdotto() {
         return idProdotto;
     }
 
@@ -50,7 +50,7 @@ public class Prodotto {
      * 
      * @param idProdotto Nuovo ID del prodotto.
      */
-    public void setIdProdotto(String idProdotto) {
+    public void setIdProdotto(int idProdotto) {
         this.idProdotto = idProdotto;
     }
 

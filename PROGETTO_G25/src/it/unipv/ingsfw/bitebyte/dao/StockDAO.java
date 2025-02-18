@@ -1,6 +1,8 @@
 package it.unipv.ingsfw.bitebyte.dao;
 import it.unipv.ingsfw.bitebyte.models.Prodotto;
 import it.unipv.ingsfw.bitebyte.types.Categoria;
+
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import it.unipv.ingsfw.bitebyte.models.Stock;
@@ -34,7 +36,7 @@ public class StockDAO implements IStockDAO {
 
 	            while (rs.next()) {
 	                Prodotto prodotto = new Prodotto(
-	                    rs.getString("ID_Prodotto"),
+	                    rs.getInt("ID_Prodotto"),
 	                    rs.getString("Nome_p"),
 	                    rs.getBigDecimal("Prezzo"),
 	                    Categoria.valueOf(rs.getString("Categoria_P").replace(" ", "_").toUpperCase())
@@ -63,7 +65,7 @@ public class StockDAO implements IStockDAO {
 	        String query = "INSERT INTO stock_dettagli (ID_Inventario, ID_Prodotto, Q_disp, Qmax_inseribile, Stato) VALUES (?, ?, ?, ?, ?)";
 	        try (PreparedStatement stmt = connection.prepareStatement(query)) {
 	            stmt.setInt(1, stock.getIdInventario());
-	            stmt.setString(2, stock.getProdotto().getIdProdotto());
+	            stmt.setInt(2, stock.getProdotto().getIdProdotto());
 	            stmt.setInt(3, stock.getQuantitaDisp());
 	            stmt.setInt(4, stock.getQMaxInseribile());
 	            stmt.setString(5, stock.getStato());
@@ -92,9 +94,28 @@ public class StockDAO implements IStockDAO {
 	            DBConnection.closeConnection(connection);
 	        }
 	    }
+	    
+	    
+	    public boolean aggiornaPrezzo(int idProdotto, int idInventario, BigDecimal nuovoPrezzo) {
+	    	connection = DBConnection.startConnection(connection, schema);
+	        String query = "UPDATE prodotto p JOIN stock_dettagli s ON s.ID_Prodotto = p.ID_Prodotto " +
+	                       "SET p.Prezzo = ? WHERE s.ID_Inventario = ? AND p.ID_Prodotto = ?";
+	        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+	            stmt.setBigDecimal(1, nuovoPrezzo);
+	            stmt.setInt(2, idInventario);
+	            stmt.setInt(3, idProdotto);
+	            int rowsAffected = stmt.executeUpdate();
+	            return rowsAffected > 0;
 
-	  
-
+	        } catch (SQLException e) {
+	            System.err.println("Errore durante l'aggiornamento del prezzo: " + e.getMessage());
+	            return false;
+	            
+	        } finally {
+	        	DBConnection.closeConnection(connection);
+	        }
+	    }
+	    
 	    @Override
 	    public void deleteStock(int idInventario) {
 	        connection = DBConnection.startConnection(connection, schema);
