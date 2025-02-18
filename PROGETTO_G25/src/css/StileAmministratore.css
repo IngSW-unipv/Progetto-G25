@@ -26,6 +26,24 @@
     -fx-vgap: 15;
 }
 
+/*Stile della barra superiore */
+.top-bar {
+    -fx-background-color: #66cdaa; 
+    -fx-padding: 15px;
+    -fx-alignment: center;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+/*Stile del titolo */
+.title-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #222222;
+}
+
 /* Stile del box prodotto */
 .product-box {
     -fx-padding: 15;
@@ -34,6 +52,11 @@
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 2, 2);
+}
+
+.image-container {
+    -fx-pref-height: 140px;
+    -fx-alignment: center;
 }
 
 /* Stili per le Label */
@@ -66,16 +89,30 @@
     -fx-text-fill: #008000; /* Verde per disponibile */
     -fx-font-weight: bold;
 }
-
 /* Bottone di rifornimento */
 .restock-button {
-    -fx-background-color: #66cdaa;
+    -fx-background-color: #66cdaa; /* Verde acqua */
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-background-radius: 5;
-    -fx-padding: 5 10;
+    -fx-background-radius: 5px;  /* Raggio del background */
+    -fx-border-color: #000000;   /* Bordo nero */
+    -fx-border-width: 1px;     /* Bordo sottile */
+    -fx-border-radius: 5px;      /* Deve combaciare con il background-radius */
+    -fx-padding: 4px 9px;        /* Padding ridotto per evitare "sbrodolamenti" */
+    -fx-min-height: 30px;        /* Altezza minima per evitare distorsioni */
+    -fx-alignment: center;       /* Centra il testo e l'icona */
+    -fx-background-insets: 0;    /* Evita che il colore vada oltre il bordo */
 }
 
+/* Effetto hover */
 .restock-button:hover {
-    -fx-background-color: #2e8b57;
+    -fx-background-color: #2e8b57; /* Verde più scuro */
+    -fx-border-color: #222222;     /* Bordo leggermente più scuro */
 }
+
+/* Effetto click */
+.restock-button:pressed {
+    -fx-background-color: #1e6f43; /* Verde ancora più scuro */
+    -fx-border-color: #111111;     /* Bordo ancora più scuro */
+}
+
