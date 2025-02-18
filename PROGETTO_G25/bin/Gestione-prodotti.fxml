@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="it.unipv.ingsfw.bitebyte.controller.ProdottiController" stylesheets="@/css/StileAmministratore.css">
+    <children>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true">
+            <content>
+                <FlowPane fx:id="prodottiContainer" hgap="15" vgap="15"
+                          style="-fx-padding: 10;" 
+                          prefWrapLength="600"
+                          alignment="CENTER">
+                </FlowPane>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

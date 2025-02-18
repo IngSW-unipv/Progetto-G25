@@ -18,7 +18,7 @@ public class TestGestioneP extends Application {
 
             // Prendiamo il controller e impostiamo i dati
             ProdottiController controller = loader.getController();
-            controller.setIdInventario(2);  // Esempio di passaggio dati
+            controller.setIdInventario(1);  // Esempio di passaggio dati
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Distributore Automatico");
