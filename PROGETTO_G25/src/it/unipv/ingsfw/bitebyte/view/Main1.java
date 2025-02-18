@@ -9,10 +9,9 @@ import javafx.stage.Stage;
 public class Main1 extends Application {
 	    @Override
 	    public void start(Stage primaryStage) throws Exception {
-	    	
-	        Parent root = FXMLLoader.load(getClass().getResource("/registration-view.fxml"));        
-	        primaryStage.setTitle("Registration");	    
-	        primaryStage.setScene(new Scene(root, 600, 400));        
+	        Parent root = FXMLLoader.load(getClass().getResource("/registration-view.fxml"));
+	        primaryStage.setTitle("Login");
+	        primaryStage.setScene(new Scene(root, 400, 293));
 	        primaryStage.show();
 	    }
 
