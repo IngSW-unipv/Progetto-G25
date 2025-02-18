@@ -22,7 +22,7 @@
                </image>
             </ImageView>
             <Circle fill="#1f93ff00" layoutX="103.0" layoutY="193.0" radius="101.0" stroke="#dba62a" strokeType="INSIDE" strokeWidth="3.0" />
-            <Button id="pulsanteVaiALogin" layoutX="21.0" layoutY="346.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="115.0" style="-fx-background-color: #EEB729;" text="Torna al login" >
+            <Button fx:id="pulsanteVaiALogin" layoutX="21.0"  layoutY="346.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="115.0" style="-fx-background-color: #EEB729;" text="Torna al login"  onAction="#cambiaScena">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -64,7 +64,7 @@
                   <Font name="System Bold Italic" size="12.0" />
                </font>
             </Label>
-            <Button id="pulsanteRegistrati" layoutX="200.0" layoutY="328.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="149.0" style="-fx-background-color: #EEB729;" text="Registrati!" onAction="#controlloCampi">
+            <Button fx:id="pulsanteRegistrati" layoutX="200.0" layoutY="328.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="149.0" style="-fx-background-color: #EEB729;" text="Registrati!" onAction="#controlloCampi">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
