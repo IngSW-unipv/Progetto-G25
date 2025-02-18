@@ -1,4 +1,3 @@
-//CONTROLLER
 package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.dao.ClienteDAO;
 
@@ -12,13 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage; 
-import javafx.fxml.Initializable;
 
-import java.awt.event.ActionEvent;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class Authcontroller implements Initializable{
+public class Authcontroller {
 
 	   	private ClienteDAO clienteDAO = new ClienteDAO();
 
@@ -45,31 +39,16 @@ public class Authcontroller implements Initializable{
 	    @FXML private Button pulsanteVaiARegistrazione;
 	    @FXML private Button pulsanteVaiALogin;
 
-	    
-	    
-	    
-	    
-	    
-	    @Override
-	    public void initialize(URL location, ResourceBundle resources) {
-	        // Questo metodo verrà chiamato quando la vista è completamente caricata
-	        System.out.println("Metodo initialize chiamato!");
-	    }
-	
 	    @FXML
-	    public void cambiaScena(javafx.event.ActionEvent event) {
-	        Button clickedButton = (Button) event.getSource();
-	        Stage stage = (Stage) clickedButton.getScene().getWindow();  // Ottieni lo Stage dal bottone premuto
-	        // Verifica quale bottone è stato premuto e cambia scena di conseguenza
-	        if (clickedButton.getId().equals("pulsanteVaiALogin")) {
-	        	System.out.println("sono in switch scene");
-	            switchScene(stage, "login-view.fxml", "Login");
-	        } else if (clickedButton.getId().equals("pulsanteRegistrati")) {
-	            switchScene(stage, "registration-view.fxml", "Registrazione");
-	        }
+	    public void inizializza() {
+	        // Controllo in tempo reale mentre l'utente digita
+	    	emailReg.setOnKeyReleased(this::controllaEmail);
+	    	passwordReg.setOnKeyReleased(this::controllaPassword);
+	    	
+	    	pulsanteVaiARegistrazione.setOnAction(event -> switchScene("registration-view.fxml", "Registrazione"));
+	    	pulsanteRegistrati.setOnAction(event -> controlloCampi());
 	    }
 
-	    
 	    @FXML
 	    public void accedi() {
 	        String nomeUtente = usernameLogin.getText();
@@ -191,33 +170,13 @@ public class Authcontroller implements Initializable{
 	        clienteDAO.registraCliente(nuovoCliente);
 	        showAlert("Successo", "REGISTRAZIONE COMPLETATA!");
 	        
-	        //switchScene("login-view.fxml", "Login");
+	        switchScene("login-view.fxml", "Login");
 	        	        
 	    }
 	    
-	    
-	    
-	    private void switchScene(Stage stage, String fxml, String title) {
-	        try {
-	        	System.out.println("sono in switch scene");
-	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxml));
-	            Parent root = loader.load();
-	            stage.setTitle(title);
-	            stage.setScene(new Scene(root));
-	            stage.show();
-	        } catch (Exception e) {
-	            e.printStackTrace();  // Questo mostrerà eventuali errori
-	        }
-	    }
-	    
-	    
-	    
-	    
-	    /*
 	    private void switchScene(String fxml, String title) {
-	    	System.out.println("/" + fxml);
 	        try {
-	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxml));
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
 	            Parent root = loader.load();
 	            Stage stage = (Stage) pulsanteAccedi.getScene().getWindow();
 	            stage.setTitle(title);
@@ -228,7 +187,7 @@ public class Authcontroller implements Initializable{
 	        }
 	    }
 	    
-	*/    
+	    
 	    
 	
 }
