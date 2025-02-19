@@ -96,7 +96,7 @@ public class StockDAO implements IStockDAO {
 	    }
 	    
 	    
-	    public boolean aggiornaPrezzo(int idProdotto, int idInventario, BigDecimal nuovoPrezzo) {
+	    public boolean updatePrice(int idProdotto, int idInventario, BigDecimal nuovoPrezzo) {
 	    	connection = DBConnection.startConnection(connection, schema);
 	        String query = "UPDATE prodotto p JOIN stock_dettagli s ON s.ID_Prodotto = p.ID_Prodotto " +
 	                       "SET p.Prezzo = ? WHERE s.ID_Inventario = ? AND p.ID_Prodotto = ?";

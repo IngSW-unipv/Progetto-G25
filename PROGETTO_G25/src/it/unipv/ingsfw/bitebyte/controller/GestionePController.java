@@ -11,13 +11,13 @@ import it.unipv.ingsfw.bitebyte.view.ModificaPrezzoView;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class ProdController {
+public class GestionePController {
 
     private StockDAO stockDAO;
     private ProdottiView prodottiView;
     private int idInventario;
 
-    public ProdController() {
+    public GestionePController() {
         this.stockDAO = new StockDAO();
         this.prodottiView = new ProdottiView(this); // Passiamo il controller alla view
     }
@@ -51,7 +51,7 @@ public class ProdController {
                 mostraErrore("Il prezzo deve essere compreso tra €0.01 e €5.00!");
                 return;
             }
-            boolean aggiornato = stockDAO.aggiornaPrezzo(stock.getProdotto().getIdProdotto(), idInventario, nuovoPrezzo);
+            boolean aggiornato = stockDAO.updatePrice(stock.getProdotto().getIdProdotto(), idInventario, nuovoPrezzo);
             if (!aggiornato) {
                 mostraErrore("❌ Errore durante l'aggiornamento del prezzo!");
                 return;

@@ -1,7 +1,7 @@
 package it.unipv.ingsfw.bitebyte.test;
 
 
-import it.unipv.ingsfw.bitebyte.controller.ProdController;
+import it.unipv.ingsfw.bitebyte.controller.GestionePController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -11,7 +11,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Creiamo il controller
-        ProdController controller = new ProdController();
+        GestionePController controller = new GestionePController();
 
         // Simuliamo un inventario (puoi cambiare l'ID per testare)
         controller.setIdInventario(1);

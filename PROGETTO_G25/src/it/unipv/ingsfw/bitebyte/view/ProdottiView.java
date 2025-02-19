@@ -1,6 +1,6 @@
 package it.unipv.ingsfw.bitebyte.view;
 
-import it.unipv.ingsfw.bitebyte.controller.ProdController;
+import it.unipv.ingsfw.bitebyte.controller.GestionePController;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,9 +18,9 @@ public class ProdottiView {
     private VBox rootLayout;
     private FlowPane prodottiContainer;
     private ScrollPane scrollPane;
-    private ProdController controller;
+    private GestionePController controller;
 
-    public ProdottiView(ProdController controller) {
+    public ProdottiView(GestionePController controller) {
         this.controller = controller;
 
         rootLayout = new VBox(10);
