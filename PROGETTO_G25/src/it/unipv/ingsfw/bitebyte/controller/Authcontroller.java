@@ -112,7 +112,9 @@ public class Authcontroller implements Initializable{
 	    }
 
 	    // Controlla l'email in tempo reale mentre l'utente digita
+	    @FXML
 	    private void controllaEmail(KeyEvent evento) {
+	    	System.out.println("prova");
 	        String email = emailReg.getText();
 	        if (!emailFormatoValido(email)) {
 	        	erroreRegEmail.setText("L'email deve terminare con @universitadipavia.it");
@@ -135,6 +137,7 @@ public class Authcontroller implements Initializable{
 
 	    // Controlla se l'email è valida
 	    private boolean emailFormatoValido(String email) {
+	    	System.out.println(email);
 	        return email.endsWith("@universitadipavia.it");
 	    }
 

@@ -51,7 +51,8 @@
                   <Font name="System Bold Italic" size="12.0" />
                </font>
             </Label>
-            <TextField id="emailReg" layoutX="21.0" layoutY="224.0" prefHeight="26.0" prefWidth="254.0" promptText="E-mail" style="-fx-background-color: ;" />
+            <TextField fx:id="emailReg" layoutX="21.0" layoutY="224.0" prefHeight="26.0" prefWidth="254.0" promptText="E-mail" style="-fx-background-color: ;" onKeyReleased="#controllaEmail" />
+            	<Label fx:id="erroreRegEmail" layoutX="22.0" layoutY="250.0" text="" textFill="RED" /> 
             <PasswordField id="passwordReg" layoutX="22.0" layoutY="279.0" promptText="Password" style="-fx-background-color: ;" />
             <PasswordField id="passwordConfReg" layoutX="200.0" layoutY="279.0" promptText="Conferma password" style="-fx-background-color: ;" />
             <Label layoutX="22.0" layoutY="259.0" text="Password">
