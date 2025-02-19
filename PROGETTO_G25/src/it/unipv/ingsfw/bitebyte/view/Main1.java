@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 public class Main1 extends Application {
 	    @Override
 	    public void start(Stage primaryStage) throws Exception {
+	    	System.out.println("prova");
 	        Parent root = FXMLLoader.load(getClass().getResource("/registration-view.fxml"));
 	        primaryStage.setTitle("Registrazione");
 	        primaryStage.setScene(new Scene(root, 600, 400));
