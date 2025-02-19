@@ -60,7 +60,7 @@
                   <Font name="System Bold Italic" size="15.0" />
                </font>
             </Label>
-            <Button id="pulsanteVaiARegistrazione" layoutX="198.0" layoutY="354.0" mnemonicParsing="false" style="-fx-background-color: #eeb729;" text="Registrati!">
+            <Button fx:id="pulsanteVaiARegistrazione" layoutX="198.0" layoutY="354.0" mnemonicParsing="false" style="-fx-background-color: #eeb729;" text="Registrati!" onAction="#cambiaScena">
                <font>
                   <Font name="System Bold Italic" size="14.0" />
                </font>

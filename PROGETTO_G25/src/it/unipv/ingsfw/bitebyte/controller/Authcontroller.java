@@ -66,6 +66,8 @@ public class Authcontroller implements Initializable{
 	            switchScene(stage, "login-view.fxml", "Login");
 	        } else if (clickedButton.getId().equals("pulsanteRegistrati")) {
 	            switchScene(stage, "registration-view.fxml", "Registrazione");
+	        } else if (clickedButton.getId().equals("pulsanteVaiARegistrazione")) {
+	        	switchScene(stage, "registration-view.fxml", "Registrazione");
 	        }
 	    }
 
