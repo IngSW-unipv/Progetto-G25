@@ -8,8 +8,9 @@ import java.util.List;
  * Contiene informazioni relative alla sua posizione e tipologia.
  * 
  * @author Alessandro, Alice, Annamaria, Davide
+ * @param <idInventario>
  */
-public class Distributore {
+public class Distributore{
     
  
     private int idDistr;
@@ -18,7 +19,10 @@ public class Distributore {
     private String via;
     private String nCivico;
     private int idInventario;
+    private double lat;
+    private double lon;
     private List<Stock> stockList;
+    
     
     /**
      * Costruttore della classe Distributore.
@@ -30,13 +34,15 @@ public class Distributore {
      * @param nCivico Numero civico del distributore
      * @param idInventario
      */
-    public Distributore(int idDistr, String tipo, String citta, String via, String nCivico, int idInventario) {
+    public Distributore(int idDistr, String tipo, String citta, String via, String nCivico, int idInventario, double lat, double lon) {
         this.idDistr = idDistr;
         this.tipo = tipo;
         this.citta = citta;
         this.via = via;
         this.nCivico = nCivico;
         this.idInventario = idInventario;
+        this.lat = lat;
+        this.lon = lon;
     }
     
     /**
@@ -154,7 +160,24 @@ public class Distributore {
 	public void setStockList(List<Stock> stockList) {
 		this.stockList = stockList;
 	}
+	
     
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLon() {
+		return lon;
+	}
+
+	public void setLon(double lon) {
+		this.lon = lon;
+	}
+
 	@Override
 	public String toString() {
 	    return "Distributore{" +

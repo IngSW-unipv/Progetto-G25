@@ -21,11 +21,11 @@ public class StockDAO implements IStockDAO {
 	        ArrayList<Stock> stocks = new ArrayList<>();
 	        connection = DBConnection.startConnection(connection, schema);
 
-	        String query = "SELECT s.ID_Inventario, s.Q_disp, s.Qmax_inseribile, s.Stato " +
-	                       "p.ID_Prodotto, p.Nome_p, p.Prezzo, p.Categoria_P " +
-	                       "FROM stock_dettagli s " +
-	                       "JOIN prodotto p ON s.ID_Prodotto = p.ID_Prodotto " +
-	                       "WHERE s.ID_Inventario = ?";
+	        String query = "SELECT s.ID_Inventario, s.Q_disp, s.Qmax_inseribile, s.Stato, " + 
+	                "p.ID_Prodotto, p.Nome_p, p.Prezzo, p.Categoria_P " +  
+	                "FROM stock_dettagli s " +
+	                "JOIN prodotto p ON s.ID_Prodotto = p.ID_Prodotto " +
+	                "WHERE s.ID_Inventario = ?";
 
 	        try (PreparedStatement stmt = connection.prepareStatement(query)) {
 	            stmt.setInt(1, inventarioId);
