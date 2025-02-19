@@ -4,8 +4,11 @@ package it.unipv.ingsfw.bitebyte.dao;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
+import it.unipv.ingsfw.bitebyte.utils.CalcolaDistanza;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -38,7 +41,9 @@ public class DistributoreDAO implements IDistributoreDAO {
                         rs.getString("Citta"),
                         rs.getString("Via"),
                         rs.getString("N_civico"),
-                        rs.getInt("ID_Inventario")
+                        rs.getInt("ID_Inventario"),
+                        rs.getDouble("LAT"),
+                        rs.getDouble("LON")
                 );
 
                 // Recupera e associa gli stock tramite l'ID_Inventario
@@ -69,7 +74,9 @@ public class DistributoreDAO implements IDistributoreDAO {
                         rs.getString("Citta"),
                         rs.getString("Via"),
                         rs.getString("N_civico"),
-                        rs.getInt("ID_Inventario")
+                        rs.getInt("ID_Inventario"),
+                        rs.getDouble("LAT"),
+                        rs.getDouble("LON")
                 );
 
                 // Associa gli stock
@@ -86,10 +93,41 @@ public class DistributoreDAO implements IDistributoreDAO {
         return distributori;
     }
 
+    public List<Distributore> getDistributoriVicini(int idDistributore, double maxDistanzaKm) {
+        // Recupera il distributore corrente
+        Distributore distributoreCorrente = getDistributoreById(idDistributore);
+        if (distributoreCorrente == null) {
+            return new ArrayList<>();
+        }
+
+        // Recupera tutti i distributori
+        List<Distributore> tuttiDistributori = getAllDistributori();
+        List<Distributore> distributoriVicini = new ArrayList<>();
+
+        for (Distributore d : tuttiDistributori) {
+            // Evita di considerare lo stesso distributore
+            if (d.getIdDistr() != distributoreCorrente.getIdDistr()) {
+                double distanza = CalcolaDistanza.calcolaDistanza(distributoreCorrente, d);
+                if (distanza <= maxDistanzaKm) {
+                    // Se lo desideri, puoi memorizzare la distanza nel distributore (aggiungendo un campo e setter)
+                    // d.setDistanza(distanza);
+                    distributoriVicini.add(d);
+                }
+            }
+        }
+
+        // Ordina la lista in base alla distanza (calcolata dinamicamente)
+        distributoriVicini.sort(Comparator.comparingDouble(d ->
+                CalcolaDistanza.calcolaDistanza(distributoreCorrente, d)
+        ));
+
+        return distributoriVicini;
+    }
+    
     @Override
     public void addDistributore(Distributore distributore) {
         connection = DBConnection.startConnection(connection, schema);
-        String query = "INSERT INTO distributore (ID_Distributore, Tipo_D , Citta, Via,  N_civico, ID_inventario) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO distributore (ID_Distributore, Tipo_D , Citta, Via,  N_civico, ID_Inventario, LAT, LON) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
         	
@@ -99,6 +137,8 @@ public class DistributoreDAO implements IDistributoreDAO {
             stmt.setString(4, distributore.getVia());
             stmt.setString(5, distributore.getNCivico());
             stmt.setInt(6, distributore.getIdInventario());
+            stmt.setDouble(7, distributore.getLat());
+            stmt.setDouble(8, distributore.getLon());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,15 +150,17 @@ public class DistributoreDAO implements IDistributoreDAO {
     @Override
     public void updateDistributore(Distributore distributore) {
         connection = DBConnection.startConnection(connection, schema);
-        String query = "UPDATE distributore SET Tipo = ?, Citta = ?, Via = ?, N_civico = ?, ID_Inventario = ? WHERE ID_Distributore = ?";
+        String query = "UPDATE distributore SET ID_Distributore = ?, Tipo_D = ?, Citta = ?, Via = ?, N_civico = ?, ID_Inventario = ?, LAT = ?, LON = ? WHERE ID_Distributore = ?";
         
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, distributore.getTipo().toString());
-            stmt.setString(2, distributore.getCitta());
-            stmt.setString(3, distributore.getVia());
-            stmt.setString(4, distributore.getNCivico());
-            stmt.setInt(5, distributore.getIdInventario());
-            stmt.setInt(6, distributore.getIdDistr());
+        	stmt.setInt(1, distributore.getIdDistr());
+        	stmt.setString(2, distributore.getTipo().toString());
+            stmt.setString(3, distributore.getCitta());
+            stmt.setString(4, distributore.getVia());
+            stmt.setString(5, distributore.getNCivico());
+            stmt.setInt(6, distributore.getIdInventario());
+            stmt.setDouble(7, distributore.getLat());
+            stmt.setDouble(8, distributore.getLon());
             stmt.executeUpdate();
 
             // Dopo aver aggiornato, aggiorna ogni singolo stock
