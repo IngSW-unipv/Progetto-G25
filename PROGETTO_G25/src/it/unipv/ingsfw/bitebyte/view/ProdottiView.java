@@ -82,7 +82,7 @@ public class ProdottiView {
         // 🔻 Bottone Carrello
         carrelloButton = new Button("🛒 Carrello");
         carrelloButton.getStyleClass().add("carrello-button");
-        carrelloButton.setOnAction(e -> controller.handleApriCarrello());
+        carrelloButton.setOnAction(e -> controller.apriCarrello());
 
         // 🔻 Dropdown per selezione Distributore
         distributoreDropdown = new ComboBox<>();

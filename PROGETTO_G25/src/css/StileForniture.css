@@ -23,28 +23,23 @@
     -fx-transition: 0.3s;
 }
 
-/* Colore del testo nei riquadri dei fornitori */
-.fornitore-box .label {
-    -fx-text-fill: #ffffff;  /* Testo bianco */
-    
-    -fx-font-weight: bold;
-}
-
 /* Cambia colore di una specifica Label nel riquadro */
-.fornitore-box .nome-fornitore {
+.nome-fornitore {
     -fx-text-fill: #FFFFFF;  
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-font-style: italic;
 }
 
-.fornitore-box .citta-fornitore {
+.citta-fornitore {
     -fx-text-fill: #8b0000;  /* Rosso scuro */
+    -fx-font-weight: bold;
     -fx-font-size: 15px;
 }
 
-.fornitore-box .prezzo-fornitore {
+.prezzo-fornitore {
     -fx-text-fill: #006400;  /* Verde scuro */
+    -fx-font-weight: bold;
     -fx-font-size: 15px;
 }
 

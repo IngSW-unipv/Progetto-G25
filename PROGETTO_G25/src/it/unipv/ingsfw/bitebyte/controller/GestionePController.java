@@ -1,14 +1,20 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
+import it.unipv.ingsfw.bitebyte.business.SupplyContext;
 import it.unipv.ingsfw.bitebyte.dao.FornituraDAO;
 import it.unipv.ingsfw.bitebyte.dao.StockDAO;
+import it.unipv.ingsfw.bitebyte.models.Carrello;
 import it.unipv.ingsfw.bitebyte.models.Fornitura;
 import it.unipv.ingsfw.bitebyte.models.Stock;
+import it.unipv.ingsfw.bitebyte.strategyforn.IDiscountStrategy;
+import it.unipv.ingsfw.bitebyte.strategyforn.DiscountFactory;
+import it.unipv.ingsfw.bitebyte.view.CarrelloView;
 import it.unipv.ingsfw.bitebyte.view.ModificaPrezzoView;
 import it.unipv.ingsfw.bitebyte.view.ProdottiView;
 import it.unipv.ingsfw.bitebyte.view.RifornimentoView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
+import javafx.stage.Stage;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,25 +47,64 @@ public class GestionePController {
     }
 
     public void handleRestock(Stock stock) {
+    	if(stock.getQuantitaDisp() == stock.getQMaxInseribile()) {
+    		mostraErrore("Slot prodotto già pieno");
+    		return;
+    	}
         System.out.println("🔄 Rifornimento per: " + stock.getProdotto().getNome());
 
         ArrayList<Fornitura> forniture = fornituraDAO.getFornitoriInfo(stock);
 
         RifornimentoView rifornimentoView = new RifornimentoView(forniture, stock, new RifornimentoView.RifornimentoListener() {
+           
             @Override
             public void onFornitoreSelezionato(Fornitura fornitura, int quantita) {
-                System.out.println("✅ Fornitore selezionato: " + fornitura.getFornitore().getNomeF());
-                System.out.println("📦 Quantità richiesta: " + quantita);
-                // Implementazione della logica di aggiornamento DB
-            }
+                int disponibile = stock.getQuantitaDisp();
+                int maxInseribile = stock.getQMaxInseribile();
 
-            @Override
-            public void onConfermaOrdine() {
-                System.out.println("🛒 Ordine confermato!");
+                // ✅ Controllo validità quantità
+                if (quantita <= 0) {
+                    mostraErrore("Inserisci una quantità valida.");
+                    return;
+                }
+                if (quantita + disponibile > maxInseribile) {
+                    mostraErrore("Quantità non disponibile! Puoi ordinare al massimo " + (maxInseribile - disponibile) + " unità.");
+                    return;
+                }
+
+                // ✅ Determina la strategia in base alla quantità massima
+                String strategyKey = (quantita == maxInseribile) ? "maxquantity.strategy" : "quantity.strategy";
+
+                // ✅ Creazione della strategia
+                IDiscountStrategy discountStrategy = DiscountFactory.getDiscountStrategy(strategyKey);
+                if (discountStrategy == null) {
+                    mostraErrore("Errore nel caricamento della strategia di sconto.");
+                    return;
+                }
+
+                // ✅ Calcolo del prezzo finale con la strategia di sconto applicata
+                SupplyContext supplyContext = new SupplyContext(discountStrategy, fornitura.getPpu());
+                BigDecimal finalPrice = supplyContext.calculateFinalPrice(quantita, stock);
+
+                // ✅ Aggiungi l'elemento al carrello
+                Carrello carrello = Carrello.getInstance();
+                carrello.aggiungiItem(fornitura, quantita, finalPrice);
+                
+                // ✅ Passa alla vista del carrello
+                apriCarrello();
             }
         });
+        rifornimentoView.mostra(); 
 
-        rifornimentoView.mostra();
+    }
+
+    public void apriCarrello() {
+        // Recupera l'istanza del carrello
+        Carrello carrello = Carrello.getInstance();
+
+        // Crea la vista del carrello (questa è un'altra view che mostrerà gli articoli nel carrello)
+        CarrelloView carrelloView = new CarrelloView(carrello, this);
+        carrelloView.mostra();
     }
 
     public void handleSostituzione(Stock stock) {
@@ -83,10 +128,7 @@ public class GestionePController {
 
         view.show();
     }
-    
-    public void handleApriCarrello() {
-    	System.out.println("Carrello");
-    }
+
     public void mostraErrore(String messaggio) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore");
