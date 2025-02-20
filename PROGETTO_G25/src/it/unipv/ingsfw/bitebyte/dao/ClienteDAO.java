@@ -98,11 +98,6 @@ public class ClienteDAO implements IClienteDAO {
 		return false;
 	}
 
-	@Override
-	public Cliente getClienteByCf(String cf) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public Cliente getCliente(String username, String password) {
