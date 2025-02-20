@@ -36,7 +36,7 @@ public class ClienteDAO implements IClienteDAO{
 	    
 	    public boolean esisteCliente(String email) {
 	    	connection = DBConnection.startConnection(connection, schema);
-	    	String query = "SELECT COUNT(*) FROM cliente WHERE email = '?' ";
+	    	String query = "SELECT COUNT(*) FROM cliente WHERE email = ? ";
 	    	try {
 	    		PreparedStatement ps = connection.prepareStatement(query);
 	    		ps.setString(1, email);

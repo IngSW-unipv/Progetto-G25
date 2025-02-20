@@ -47,7 +47,7 @@ public class Authcontroller implements Initializable{
 
 	    
 	    
-	    
+	    //fx:id serve per poter estrapolare i dati e manipolarli nel codice Java
 	    
 	    
 	    @Override
@@ -114,7 +114,6 @@ public class Authcontroller implements Initializable{
 	    // Controlla l'email in tempo reale mentre l'utente digita
 	    @FXML
 	    private void controllaEmail(KeyEvent evento) {
-	    	System.out.println("prova");
 	        String email = emailReg.getText();
 	        if (!emailFormatoValido(email)) {
 	        	erroreRegEmail.setText("L'email deve terminare con @universitadipavia.it");
@@ -125,6 +124,7 @@ public class Authcontroller implements Initializable{
 	    }
 
 	    // Controlla la password in tempo reale mentre l'utente digita
+	    @FXML
 	    private void controllaPassword(KeyEvent evento) {
 	    	String password = passwordReg.getText();
 	        if (!passwordValida(password)) {
@@ -137,7 +137,6 @@ public class Authcontroller implements Initializable{
 
 	    // Controlla se l'email è valida
 	    private boolean emailFormatoValido(String email) {
-	    	System.out.println(email);
 	        return email.endsWith("@universitadipavia.it");
 	    }
 
@@ -157,8 +156,10 @@ public class Authcontroller implements Initializable{
 	        alert.showAndWait();
 	    }
 	    
+	    @FXML
 	    public void controlloCampi() {
-	    	System.out.println("Bottonepremuto!");
+	    	Stage stage = (Stage) pulsanteRegistrati.getScene().getWindow();
+	    	
 	    	String cf = cfReg.getText().toUpperCase();
 	        String nomeUtente = usernameReg.getText();
 	        String email = emailReg.getText();
@@ -192,11 +193,11 @@ public class Authcontroller implements Initializable{
 	            return;
 	        }
 	    	
-	        Cliente nuovoCliente = new Cliente(cf, nome, cognome, email, password, dataNascita, nomeUtente);
-	        clienteDAO.registraCliente(nuovoCliente);
+	        //Cliente nuovoCliente = new Cliente(cf, nome, cognome, email, password, dataNascita, nomeUtente);
+	        //clienteDAO.registraCliente(nuovoCliente);
 	        showAlert("Successo", "REGISTRAZIONE COMPLETATA!");
 	        
-	        //switchScene("login-view.fxml", "Login");
+	        switchScene(stage, "login-view.fxml", "Login");
 	        	        
 	    }
 	    
@@ -215,25 +216,6 @@ public class Authcontroller implements Initializable{
 	        }
 	    }
 	    
-	    
-	    
-	    
-	    /*
-	    private void switchScene(String fxml, String title) {
-	    	System.out.println("/" + fxml);
-	        try {
-	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxml));
-	            Parent root = loader.load();
-	            Stage stage = (Stage) pulsanteAccedi.getScene().getWindow();
-	            stage.setTitle(title);
-	            stage.setScene(new Scene(root));
-	            stage.show();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
-	    
-	*/    
 	    
 	
 }
