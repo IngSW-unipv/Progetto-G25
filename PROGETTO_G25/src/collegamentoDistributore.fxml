@@ -21,7 +21,7 @@
     <!-- Immagine di sfondo -->
     <ImageView fitHeight="338.0" fitWidth="175.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0">
         <image>
-            <Image url="@../../../../distributore.jpeg" />
+            <Image url="file:resources/collegamentoDistributore/distributore.jpeg" />
         </image>
     </ImageView>
 
