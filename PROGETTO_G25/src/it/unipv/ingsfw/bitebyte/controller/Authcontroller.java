@@ -37,18 +37,12 @@ public class Authcontroller implements Initializable{
 	    @FXML private Label erroreRegEmail;
 	    @FXML private Label erroreRegPassword;					
 	    
-	    
-	    
 
 	    @FXML private Button pulsanteAccedi;
 	    @FXML private Button pulsanteRegistrati;
 	    @FXML private Button pulsanteVaiARegistrazione;
 	    @FXML private Button pulsanteVaiALogin;
 
-	    
-	    
-	    
-	    
 	    
 	    @Override
 	    public void initialize(URL location, ResourceBundle resources) {
@@ -76,8 +70,9 @@ public class Authcontroller implements Initializable{
 	    public void accedi() {
 	        String nomeUtente = usernameLogin.getText();
 	        String password = passwordLogin.getText();
-
+	        ProfiloClienteController pfc = new ProfiloClienteController();
 	        if (clienteDAO.verificaLogin(nomeUtente, password)) {
+	        	pfc.setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
 	        	erroreLogin.setText("Accesso effettuato con successo!");
 	        	erroreLogin.setTextFill(Color.GREEN);
 	        } else {
@@ -214,7 +209,7 @@ public class Authcontroller implements Initializable{
 	            e.printStackTrace();  // Questo mostrerà eventuali errori
 	        }
 	    }
-	    
+
 	    
 	    
 	    
