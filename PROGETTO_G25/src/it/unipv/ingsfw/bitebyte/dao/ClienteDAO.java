@@ -16,7 +16,7 @@ public class ClienteDAO implements IClienteDAO{
 	        
 	    public boolean esisteUsername(String username) {
 	    	connection = DBConnection.startConnection(connection, schema);
-	    	String query = "SELECT COUNT(*) FROM cliente WHERE username = '?' ";
+	    	String query = "SELECT COUNT(*) FROM cliente WHERE username = ? ";
 	    	
 	    	try {
 	    		PreparedStatement ps = connection.prepareStatement(query);
@@ -55,7 +55,7 @@ public class ClienteDAO implements IClienteDAO{
 	    @Override
 	    public void registraCliente(Cliente cliente) {
 	        connection = DBConnection.startConnection(connection, schema);
-	        String query = "INSERT INTO cliente (Cf, Nome, Cognome, Username, Data_N, Email, Password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	        String query = "INSERT INTO cliente (Cf, Nome, Cognome, Username, Data_N, Email, Passw) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	    	
 	    	try {
 	            PreparedStatement ps = connection.prepareStatement(query);
@@ -72,6 +72,7 @@ public class ClienteDAO implements IClienteDAO{
 	        	System.err.println("Errore durante l'inserimento del cliente: " + e.getMessage());
 	            e.printStackTrace();
 	        } finally {
+	        	System.out.println("Cliente registrato con successo!");
 	        	DBConnection.closeConnection(connection);
 	        }
 	    	
@@ -80,7 +81,7 @@ public class ClienteDAO implements IClienteDAO{
 	    @Override
 	    public boolean verificaLogin(String username, String password) {
 	    	connection = DBConnection.startConnection(connection, schema);
-	        String query = "SELECT * FROM cliente WHERE username = '?' and password = '?' ";
+	        String query = "SELECT * FROM cliente WHERE Username = ? and Passw = ? ";
 	        try {
 	    		PreparedStatement ps = connection.prepareStatement(query);
 	    		ps.setString(1, username);

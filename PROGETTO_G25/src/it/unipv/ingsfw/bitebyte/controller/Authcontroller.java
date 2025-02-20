@@ -78,11 +78,11 @@ public class Authcontroller implements Initializable{
 	        String password = passwordLogin.getText();
 
 	        if (clienteDAO.verificaLogin(nomeUtente, password)) {
-	        	erroreLogin.setText("Accesso effettuato con successo!");
-	        	erroreLogin.setTextFill(Color.GREEN);
+	        	showAlert("Successo!", "Log in effettuato");
+                return;
 	        } else {
-	        	erroreLogin.setText("Nome utente o password errati!");
-	        	erroreLogin.setTextFill(Color.RED);
+	        	showAlert("Errore", "Username o password errati");
+                return;
 	        }
 	        
 	        
@@ -193,8 +193,8 @@ public class Authcontroller implements Initializable{
 	            return;
 	        }
 	    	
-	        //Cliente nuovoCliente = new Cliente(cf, nome, cognome, email, password, dataNascita, nomeUtente);
-	        //clienteDAO.registraCliente(nuovoCliente);
+	        Cliente nuovoCliente = new Cliente(cf, nome, cognome, email, password, dataNascita, nomeUtente);
+	        clienteDAO.registraCliente(nuovoCliente);
 	        showAlert("Successo", "REGISTRAZIONE COMPLETATA!");
 	        
 	        switchScene(stage, "login-view.fxml", "Login");
