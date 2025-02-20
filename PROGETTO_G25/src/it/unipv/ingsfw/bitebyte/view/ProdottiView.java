@@ -1,17 +1,21 @@
 package it.unipv.ingsfw.bitebyte.view;
 
 import it.unipv.ingsfw.bitebyte.controller.GestionePController;
+import it.unipv.ingsfw.bitebyte.dao.DistributoreDAO;
+import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.control.Button;
+import javafx.stage.Stage;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProdottiView {
 
@@ -19,6 +23,8 @@ public class ProdottiView {
     private FlowPane prodottiContainer;
     private ScrollPane scrollPane;
     private GestionePController controller;
+    private ComboBox<Distributore> distributoreDropdown;
+    private Button carrelloButton;
 
     public ProdottiView(GestionePController controller) {
         this.controller = controller;
@@ -34,8 +40,10 @@ public class ProdottiView {
 
         initialize();
 
-        // Aggiungo la barra titolo + lista prodotti
-        rootLayout.getChildren().addAll(topBar, scrollPane);
+        // 🔻 Barra inferiore con menu distributore e bottone carrello
+        HBox bottomBar = creaBottomBar();
+
+        rootLayout.getChildren().addAll(topBar, scrollPane, bottomBar);
 
         // Caricamento CSS
         rootLayout.getStylesheets().add(getClass().getResource("/css/StileAmministratore.css").toExternalForm());
@@ -56,13 +64,51 @@ public class ProdottiView {
         HBox topBar = new HBox();
         topBar.setAlignment(Pos.CENTER);
         topBar.setPadding(new Insets(10));
-        topBar.getStyleClass().add("top-bar"); // 🔹 Classe CSS
+        topBar.getStyleClass().add("top-bar");
 
         Label titleLabel = new Label("Gestione Prodotti");
-        titleLabel.getStyleClass().add("title-label"); // 🔹 Classe CSS per il titolo
+        titleLabel.getStyleClass().add("title-label");
 
         topBar.getChildren().add(titleLabel);
         return topBar;
+    }
+
+    private HBox creaBottomBar() {
+        HBox bottomBar = new HBox(20);
+        bottomBar.setAlignment(Pos.CENTER);
+        bottomBar.setPadding(new Insets(10));
+        bottomBar.getStyleClass().add("bottom-bar");
+
+        // 🔻 Bottone Carrello
+        carrelloButton = new Button("🛒 Carrello");
+        carrelloButton.getStyleClass().add("carrello-button");
+        carrelloButton.setOnAction(e -> controller.handleApriCarrello());
+
+        // 🔻 Dropdown per selezione Distributore
+        distributoreDropdown = new ComboBox<>();
+        distributoreDropdown.setPrefHeight(90);
+        distributoreDropdown.setPromptText("Seleziona Distributore");
+        distributoreDropdown.getStyleClass().add("distributore-dropdown");
+
+        // Carica distributori dal database
+        caricaDistributori();
+
+        // Quando cambia il distributore, aggiorniamo i prodotti
+        distributoreDropdown.setOnAction(e -> {
+            Distributore distributoreSelezionato = distributoreDropdown.getValue();
+            if (distributoreSelezionato != null) {
+                controller.setIdInventario(distributoreSelezionato.getIdInventario());
+            }
+        });
+
+        bottomBar.getChildren().addAll(carrelloButton, distributoreDropdown);
+        return bottomBar;
+    }
+
+    private void caricaDistributori() {
+        DistributoreDAO distributoreDAO = new DistributoreDAO();
+        List<Distributore> distributori = distributoreDAO.getAllDistributori();
+        distributoreDropdown.getItems().addAll(distributori);
     }
 
     public VBox getView() {
@@ -81,7 +127,6 @@ public class ProdottiView {
         box.getStyleClass().add("product-box");
         box.setAlignment(Pos.CENTER);
 
-        // 🔹 Contenitore con altezza fissa per l'immagine
         VBox imageContainer = new VBox();
         imageContainer.setPrefHeight(140);
         imageContainer.setAlignment(Pos.CENTER);
@@ -117,7 +162,7 @@ public class ProdottiView {
         } else if (stock.getQuantitaDisp() == 0) {
             statusLabel.setText("Stato: Esaurito");
             statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-        } 
+        }
 
         Button restockButton = creaBottoneConIcona("resources/icona spedizione.png", e -> controller.handleRestock(stock));
         Button replaceButton = creaBottoneConIcona("resources/icona-switch (1).png", e -> controller.handleSostituzione(stock));
@@ -128,7 +173,6 @@ public class ProdottiView {
         buttonContainer.getChildren().addAll(restockButton, replaceButton, priceChangeButton);
         buttonContainer.getStyleClass().add("button-container");
 
-        // Aggiungo tutto al box
         box.getChildren().addAll(imageContainer, nameLabel, priceLabel, quantityLabel, statusLabel, buttonContainer);
         return box;
     }

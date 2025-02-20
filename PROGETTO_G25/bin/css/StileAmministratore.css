@@ -26,7 +26,7 @@
     -fx-vgap: 15;
 }
 
-/*Stile della barra superiore */
+/* Stile della barra superiore */
 .top-bar {
     -fx-background-color: #66cdaa; 
     -fx-padding: 15px;
@@ -37,11 +37,19 @@
     -fx-background-radius: 8px;
 }
 
-/*Stile del titolo */
+/* Stile del titolo */
 .title-label {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #222222;
+}
+
+/* Stile della barra inferiore */
+.bottom-bar {
+    -fx-background-color: transparent; 
+    -fx-padding: 15px;
+    -fx-alignment: center;
+    -fx-background-radius: 8px;
 }
 
 /* Stile del box prodotto */
@@ -72,7 +80,7 @@
 /* Prezzo */
 .product-price {
     -fx-font-size: 15px;
-    -fx-text-fill: 	#FFFFFF;
+    -fx-text-fill: #FFFFFF;
     -fx-font-weight: bold;
 }
 
@@ -89,30 +97,126 @@
     -fx-text-fill: #008000; /* Verde per disponibile */
     -fx-font-weight: bold;
 }
+
 /* Bottone di rifornimento */
 .restock-button {
     -fx-background-color: #66cdaa; /* Verde acqua */
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-background-radius: 5px;  /* Raggio del background */
-    -fx-border-color: #000000;   /* Bordo nero */
-    -fx-border-width: 1px;     /* Bordo sottile */
-    -fx-border-radius: 5px;      /* Deve combaciare con il background-radius */
-    -fx-padding: 4px 9px;        /* Padding ridotto per evitare "sbrodolamenti" */
-    -fx-min-height: 30px;        /* Altezza minima per evitare distorsioni */
-    -fx-alignment: center;       /* Centra il testo e l'icona */
-    -fx-background-insets: 0;    /* Evita che il colore vada oltre il bordo */
+    -fx-background-radius: 5px;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 4px 9px;
+    -fx-min-height: 30px;
+    -fx-alignment: center;
+    -fx-background-insets: 0;
 }
 
 /* Effetto hover */
 .restock-button:hover {
     -fx-background-color: #2e8b57; /* Verde più scuro */
-    -fx-border-color: #222222;     /* Bordo leggermente più scuro */
+    -fx-border-color: #222222;
 }
 
 /* Effetto click */
 .restock-button:pressed {
-    -fx-background-color: #1e6f43; /* Verde ancora più scuro */
-    -fx-border-color: #111111;     /* Bordo ancora più scuro */
+    -fx-background-color: #1e6f43;
+    -fx-border-color: #111111;
 }
 
+/* Bottone "Visualizza Carrello" */
+.carrello-button {
+    -fx-background-color: #66cdaa; /* Stesso colore del restock */
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 6px 12px;
+    -fx-min-height: 40px;
+    -fx-min-width: 120px;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+/* Effetto hover */
+.carrello-button:hover {
+    -fx-background-color: #2e8b57; /* Verde più scuro */
+    -fx-border-color: #222222;
+}
+
+/* Effetto click */
+.carrello-button:pressed {
+    -fx-background-color: #1e6f43;
+    -fx-border-color: #111111;
+}
+
+/* Menu a tendina per i distributori */
+.distributore-dropdown {
+    -fx-background-color: #66cdaa; /* Stesso colore degli altri bottoni */
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-min-height: 40px;
+    -fx-min-width: 180px;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+/* Cambia colore quando il menu è aperto */
+.distributore-dropdown:hover {
+    -fx-background-color: #2e8b57; /* Verde più scuro */
+    -fx-border-color: #222222;
+}
+
+.distributore-dropdown .combo-box {
+    -fx-background-color: transparent;
+    -fx-text-fill: #222222; /* Mantiene il testo visibile */
+}
+
+/* Rimuove lo sfondo verde scuro dietro il testo selezionato */
+.distributore-dropdown .combo-box .button-cell {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+    -fx-text-fill: white; /* Cambia il colore del testo se necessario */
+}
+
+/* Evita che si ripresenti quando il ComboBox è focalizzato */
+.distributore-dropdown .combo-box:focused .button-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Rimuove qualsiasi sfondo quando il ComboBox è aperto */
+.distributore-dropdown .combo-box:showing .button-cell {
+    -fx-background-color: transparent;
+}
+
+.distributore-dropdown .list-view {
+    -fx-background-color: #66cdaa; 
+}
+
+/* Colore del testo all'interno del menu */
+.distributore-dropdown .list-cell {
+	-fx-background-color: #66cdaa;
+    -fx-text-fill: #222222;
+    -fx-font-weight: bold;
+}
+
+.distributore-dropdown .list-cell:hover {
+    -fx-background-color: #FFA500; /* Arancione */
+    -fx-text-fill: black;
+}
+
+/* Cambia colore quando un elemento è selezionato */
+.distributore-dropdown .list-cell:filled:selected {
+    -fx-background-color: #1e6f43; /* Verde ancora più scuro */
+    -fx-text-fill: white;
+}

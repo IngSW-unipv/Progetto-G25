@@ -1,12 +1,14 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
-
+import it.unipv.ingsfw.bitebyte.dao.FornituraDAO;
 import it.unipv.ingsfw.bitebyte.dao.StockDAO;
+import it.unipv.ingsfw.bitebyte.models.Fornitura;
 import it.unipv.ingsfw.bitebyte.models.Stock;
+import it.unipv.ingsfw.bitebyte.view.ModificaPrezzoView;
 import it.unipv.ingsfw.bitebyte.view.ProdottiView;
+import it.unipv.ingsfw.bitebyte.view.RifornimentoView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
-import it.unipv.ingsfw.bitebyte.view.ModificaPrezzoView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,11 +16,13 @@ import java.util.ArrayList;
 public class GestionePController {
 
     private StockDAO stockDAO;
+    private FornituraDAO fornituraDAO;
     private ProdottiView prodottiView;
     private int idInventario;
 
     public GestionePController() {
         this.stockDAO = new StockDAO();
+        this.fornituraDAO = new FornituraDAO();
         this.prodottiView = new ProdottiView(this); // Passiamo il controller alla view
     }
 
@@ -36,9 +40,26 @@ public class GestionePController {
         return prodottiView;
     }
 
-    // Metodi chiamati dai bottoni
     public void handleRestock(Stock stock) {
         System.out.println("🔄 Rifornimento per: " + stock.getProdotto().getNome());
+
+        ArrayList<Fornitura> forniture = fornituraDAO.getFornitoriInfo(stock);
+
+        RifornimentoView rifornimentoView = new RifornimentoView(forniture, stock, new RifornimentoView.RifornimentoListener() {
+            @Override
+            public void onFornitoreSelezionato(Fornitura fornitura, int quantita) {
+                System.out.println("✅ Fornitore selezionato: " + fornitura.getFornitore().getNomeF());
+                System.out.println("📦 Quantità richiesta: " + quantita);
+                // Implementazione della logica di aggiornamento DB
+            }
+
+            @Override
+            public void onConfermaOrdine() {
+                System.out.println("🛒 Ordine confermato!");
+            }
+        });
+
+        rifornimentoView.mostra();
     }
 
     public void handleSostituzione(Stock stock) {
@@ -56,24 +77,26 @@ public class GestionePController {
                 mostraErrore("❌ Errore durante l'aggiornamento del prezzo!");
                 return;
             }
-            // Se il prezzo è stato aggiornato, aggiorna il modello e la UI
-    //      stock.getProdotto().setPrezzo(nuovoPrezzo);
-            prodottiView.aggiornaProdotti(stockDAO.getStockByInventario(idInventario)); // Ricarica i dati dalla DB
 
+            prodottiView.aggiornaProdotti(stockDAO.getStockByInventario(idInventario));
         });
 
         view.show();
     }
-
+    
+    public void handleApriCarrello() {
+    	System.out.println("Carrello");
+    }
     public void mostraErrore(String messaggio) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore");
         alert.setHeaderText(null);
         alert.setContentText(messaggio);
-        // Associa il CSS al dialog pane dell'alert
+
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("/css/StileModificaPrezzo.css").toExternalForm());
-        dialogPane.getStyleClass().add("custom-alert"); 
+        dialogPane.getStyleClass().add("custom-alert");
+
         alert.showAndWait();
     }
 }

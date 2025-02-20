@@ -14,7 +14,7 @@ public class MainApp extends Application {
         GestionePController controller = new GestionePController();
 
         // Simuliamo un inventario (puoi cambiare l'ID per testare)
-        controller.setIdInventario(1);
+        controller.setIdInventario(2);
 
         // Creiamo la scena con la vista del controller
         Scene scene = new Scene(controller.getView().getView(), 800, 600);
