@@ -50,7 +50,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Button fx:id="pulsanteAccedi" layoutX="140.0" layoutY="298.0" mnemonicParsing="false"  onAction="#accedi" style="-fx-background-color: #dc143c;" text="Log in!" textFill="WHITE">
+            <Button fx:id="pulsanteAccedi" layoutX="140.0" layoutY="298.0" mnemonicParsing="false"  onAction="#cambiaScena2" style="-fx-background-color: #dc143c;" text="Log in!" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
