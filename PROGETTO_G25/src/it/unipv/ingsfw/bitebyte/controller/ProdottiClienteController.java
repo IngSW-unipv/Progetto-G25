@@ -94,7 +94,7 @@ public class ProdottiClienteController {
 
         // Listener per il campo di ricerca
         searchField.textProperty().addListener((obs, oldVal, newVal) -> caricaProdotti(newVal));
-
+        searchField.setFocusTraversable(false);
         filterPanel.setVisible(false); // Nasconde inizialmente i filtri
         
         categoryFilter.setItems(javafx.collections.FXCollections.observableArrayList(
