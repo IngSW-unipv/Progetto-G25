@@ -7,12 +7,14 @@ public class DistributoreBin {
     private String indirizzo;
     private double distanza;
     private Button azione;
+    private Button visualizzaProdotto; // Pulsante "Visualizza prodotto"
     
-    public DistributoreBin(String nome, String indirizzo, double distanza, Button azione) {
+    public DistributoreBin(String nome, String indirizzo, double distanza, Button azione, Button visualizzaProdotto) {
         this.nome = nome;
         this.indirizzo = indirizzo;
         this.distanza = distanza;
         this.azione = azione;
+        this.visualizzaProdotto = visualizzaProdotto;
     }
     
     // Getter per la TableView
@@ -23,4 +25,8 @@ public class DistributoreBin {
     }
 
     public Button getAzione() { return azione; }
+    
+    public Button getVisualizzaProdotto() {
+        return visualizzaProdotto;
+    }
 }
