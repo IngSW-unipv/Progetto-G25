@@ -8,8 +8,6 @@ public class ClienteDAO implements IClienteDAO {
 	private Connection connection;
 	private String schema;
 
-	
-	
 	public ClienteDAO() {
 		super();
 		this.schema = "progettog25";
@@ -17,7 +15,7 @@ public class ClienteDAO implements IClienteDAO {
 
 	public boolean esisteUsername(String username) {
 		connection = DBConnection.startConnection(connection, schema);
-		String query = "SELECT COUNT(*) FROM cliente WHERE username = '?' ";
+		String query = "SELECT COUNT(*) FROM cliente WHERE username = ? ";
 
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
@@ -37,7 +35,7 @@ public class ClienteDAO implements IClienteDAO {
 
 	public boolean esisteCliente(String email) {
 		connection = DBConnection.startConnection(connection, schema);
-		String query = "SELECT COUNT(*) FROM cliente WHERE email = '?' ";
+		String query = "SELECT COUNT(*) FROM cliente WHERE email = ? ";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, email);
@@ -81,7 +79,7 @@ public class ClienteDAO implements IClienteDAO {
 	@Override
 	public boolean verificaLogin(String username, String password) {
 		connection = DBConnection.startConnection(connection, schema);
-		String query = "SELECT * FROM cliente WHERE username = '?' and password = '?' ";
+		String query = "SELECT * FROM cliente WHERE username = ? and password = ? ";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, username);
@@ -98,46 +96,59 @@ public class ClienteDAO implements IClienteDAO {
 		return false;
 	}
 
-
 	@Override
 	public Cliente getCliente(String username, String password) {
-		 Cliente cliente = null;
-	        
-	        try {
-	        	connection = DBConnection.startConnection(connection, schema);
-	            String query = "SELECT * FROM cliente WHERE username = '?' AND password = '?' ";
-	            PreparedStatement stmt = connection.prepareStatement(query);
-	            stmt.setString(1, username);  
-	            stmt.setString(2, password);  
-	            ResultSet rs = stmt.executeQuery();
-	            
-	            if (rs.next()) {
-	            	Date dataNascitaSQL = rs.getDate("dataN");
-	            	 LocalDate dataNascita = dataNascitaSQL.toLocalDate();
-	            	
-	                cliente = new Cliente(
-	                    rs.getString("cf"),
-	                    rs.getString("nome"),
-	                    rs.getString("cognome"),
-	                    rs.getString("email"),
-	                    rs.getString("password"),
-	                    dataNascita,
-	                    rs.getString("username")
-	                    );
-	            }
-	            
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        } finally {
-	            DBConnection.closeConnection(connection);
-	        }
+		Cliente cliente = null;
 
-	        return cliente;
+		try {
+			connection = DBConnection.startConnection(connection, schema);
+			String query = "SELECT * FROM cliente WHERE username = ? AND password = ? ";
+			PreparedStatement stmt = connection.prepareStatement(query);
+			stmt.setString(1, username);
+			stmt.setString(2, password);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				Date dataNascitaSQL = rs.getDate("dataN");
+				LocalDate dataNascita = dataNascitaSQL.toLocalDate();
+
+				cliente = new Cliente(rs.getString("cf"), rs.getString("nome"), rs.getString("cognome"),
+						rs.getString("email"), rs.getString("password"), dataNascita, rs.getString("username"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeConnection(connection);
+		}
+
+		return cliente;
 	}
 
 	@Override
 	public boolean modificaProfilo(Cliente clienteModificato) {
-		// TODO Auto-generated method stub
+
+		try {
+			connection = DBConnection.startConnection(connection, schema);
+			String query = "UPDATE Cliente SET username = ?, nome = ?, cognome = ?, password = ? WHERE cf = ? ";
+			PreparedStatement stmt = connection.prepareStatement(query);
+
+			stmt.setString(1, clienteModificato.getUsername());
+			stmt.setString(2, clienteModificato.getNome());
+			stmt.setString(3, clienteModificato.getCognome());
+			stmt.setString(4, clienteModificato.getPassword());
+			stmt.setString(5, clienteModificato.getCf());
+
+			// Eseguo l'update e controllo se almeno una riga è stata modificata
+			int rowsUpdated = stmt.executeUpdate();
+			return rowsUpdated > 0;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeConnection(connection);
+		}
+
 		return false;
 	}
 

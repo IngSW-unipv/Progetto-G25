@@ -12,7 +12,5 @@ public interface IClienteDAO {
     public boolean modificaProfilo(Cliente clienteModificato);
     
 
-    
-    //public void modificaProfilo (String );
 }
 
