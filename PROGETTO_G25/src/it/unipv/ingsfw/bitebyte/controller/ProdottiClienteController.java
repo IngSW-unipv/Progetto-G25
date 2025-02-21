@@ -29,6 +29,7 @@ public class ProdottiClienteController {
 	 private Distributore distributoreCorrente; // Distributore corrente
 	 private StockDAO stockDAO = new StockDAO();
 	 private DistributoreDAO distributoreDAO = new DistributoreDAO();
+	 private boolean modalitaVisualizzazione = false;
 	    
 
     @FXML
@@ -120,6 +121,8 @@ public class ProdottiClienteController {
             sugarLevel.setText(String.valueOf(currentSugar));
         }
     }
+    
+
 
     public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
@@ -201,7 +204,6 @@ public class ProdottiClienteController {
                 statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
             }
         } else { 
-            // If quantity is 0, mark the product as "Esaurito"
             statusLabel.setText("Stato: Esaurito");
             statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         }
@@ -209,8 +211,16 @@ public class ProdottiClienteController {
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
-        Button selectButton = createSelectButton(stock);
-        box.getChildren().addAll(imageView, nameLabel, priceLabel, quantityLabel, statusLabel, spacer, selectButton);
+        // Aggiungi gli elementi nella sequenza: immagine, nome, prezzo, quantità, stato
+        box.getChildren().addAll(imageView, nameLabel, priceLabel, quantityLabel, statusLabel);
+
+        // Se non siamo in modalità visualizzazione, aggiungi il bottone sotto lo stato
+        if (!modalitaVisualizzazione) {
+            Button selectButton = createSelectButton(stock);
+            box.getChildren().add(selectButton);
+        }
+
+        box.getChildren().add(spacer);
         return box;
     }
 
@@ -233,6 +243,7 @@ public class ProdottiClienteController {
     
    */
     
+    /*
     public Button createSelectButton(Stock stock) {
         Button button;
         
@@ -250,6 +261,7 @@ public class ProdottiClienteController {
 
         return button;
     }
+    */
 
     public void handleSelect(Stock stock) {
         System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
@@ -316,6 +328,7 @@ public class ProdottiClienteController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/distributoriAlternativi.fxml"));
                 Parent root = loader.load();
                 DistributoriAlternativiController controller = loader.getController();
+                controller.setSearchQuery(nomeProdotto);
                 controller.setDistributori(distributori, distributoreCorrente);
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
@@ -327,7 +340,44 @@ public class ProdottiClienteController {
         
         }
     }
-}
+        
+        //parte nuova
+    public void setModalitaVisualizzazione(boolean visualizza) {
+        this.modalitaVisualizzazione = visualizza;
+        // Ricarica i prodotti in base al testo attuale del campo di ricerca
+        caricaProdotti(searchField.getText());
+    }
+        
+        // Imposta il campo di ricerca e ricarica i prodotti filtrati
+        public void setSearchQuery(String query) {
+            searchField.setText(query);
+            caricaProdotti(query);
+        }
+        
+        // Modifica il metodo createSelectButton per gestire la modalità visualizzazione
+        public Button createSelectButton(Stock stock) {
+            if (modalitaVisualizzazione) {
+                // In modalità visualizzazione, il bottone di selezione non deve essere attivo
+                Button button = new Button("Visualizza");
+                button.getStyleClass().add("select-button");
+                button.setDisable(true);
+                return button;
+            } else {
+                if (stock.getQuantitaDisp() == 0) {
+                    Button button = new Button("Visualizza distributori vicini");
+                    button.getStyleClass().add("select-button");
+                    button.setOnAction(e -> mostraDistributoriAlternativiByName(stock.getProdotto().getNome()));
+                    return button;
+                } else {
+                    Button button = new Button("Seleziona");
+                    button.getStyleClass().add("select-button");
+                    button.setOnAction(e -> handleSelect(stock));
+                    return button;
+                }
+            }
+        }
+    }
+
     
     /*
     public void mostraDistributoriAlternativiByName(String nomeProdotto) {
