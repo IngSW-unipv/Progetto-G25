@@ -33,7 +33,7 @@ public class StockDAO implements IStockDAO {
 
 	            while (rs.next()) {
 	                Prodotto prodotto = new Prodotto(
-	                    rs.getString("ID_Prodotto"),
+	                    rs.getInt("ID_Prodotto"),
 	                    rs.getString("Nome_p"),
 	                    rs.getBigDecimal("Prezzo"),
 	                    Categoria.valueOf(rs.getString("Categoria_P").replace(" ", "_").toUpperCase())
@@ -62,7 +62,7 @@ public class StockDAO implements IStockDAO {
 	        String query = "INSERT INTO stock_dettagli (ID_Inventario, ID_Prodotto, Q_disp, Qmax_inseribile, Stato) VALUES (?, ?, ?, ?, ?)";
 	        try (PreparedStatement stmt = connection.prepareStatement(query)) {
 	            stmt.setInt(1, stock.getIdInventario());
-	            stmt.setString(2, stock.getProdotto().getIdProdotto());
+	            stmt.setInt(2, stock.getProdotto().getIdProdotto());
 	            stmt.setInt(3, stock.getQuantitaDisp());
 	            stmt.setInt(4, stock.getQMaxInseribile());
 	            stmt.setString(5, stock.getStato());
@@ -107,6 +107,7 @@ public class StockDAO implements IStockDAO {
 	            DBConnection.closeConnection(connection);
 	        }
 	    }
+	    
 	    
 	    
 

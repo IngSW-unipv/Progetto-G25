@@ -2,6 +2,9 @@
 
 package it.unipv.ingsfw.bitebyte.dao;
 
+import it.unipv.ingsfw.bitebyte.filtri.CompositeFilter;
+import it.unipv.ingsfw.bitebyte.filtri.FilterByDisponibilità;
+import it.unipv.ingsfw.bitebyte.filtri.FilterByNome;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import it.unipv.ingsfw.bitebyte.utils.CalcolaDistanza;
@@ -10,6 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class DistributoreDAO implements IDistributoreDAO {
@@ -58,7 +62,7 @@ public class DistributoreDAO implements IDistributoreDAO {
         return distributore;
     }
 
-    @Override
+   /* @Override
     public List<Distributore> getAllDistributori() {
         connection = DBConnection.startConnection(connection, schema);
         String query = "SELECT * FROM distributore";
@@ -92,13 +96,88 @@ public class DistributoreDAO implements IDistributoreDAO {
         }
         return distributori;
     }
+    
+    */
+    
+    @Override
+    public List<Distributore> getAllDistributori() {
+        connection = DBConnection.startConnection(connection, schema);
+        String query = "SELECT * FROM distributore";
+        List<Distributore> distributori = new ArrayList<>();
 
-    public List<Distributore> getDistributoriVicini(int idDistributore, double maxDistanzaKm) {
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                Distributore distributore = new Distributore(
+                        rs.getInt("ID_Distributore"),
+                        rs.getString("Tipo_D"),
+                        rs.getString("Citta"),
+                        rs.getString("Via"),
+                        rs.getString("N_civico"),
+                        rs.getInt("ID_Inventario"),
+                        rs.getDouble("LAT"),
+                        rs.getDouble("LON")
+                );
+                List<Stock> stockList = stockDAO.getStockByInventario(distributore.getIdInventario());
+                distributore.setStockList(stockList);
+                distributori.add(distributore);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(connection);
+        }
+        return distributori;
+    }
+
+    /**
+     * Restituisce i distributori (della stessa tipologia) che possiedono almeno uno stock
+     * in cui il nome del prodotto contiene 'nomeProdotto' e la quantità disponibile è > 0.
+     * Viene escluso il distributore corrente.
+     * La lista è ordinata per distanza dal distributore corrente.
+     */
+    public List<Distributore> getDistributoriConProdottoDisponibileByName(int idDistributoreCorrente, String nomeProdotto) {
+        // Recupera il distributore corrente
+        Distributore corrente = getDistributoreById(idDistributoreCorrente);
+        if (corrente == null) return new ArrayList<>();
+
+        // Recupera tutti i distributori e filtra per tipologia ed escludi il corrente
+        List<Distributore> distributoriTipologia = getAllDistributori().stream()
+            .filter(d -> d.getTipo().equals(corrente.getTipo()) && d.getIdDistr() != corrente.getIdDistr())
+            .collect(Collectors.toList());
+
+        // Imposta il filtro composito: per nome e disponibilità
+        CompositeFilter compositeFilter = new CompositeFilter();
+        compositeFilter.addFilter(new FilterByNome(nomeProdotto));
+        compositeFilter.addFilter(new FilterByDisponibilità());
+
+        List<Distributore> distributoriDisponibili = new ArrayList<>();
+        for (Distributore d : distributoriTipologia) {
+            // Applica il filtro sulla lista degli stock di questo distributore
+            List<Stock> stockFiltrati = compositeFilter.applyFilter(d.getStockList());
+            if (!stockFiltrati.isEmpty()) {
+                d.setStockList(stockFiltrati); // Aggiorna la lista con gli stock filtrati
+                distributoriDisponibili.add(d);
+            }
+        }
+
+        // Ordina i distributori per distanza dal distributore corrente
+        distributoriDisponibili.sort(Comparator.comparingDouble(d ->
+            CalcolaDistanza.calcolaDistanza(corrente, d)
+        ));
+
+        return distributoriDisponibili;
+    }
+
+   /* public List<Distributore> getDistributoriVicini(int idDistributore, double maxDistanzaKm) {
         // Recupera il distributore corrente
         Distributore distributoreCorrente = getDistributoreById(idDistributore);
         if (distributoreCorrente == null) {
             return new ArrayList<>();
         }
+        
+        
 
         // Recupera tutti i distributori
         List<Distributore> tuttiDistributori = getAllDistributori();
@@ -123,6 +202,8 @@ public class DistributoreDAO implements IDistributoreDAO {
 
         return distributoriVicini;
     }
+    
+    */
     
     @Override
     public void addDistributore(Distributore distributore) {
@@ -195,5 +276,60 @@ public class DistributoreDAO implements IDistributoreDAO {
         Distributore distributore = getDistributoreById(idDistributore);
         return stockDAO.getStockByInventario(distributore.getIdInventario());
     }
+    
+    
+  /*  public List<Distributore> getDistributoriConProdottoDisponibileByName(int idDistributoreCorrente, String nomeProdotto) {
+        connection = DBConnection.startConnection(connection, schema);
+        List<Distributore> distributoriDisponibili = new ArrayList<>();
+
+        // Recupera il distributore corrente per ottenere il tipo
+        Distributore corrente = getDistributoreById(idDistributoreCorrente);
+        if (corrente == null) return distributoriDisponibili;
+        String tipoCorrente = corrente.getTipo();
+
+        String query = 
+        		
+        	    "SELECT d.*, s.ID_Prodotto, s.Q_disp " +  // Aggiungi ID_Prodotto e Q_disp
+        	    "FROM distributore d " +
+        	    "JOIN stock_dettagli s ON d.ID_Inventario = s.ID_Inventario " +
+        	    "JOIN prodotto p ON s.ID_Prodotto = p.ID_Prodotto " +
+        	    "WHERE LOWER(p.Nome) LIKE ? " +  // Usa Nome invece di Nome_p
+        	    "AND s.Q_disp > 0 " +
+        	    "AND d.Tipo_D = ? " +
+        	    "AND d.ID_Distributore != ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, "%" + nomeProdotto.toLowerCase() + "%");
+            stmt.setInt(2, idDistributoreCorrente);
+            stmt.setString(3, tipoCorrente);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Distributore distributore = new Distributore(
+                    rs.getInt("ID_Distributore"),
+                    rs.getString("Tipo_D"),
+                    rs.getString("Citta"),
+                    rs.getString("Via"),
+                    rs.getString("N_civico"),
+                    rs.getInt("ID_Inventario"),
+                    rs.getDouble("LAT"),
+                    rs.getDouble("LON")
+                );
+                // Associa gli stock del distributore
+                List<Stock> stockList = stockDAO.getStockByInventario(distributore.getIdInventario());
+                distributore.setStockList(stockList);
+                distributoriDisponibili.add(distributore);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(connection);
+        }
+
+        return distributoriDisponibili;
+    }
+    
+    */
 }
 

@@ -12,7 +12,7 @@ public class TestController extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         // Carica il file FXML (Assicurati che il percorso sia corretto)
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Prova.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/collegamentoDistributore.fxml"));
 
         // Carica la scena con il file FXML
         AnchorPane root = loader.load();

@@ -59,6 +59,7 @@ public class ProdottoController {
                 ProdottiClienteController prodClientController = loader.getController();
                 // Passa i dati necessari (ad es. l'ID inventario)
                 prodClientController.setIdInventario(distributore.getIdInventario());
+                prodClientController.setDistributoreCorrente(distributore);
                 
                 // Crea la nuova scena e una nuova finestra NON è STATA GIà CRESTA DALL'ALTRO CONTROLLERR??
                 Scene scene = new Scene(root);
