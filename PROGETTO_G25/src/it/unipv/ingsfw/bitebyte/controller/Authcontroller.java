@@ -3,6 +3,8 @@ package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.dao.ClienteDAO;
 
 import it.unipv.ingsfw.bitebyte.models.Cliente;
+import it.unipv.ingsfw.bitebyte.models.Sessione;
+
 import java.time.LocalDate;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,18 +39,12 @@ public class Authcontroller implements Initializable{
 	    @FXML private Label erroreRegEmail;
 	    @FXML private Label erroreRegPassword;					
 	    
-	    
-	    
 
 	    @FXML private Button pulsanteAccedi;
 	    @FXML private Button pulsanteRegistrati;
 	    @FXML private Button pulsanteVaiARegistrazione;
 	    @FXML private Button pulsanteVaiALogin;
 
-	    
-	    
-	    
-	    
 	    
 	    @Override
 	    public void initialize(URL location, ResourceBundle resources) {
@@ -70,21 +66,19 @@ public class Authcontroller implements Initializable{
 	        	switchScene(stage, "registration-view.fxml", "Registrazione");
 	        }
 	    }
-
 	    
 	    @FXML
 	    public void accedi() {
 	        String nomeUtente = usernameLogin.getText();
 	        String password = passwordLogin.getText();
-
 	        if (clienteDAO.verificaLogin(nomeUtente, password)) {
+	        	Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
 	        	erroreLogin.setText("Accesso effettuato con successo!");
 	        	erroreLogin.setTextFill(Color.GREEN);
 	        } else {
 	        	erroreLogin.setText("Nome utente o password errati!");
 	        	erroreLogin.setTextFill(Color.RED);
 	        }
-	        
 	        
 	    }
 
@@ -214,7 +208,7 @@ public class Authcontroller implements Initializable{
 	            e.printStackTrace();  // Questo mostrerà eventuali errori
 	        }
 	    }
-	    
+
 	    
 	    
 	    
