@@ -3,6 +3,8 @@ package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.dao.ClienteDAO;
 
 import it.unipv.ingsfw.bitebyte.models.Cliente;
+import it.unipv.ingsfw.bitebyte.models.Sessione;
+
 import java.time.LocalDate;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,18 +39,12 @@ public class Authcontroller implements Initializable{
 	    @FXML private Label erroreRegEmail;
 	    @FXML private Label erroreRegPassword;					
 	    
-	    
-	    
 
 	    @FXML private Button pulsanteAccedi;
 	    @FXML private Button pulsanteRegistrati;
 	    @FXML private Button pulsanteVaiARegistrazione;
 	    @FXML private Button pulsanteVaiALogin;
 
-	    
-	    
-	    //fx:id serve per poter estrapolare i dati e manipolarli nel codice Java
-	    
 	    
 	    @Override
 	    public void initialize(URL location, ResourceBundle resources) {
@@ -70,22 +66,19 @@ public class Authcontroller implements Initializable{
 	        	switchScene(stage, "registration-view.fxml", "Registrazione");
 	        }
 	    }
-
 	    
 	    @FXML
 	    public void accedi() {
 	        String nomeUtente = usernameLogin.getText();
 	        String password = passwordLogin.getText();
-
 	        if (clienteDAO.verificaLogin(nomeUtente, password)) {
-	        	Stage stage = (Stage) pulsanteAccedi.getScene().getWindow();
-	        	switchScene(stage, "collegamentoDistributore.fxml", "Distributori");
-                
+	        	Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
+	        	erroreLogin.setText("Accesso effettuato con successo!");
+	        	erroreLogin.setTextFill(Color.GREEN);
 	        } else {
-	        	showAlert("Errore", "Username o password errati");
-                return;
+	        	erroreLogin.setText("Nome utente o password errati!");
+	        	erroreLogin.setTextFill(Color.RED);
 	        }
-	        
 	        
 	    }
 
@@ -115,6 +108,7 @@ public class Authcontroller implements Initializable{
 	    // Controlla l'email in tempo reale mentre l'utente digita
 	    @FXML
 	    private void controllaEmail(KeyEvent evento) {
+	    	System.out.println("prova");
 	        String email = emailReg.getText();
 	        if (!emailFormatoValido(email)) {
 	        	erroreRegEmail.setText("L'email deve terminare con @universitadipavia.it");
@@ -125,7 +119,6 @@ public class Authcontroller implements Initializable{
 	    }
 
 	    // Controlla la password in tempo reale mentre l'utente digita
-	    @FXML
 	    private void controllaPassword(KeyEvent evento) {
 	    	String password = passwordReg.getText();
 	        if (!passwordValida(password)) {
@@ -138,6 +131,7 @@ public class Authcontroller implements Initializable{
 
 	    // Controlla se l'email è valida
 	    private boolean emailFormatoValido(String email) {
+	    	System.out.println(email);
 	        return email.endsWith("@universitadipavia.it");
 	    }
 
@@ -157,10 +151,8 @@ public class Authcontroller implements Initializable{
 	        alert.showAndWait();
 	    }
 	    
-	    @FXML
 	    public void controlloCampi() {
-	    	Stage stage = (Stage) pulsanteRegistrati.getScene().getWindow();
-	    	
+	    	System.out.println("Bottonepremuto!");
 	    	String cf = cfReg.getText().toUpperCase();
 	        String nomeUtente = usernameReg.getText();
 	        String email = emailReg.getText();
@@ -198,7 +190,7 @@ public class Authcontroller implements Initializable{
 	        clienteDAO.registraCliente(nuovoCliente);
 	        showAlert("Successo", "REGISTRAZIONE COMPLETATA!");
 	        
-	        switchScene(stage, "login-view.fxml", "Login");
+	        //switchScene("login-view.fxml", "Login");
 	        	        
 	    }
 	    
@@ -216,7 +208,26 @@ public class Authcontroller implements Initializable{
 	            e.printStackTrace();  // Questo mostrerà eventuali errori
 	        }
 	    }
+
 	    
+	    
+	    
+	    /*
+	    private void switchScene(String fxml, String title) {
+	    	System.out.println("/" + fxml);
+	        try {
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxml));
+	            Parent root = loader.load();
+	            Stage stage = (Stage) pulsanteAccedi.getScene().getWindow();
+	            stage.setTitle(title);
+	            stage.setScene(new Scene(root));
+	            stage.show();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    
+	*/    
 	    
 	
 }
