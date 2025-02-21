@@ -48,6 +48,8 @@
 /* Stile per il bottone conferma ordine */
 .conferma-ordine-button {
     -fx-background-color: #66cdaa;
+    -fx-border-color: black;
+    -fx-border-radius: 3px;
     -fx-text-fill: white;
     -fx-font-size: 16px;
     -fx-padding: 5px 10px;
@@ -56,6 +58,8 @@
 /* Stile per il bottone torna ai prodotti */
 .torna-ai-prodotti-button {
     -fx-background-color: #66cdaa;
+    -fx-border-color: black;
+    -fx-border-radius: 3px;
     -fx-text-fill: white;
     -fx-font-size: 16px;
     -fx-padding: 5px 10px;

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Carrello {
     private static Carrello instance;
-    private List<ItemOrdine> items;
+    private List<ItemCarrello> items;
 
     private Carrello() {
         items = new ArrayList<>();
@@ -26,8 +26,8 @@ public class Carrello {
         boolean prodottoEsistente = false;
         
         // Verifica se il prodotto è già presente nel carrello
-        for (ItemOrdine item : items) {
-            if (item.getFornitura().getProdotto().getIdProdotto() == fornitura.getProdotto().getIdProdotto() && item.getFornitura().getFornitore() == fornitura.getFornitore()) {
+        for (ItemCarrello item : items) {
+            if (item.getFornitura().getProdotto().getIdProdotto() == fornitura.getProdotto().getIdProdotto() && item.getFornitura().getFornitore().getIdFornitore() == fornitura.getFornitore().getIdFornitore() ) {
                 // Se il prodotto è già presente, aggiorna la quantità e il prezzo totale
                 item.incrementaQuantita(quantita);
                 prodottoEsistente = true;
@@ -37,15 +37,15 @@ public class Carrello {
 
         // Se il prodotto non è nel carrello, aggiungilo come nuovo
         if (!prodottoEsistente) {
-            items.add(new ItemOrdine(fornitura, quantita, prezzoTotale));
+            items.add(new ItemCarrello(fornitura, quantita, prezzoTotale));
         }
     }
     
-    public void rimuoviItem(ItemOrdine item) {
+    public void rimuoviItem(ItemCarrello item) {
         // Rimuove il primo elemento trovato che corrisponde all'item passato
-        Iterator<ItemOrdine> iterator = items.iterator();
+        Iterator<ItemCarrello> iterator = items.iterator();
         while (iterator.hasNext()) {
-            ItemOrdine currentItem = iterator.next();
+            ItemCarrello currentItem = iterator.next();
             if (currentItem.equals(item)) {
                 iterator.remove(); // Rimuove l'item
                 break; // Uscita dal ciclo dopo aver rimosso l'item
@@ -54,14 +54,14 @@ public class Carrello {
     }
 
     // Restituisci gli articoli nel carrello
-    public List<ItemOrdine> getItems() {
+    public List<ItemCarrello> getItems() {
         return items;
     }
 
     // Calcola il totale del carrello
     public BigDecimal calcolaTotale() {
         BigDecimal totale = BigDecimal.ZERO;
-        for (ItemOrdine item : items) {
+        for (ItemCarrello item : items) {
             totale = totale.add(item.getPrezzoTotale()); // Somma il prezzo totale di ogni ordine
         }
         return totale;

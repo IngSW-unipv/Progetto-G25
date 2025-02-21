@@ -2,12 +2,12 @@ package it.unipv.ingsfw.bitebyte.models;
 
 import java.math.BigDecimal;
 
-public class ItemOrdine {
+public class ItemCarrello {
     private Fornitura fornitura;  // Il fornitore e il prodotto
     private int quantita;         // La quantità del prodotto ordinato
     private BigDecimal prezzoTotale; // Il prezzo totale (quantità * prezzo unitario)
 
-    public ItemOrdine(Fornitura fornitura, int quantita, BigDecimal prezzoTotale) {
+    public ItemCarrello(Fornitura fornitura, int quantita, BigDecimal prezzoTotale) {
         this.fornitura = fornitura;
         this.quantita = quantita;
         this.prezzoTotale = prezzoTotale;

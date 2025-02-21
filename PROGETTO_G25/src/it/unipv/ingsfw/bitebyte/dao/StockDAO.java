@@ -59,6 +59,55 @@ public class StockDAO implements IStockDAO {
 	        return stocks;
 	    }
 	    
+	    
+	    
+	    public ArrayList<Stock> getStockByProdotto(int idProdotto) {
+	        connection = DBConnection.startConnection(connection, schema);
+
+	        String query = "SELECT s.ID_Inventario, s.Q_disp, s.Qmax_inseribile, s.Stato, " +
+	                       "p.ID_Prodotto, p.Nome_p, p.Prezzo, p.Categoria_P " +
+	                       "FROM stock_dettagli s " +
+	                       "JOIN prodotto p ON s.ID_Prodotto = p.ID_Prodotto " +
+	                       "WHERE s.ID_Prodotto = ? " +
+	                       "ORDER BY s.ID_Inventario";
+
+	        ArrayList<Stock> stocks = new ArrayList<>();
+
+	        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+	            stmt.setInt(1, idProdotto);
+	            ResultSet rs = stmt.executeQuery();
+
+	            while (rs.next()) {
+	                Prodotto prodotto = new Prodotto(
+	                    rs.getInt("ID_Prodotto"),
+	                    rs.getString("Nome_p"),
+	                    rs.getBigDecimal("Prezzo"),
+	                    Categoria.valueOf(rs.getString("Categoria_P").replace(" ", "_").toUpperCase())
+	                );
+
+	                Stock stock = new Stock(
+	                    rs.getInt("ID_Inventario"),
+	                    rs.getInt("Q_disp"),
+	                    rs.getInt("Qmax_inseribile"),
+	                    rs.getString("Stato"),
+	                    prodotto
+	                );
+
+	                stocks.add(stock);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            DBConnection.closeConnection(connection);
+	        }
+
+	        return stocks;
+	    }
+	    
+	    
+	    
+	    
+	    
 	    @Override
 	    public void addStock(Stock stock) {
 	        connection = DBConnection.startConnection(connection, schema);
@@ -83,10 +132,11 @@ public class StockDAO implements IStockDAO {
 	    @Override
 	    public void updateStock(Stock stock) {
 	        connection = DBConnection.startConnection(connection, schema);
-	        String query = "UPDATE stock_dettagli SET Q_disp = ?  WHERE ID_Inventario = ?";
+	        String query = "UPDATE stock_dettagli SET Q_disp = ? WHERE ID_Inventario = ? AND ID_Prodotto = ?";
 	        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-	            stmt.setInt(1, stock.getQuantitaDisp());           
+	            stmt.setInt(1, stock.getQuantitaDisp());  // Aggiorniamo la quantità disponibile
 	            stmt.setInt(2, stock.getIdInventario());
+	            stmt.setInt(3, stock.getProdotto().getIdProdotto());  // Aggiunto ID del prodotto
 	            stmt.executeUpdate();
 	        } catch (SQLException e) {
 	            e.printStackTrace();
