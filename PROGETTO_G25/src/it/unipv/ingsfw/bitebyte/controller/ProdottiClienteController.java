@@ -30,7 +30,6 @@ public class ProdottiClienteController {
 	 private StockDAO stockDAO = new StockDAO();
 	 private DistributoreDAO distributoreDAO = new DistributoreDAO();
 	 private boolean modalitaVisualizzazione = false;
-	 private AcquistoController acquistoController; 
 	 
     @FXML
     private FlowPane prodottiContainer;
@@ -86,7 +85,7 @@ public class ProdottiClienteController {
     // Inizializzazione della scena
     public void initialize() {
     	
-    	this.acquistoController = new AcquistoController();	//Controller per passare all'acquisto
+    	
         prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
         prodottiContainer.setPrefWrapLength(600);
 
@@ -169,10 +168,7 @@ public class ProdottiClienteController {
         }
     }
     
-    public void setAcquistoController(AcquistoController controller) {
-        this.acquistoController = controller;
-        System.out.println("acquistoController inizializzato: " + (acquistoController != null));
-    }
+
     
     private VBox createProductBox(Stock stock) {
         VBox box = new VBox(5);
@@ -223,14 +219,27 @@ public class ProdottiClienteController {
         // Se non siamo in modalità visualizzazione, aggiungi il bottone sotto lo stato
         if (!modalitaVisualizzazione) {
             Button purchaseButton = createProductButton(stock);  // Nuovo nome del metodo
-            purchaseButton.setOnAction(e -> {
-                if (acquistoController != null) {
-                	
-                    acquistoController.setSelectedStock(stock);  // Chiama il metodo del controller
-                }else {
-                    System.err.println("Errore: acquistoController è null! Assicurati di inizializzarlo correttamente.");
-                }
-       
+            purchaseButton.setOnAction(e -> { 
+            	try {
+                // Carica la schermata di acquisto
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/acquisto-view.fxml"));
+                AcquistoController acquistoController = new AcquistoController(); // Crea il controller
+                loader.setController(acquistoController); // Imposta il controller
+                VBox vbox = loader.load(); // Carica il file FXML
+
+                // Passa lo stock al controller
+                acquistoController.setSelectedStock(stock);
+
+                // Crea una scena per la schermata di acquisto
+                Scene acquistoScene = new Scene(vbox);
+                Stage primaryStage = (Stage) purchaseButton.getScene().getWindow(); // Usa la finestra corrente
+                primaryStage.setScene(acquistoScene); // Imposta la scena
+                primaryStage.setTitle("Acquisto Prodotto");
+                primaryStage.show(); // Mostra la finestra
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             });
         
         box.getChildren().add(purchaseButton);    
