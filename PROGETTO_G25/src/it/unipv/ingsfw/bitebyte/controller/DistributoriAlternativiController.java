@@ -2,7 +2,7 @@ package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.utils.CalcolaDistanza;
-import it.unipv.ingsfw.bitebyte.view.DistributoreWrapper;
+import it.unipv.ingsfw.bitebyte.view.DistributoreBin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,39 +16,41 @@ import java.util.List;
 public class DistributoriAlternativiController {
 
     @FXML
-    private TableView<DistributoreWrapper> distributoriTable;
+    private TableView<DistributoreBin> distributoriTable;
     @FXML
-    private TableColumn<DistributoreWrapper, String> nomeColumn;
+    private TableColumn<DistributoreBin, String> nomeColumn;
     @FXML
-    private TableColumn<DistributoreWrapper, String> indirizzoColumn;
+    private TableColumn<DistributoreBin, String> indirizzoColumn;
     @FXML
-    private TableColumn<DistributoreWrapper, Double> distanzaColumn;
+    private TableColumn<DistributoreBin, Double> distanzaColumn;
     @FXML
-    private TableColumn<DistributoreWrapper, Button> azioneColumn;
+    private TableColumn<DistributoreBin, Button> azioneColumn;
     
     // Il distributore corrente serve per calcolare la distanza
     private Distributore distributoreCorrente;
 
     public void setDistributori(List<Distributore> distributori, Distributore distributoreCorrente) {
         this.distributoreCorrente = distributoreCorrente;
-        ObservableList<DistributoreWrapper> data = FXCollections.observableArrayList();
+        ObservableList<DistributoreBin> data = FXCollections.observableArrayList();
         for (Distributore d : distributori) {
             double distanza = CalcolaDistanza.calcolaDistanza(distributoreCorrente, d);
-            // Crea un pulsante "Vai" per ogni riga
+            
+            // Crea il pulsante "Vai" per aprire Google Maps
             Button btnVai = new Button("Vai");
             btnVai.setOnAction((ActionEvent event) -> {
                 apriGoogleMaps(d.getLat(), d.getLon());
             });
-            // Crea il wrapper con le informazioni
-            data.add(new DistributoreWrapper(
-                    d.getTipo(), // oppure un nome/descrizione che preferisci
-                    d.getVia() + " " + d.getNCivico(),
-                    distanza,
-                    btnVai
+            
+            data.add(new DistributoreBin(
+                String.valueOf(d.getIdDistr()),        // Nome/ID del distributore
+                d.getVia() + " " + d.getNCivico(),         // Indirizzo
+                distanza,                                  // Distanza
+                btnVai                                     // Pulsante per aprire Google Maps
             ));
         }
         distributoriTable.setItems(data);
     }
+
     
     private void apriGoogleMaps(double lat, double lon) {
         try {

@@ -26,7 +26,10 @@ import java.util.stream.Collectors;
 
 public class ProdottiClienteController {
 
-    private StockDAO stockDAO = new StockDAO();
+	 private Distributore distributoreCorrente; // Distributore corrente
+	 private StockDAO stockDAO = new StockDAO();
+	 private DistributoreDAO distributoreDAO = new DistributoreDAO();
+	    
 
     @FXML
     private FlowPane prodottiContainer;
@@ -58,7 +61,6 @@ public class ProdottiClienteController {
     @FXML
     private RadioButton priceDesc;
 
-    // Controlli per lo zucchero
     @FXML
     private HBox sugarControls;
     @FXML
@@ -72,29 +74,34 @@ public class ProdottiClienteController {
 
     private int idInventario;
 
+    
+ // In ProdottiClienteController
+    public void setDistributoreCorrente(Distributore distributore) {
+        this.distributoreCorrente = distributore;
+        if (distributore != null) {
+            setIdInventario(distributore.getIdInventario()); // Imposta l'ID inventario automaticamente
+        }
+    }
+    // Inizializzazione della scena
     public void initialize() {
+    	
         prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
         prodottiContainer.setPrefWrapLength(600);
 
-        // Configura il comportamento del ScrollPane (già impostato tramite AnchorPane in FXML)
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
             prodottiContainer.setPrefWrapLength(newVal.doubleValue() - 20);
         });
 
         // Listener per il campo di ricerca
         searchField.textProperty().addListener((obs, oldVal, newVal) -> caricaProdotti(newVal));
-
-        // Nascondi il pannello dei filtri inizialmente
-        filterPanel.setVisible(false);
+        searchField.setFocusTraversable(false);
+        filterPanel.setVisible(false); // Nasconde inizialmente i filtri
         
-        // Popola la ComboBox delle categorie (senza la voce "Tutte")
         categoryFilter.setItems(javafx.collections.FXCollections.observableArrayList(
             "Bevanda Calda", "Bevanda Fredda", "Snack Salato", "Snack Dolce"
         ));
-        
-        // I controlli dello zucchero sono nascosti di default.
-        sugarControls.setVisible(false);
-        
+
+        sugarControls.setVisible(false); // I controlli dello zucchero sono nascosti
         sugarLevel.setText(String.valueOf(currentSugar));
         btnSugarMinus.setOnAction(e -> handleSugarMinus());
         btnSugarPlus.setOnAction(e -> handleSugarPlus());
@@ -108,16 +115,14 @@ public class ProdottiClienteController {
     }
 
     private void handleSugarPlus() {
-        if(currentSugar < 5) { // Massimo 5 zuccheri
+        if(currentSugar < 5) { 
             currentSugar++;
             sugarLevel.setText(String.valueOf(currentSugar));
         }
-
     }
 
     public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
-        // Mostra i controlli dello zucchero solo per i distributori 1, 3, 5
         if (idInventario == 1 || idInventario == 3 || idInventario == 5) {
             sugarControls.setVisible(true);
         } else {
@@ -128,31 +133,35 @@ public class ProdottiClienteController {
 
     public void caricaProdotti(String query) {
         List<Stock> stocks = stockDAO.getStockByInventario(idInventario);
-        // Applica il filtro per il nome del prodotto
-        stocks = new FilterByNome(query).applyFilter(stocks);
-     // Se non trovi alcuno stock nel distributore corrente e la query non è vuota, chiedi all'utente se desidera cercare distributori alternativi
-        if (!query.trim().isEmpty() && stocks.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Prodotto non disponibile");
-            alert.setHeaderText(null);
-            alert.setContentText("Il prodotto \"" + query + "\" non è disponibile in questo distributore.\nVuoi cercare distributori alternativi?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                cercaDistributoriAlternativi(query);
-                return; // Esci da questo metodo per evitare di aggiornare la lista con zero stock
-            }
+        List<Stock> stocksFiltrati = new FilterByNome(query).applyFilter(stocks);
+        prodottiContainer.getChildren().clear();
+
+        if (stocksFiltrati.isEmpty() && !query.trim().isEmpty()) {
+            // Nessun prodotto trovato nel distributore corrente:
+            Label info = new Label("Prodotto non disponibile in questo distributore.");
+            Button btnVisualizza = new Button("Visualizza distributori vicini");
+            btnVisualizza.setOnAction(e -> mostraDistributoriAlternativiByName(query));
+            prodottiContainer.getChildren().addAll(info, btnVisualizza);
+        } else {
+            aggiornaProdotti(stocksFiltrati);
         }
-        
-        aggiornaProdotti(stocks);
     }
+
     
- 
+    
 
     private void aggiornaProdotti(List<Stock> stocks) {
-        prodottiContainer.getChildren().clear(); 
-        for (Stock stock : stocks) {
-            VBox productBox = createProductBox(stock);
-            prodottiContainer.getChildren().add(productBox);
+        prodottiContainer.getChildren().clear();
+
+        if (stocks.isEmpty()) {
+            Label noResultsLabel = new Label("Nessun prodotto trovato.");
+            noResultsLabel.getStyleClass().add("product-name");
+            prodottiContainer.getChildren().add(noResultsLabel);
+        } else {
+            for (Stock stock : stocks) {
+                VBox productBox = createProductBox(stock);
+                prodottiContainer.getChildren().add(productBox);
+            }
         }
     }
 
@@ -183,10 +192,16 @@ public class ProdottiClienteController {
 
         Label statusLabel = new Label("Stato: " + stock.getStato());
         statusLabel.getStyleClass().add("product-status");
-        if (stock.getQuantitaDisp() > 5) {
-            statusLabel.setText("Stato: Disponibile");
-            statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-        } else if (stock.getQuantitaDisp() == 0) {
+        if (stock.getQuantitaDisp() > 0) {
+            if (stock.getStato().equals("Disponibile")) {
+                statusLabel.setText("Stato: Disponibile");
+                statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+            } else if (stock.getStato().equals("Non disponibile")) {
+                statusLabel.setText("Stato: Non disponibile");
+                statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            }
+        } else { 
+            // If quantity is 0, mark the product as "Esaurito"
             statusLabel.setText("Stato: Esaurito");
             statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         }
@@ -199,6 +214,7 @@ public class ProdottiClienteController {
         return box;
     }
 
+    /*
     public Button createSelectButton(Stock stock) {
         Button button = new Button("Seleziona");
         button.getStyleClass().add("select-button");
@@ -206,13 +222,43 @@ public class ProdottiClienteController {
         return button;
     }
 
+ 
     public void handleSelect(Stock stock) {
         System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
+        if (stock.getQuantitaDisp() == 0) {
+            // Passa il nome del prodotto anziché l'ID
+            mostraDistributoriAlternativiByName(stock.getProdotto().getNome());
+        }
     }
+    
+   */
+    
+    public Button createSelectButton(Stock stock) {
+        Button button;
+        
+        if (stock.getQuantitaDisp() == 0) {
+            // Se il prodotto è esaurito, crea il pulsante "Visualizza distributori vicini"
+            button = new Button("Visualizza distributori vicini");
+            button.getStyleClass().add("select-button");
+            button.setOnAction(e -> mostraDistributoriAlternativiByName(stock.getProdotto().getNome()));
+        } else {
+            // Se il prodotto è disponibile, crea il pulsante "Seleziona"
+            button = new Button("Seleziona");
+            button.getStyleClass().add("select-button");
+            button.setOnAction(e -> handleSelect(stock));
+        }
+
+        return button;
+    }
+
+    public void handleSelect(Stock stock) {
+        System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
+        // Aggiungi logica per il prodotto disponibile (es. aggiungere al carrello o altro)
+    }
+
 
     @FXML
     public void handleFilter(ActionEvent event) {
-        // Alterna la visibilità del pannello dei filtri
         filterPanel.setVisible(!filterPanel.isVisible());
     }
 
@@ -225,11 +271,9 @@ public class ProdottiClienteController {
             stocks = new FilterByNome(searchQuery).applyFilter(stocks);
         }
 
-        // Filtra per categoria
         String selectedCategory = categoryFilter.getValue();
         if (selectedCategory != null && !selectedCategory.isEmpty()) {
             try {
-                // Esempio: "Bevanda Calda" -> "BEVANDA_CALDA"
                 Categoria categoriaEnum = Categoria.valueOf(selectedCategory.toUpperCase().replace(" ", "_"));
                 stocks = new FilterByCategoria(categoriaEnum).applyFilter(stocks);
             } catch (IllegalArgumentException e) {
@@ -237,12 +281,10 @@ public class ProdottiClienteController {
             }
         }
 
-        // Filtra per disponibilità
         if (availabilityFilter.isSelected()) {
             stocks = stocks.stream().filter(stock -> stock.getQuantitaDisp() > 0).collect(Collectors.toList());
         }
 
-        // Filtra per prezzo
         if (priceAsc.isSelected()) {
             stocks.sort((s1, s2) -> s1.getProdotto().getPrezzo().compareTo(s2.getProdotto().getPrezzo()));
         } else if (priceDesc.isSelected()) {
@@ -251,7 +293,78 @@ public class ProdottiClienteController {
 
         aggiornaProdotti(stocks);
     }
+
+    
+    public void mostraDistributoriAlternativiByName(String nomeProdotto) {
+        if(distributoreCorrente == null) {
+            System.err.println("distributoreCorrente è null! Assicurati di impostarlo correttamente.");
+            return;
+        }
+        
+        // Utilizza il nuovo metodo DAO che sfrutta il composite filter
+        List<Distributore> distributori = distributoreDAO.getDistributoriConProdottoDisponibileByName(
+                distributoreCorrente.getIdDistr(), nomeProdotto);
+
+        if (distributori.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Prodotto non disponibile");
+            alert.setHeaderText(null);
+            alert.setContentText("Non ci sono distributori alternativi disponibili per questo prodotto.");
+            alert.showAndWait();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/distributoriAlternativi.fxml"));
+                Parent root = loader.load();
+                DistributoriAlternativiController controller = loader.getController();
+                controller.setDistributori(distributori, distributoreCorrente);
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Distributori Alternativi");
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        
+        }
+    }
 }
+    
+    /*
+    public void mostraDistributoriAlternativiByName(String nomeProdotto) {
+        if(distributoreCorrente == null) {
+            System.err.println("distributoreCorrente è null! Assicurati di impostarlo correttamente.");
+            return;
+        }
+        
+        DistributoreDAO distributoreDAO = new DistributoreDAO();
+        List<Distributore> distributori = distributoreDAO.getDistributoriConProdottoDisponibileByName(
+                distributoreCorrente.getIdDistr(), nomeProdotto);
+
+        if (distributori.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Prodotto non disponibile");
+            alert.setHeaderText(null);
+            alert.setContentText("Non ci sono distributori alternativi disponibili per questo prodotto.");
+            alert.showAndWait();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/distributoriAlternativi.fxml"));
+                Parent root = loader.load();
+                DistributoriAlternativiController controller = loader.getController();
+                controller.setDistributori(distributori, distributoreCorrente);
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Distributori Alternativi");
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+*/
+
+
+
 
 
 
