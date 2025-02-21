@@ -78,8 +78,9 @@ public class Authcontroller implements Initializable{
 	        String password = passwordLogin.getText();
 
 	        if (clienteDAO.verificaLogin(nomeUtente, password)) {
-	        	showAlert("Successo!", "Log in effettuato");
-                return;
+	        	Stage stage = (Stage) pulsanteAccedi.getScene().getWindow();
+	        	switchScene(stage, "collegamentoDistributore.fxml", "Distributori");
+                
 	        } else {
 	        	showAlert("Errore", "Username o password errati");
                 return;

@@ -30,8 +30,8 @@ public class ProdottiClienteController {
 	 private StockDAO stockDAO = new StockDAO();
 	 private DistributoreDAO distributoreDAO = new DistributoreDAO();
 	 private boolean modalitaVisualizzazione = false;
-	    
-
+	 private AcquistoController acquistoController; 
+	 
     @FXML
     private FlowPane prodottiContainer;
 
@@ -86,6 +86,7 @@ public class ProdottiClienteController {
     // Inizializzazione della scena
     public void initialize() {
     	
+    	this.acquistoController = new AcquistoController();	//Controller per passare all'acquisto
         prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
         prodottiContainer.setPrefWrapLength(600);
 
@@ -167,7 +168,12 @@ public class ProdottiClienteController {
             }
         }
     }
-
+    
+    public void setAcquistoController(AcquistoController controller) {
+        this.acquistoController = controller;
+        System.out.println("acquistoController inizializzato: " + (acquistoController != null));
+    }
+    
     private VBox createProductBox(Stock stock) {
         VBox box = new VBox(5);
         box.getStyleClass().add("product-box");
@@ -216,14 +222,31 @@ public class ProdottiClienteController {
 
         // Se non siamo in modalità visualizzazione, aggiungi il bottone sotto lo stato
         if (!modalitaVisualizzazione) {
-            Button selectButton = createSelectButton(stock);
-            box.getChildren().add(selectButton);
-        }
-
+            Button purchaseButton = createProductButton(stock);  // Nuovo nome del metodo
+            purchaseButton.setOnAction(e -> {
+                if (acquistoController != null) {
+                	
+                    acquistoController.setSelectedStock(stock);  // Chiama il metodo del controller
+                }else {
+                    System.err.println("Errore: acquistoController è null! Assicurati di inizializzarlo correttamente.");
+                }
+       
+            });
+        
+        box.getChildren().add(purchaseButton);    
         box.getChildren().add(spacer);
+        
+        }
         return box;
     }
-
+    
+    private Button createProductButton(Stock stock) {
+        Button button = new Button("Aggiungi al carrello");
+        button.getStyleClass().add("product-button");
+        button.setPrefWidth(200);
+        // Aggiungi altre configurazioni del bottone, se necessario
+        return button;
+    }
     /*
     public Button createSelectButton(Stock stock) {
         Button button = new Button("Seleziona");
@@ -412,9 +435,3 @@ public class ProdottiClienteController {
         }
     }
 */
-
-
-
-
-
-
