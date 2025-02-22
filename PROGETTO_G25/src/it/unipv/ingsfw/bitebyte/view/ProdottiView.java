@@ -83,15 +83,19 @@ public class ProdottiView {
         carrelloButton = new Button("🛒 Carrello");
         carrelloButton.getStyleClass().add("carrello-button");
         carrelloButton.setOnAction(e -> controller.apriCarrello());
-
+        
+        // Bottone storico spedizioni
+        Button storicoSpedizioniButton = new Button("Storico Spedizioni");
+        storicoSpedizioniButton.getStyleClass().add("storico-spedizioni-button");
+        storicoSpedizioniButton.setOnAction(e -> controller.apriStoricoSpedizioni());
+        
         // 🔻 Dropdown per selezione Distributore
         distributoreDropdown = new ComboBox<>();
         distributoreDropdown.setPrefHeight(90);
         distributoreDropdown.setPromptText("Seleziona Distributore");
         distributoreDropdown.getStyleClass().add("distributore-dropdown");
 
-        // Carica distributori dal database
-        caricaDistributori();
+       
 
         // Quando cambia il distributore, aggiorniamo i prodotti
         distributoreDropdown.setOnAction(e -> {
@@ -101,13 +105,13 @@ public class ProdottiView {
             }
         });
 
-        bottomBar.getChildren().addAll(carrelloButton, distributoreDropdown);
+        bottomBar.getChildren().addAll(carrelloButton, distributoreDropdown, storicoSpedizioniButton);
         return bottomBar;
     }
 
-    private void caricaDistributori() {
-        DistributoreDAO distributoreDAO = new DistributoreDAO();
-        List<Distributore> distributori = distributoreDAO.getAllDistributori();
+ // Questo metodo verrà chiamato dal controller per passare la lista di distributori
+    public void setDistributori(List<Distributore> distributori) {
+        distributoreDropdown.getItems().clear();
         distributoreDropdown.getItems().addAll(distributori);
     }
 
@@ -156,7 +160,7 @@ public class ProdottiView {
 
         Label statusLabel = new Label();
         statusLabel.getStyleClass().add("product-status");
-        if (stock.getQuantitaDisp() > 5) {
+        if (stock.getQuantitaDisp() > 0) {
             statusLabel.setText("Stato: Disponibile");
             statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
         } else if (stock.getQuantitaDisp() == 0) {

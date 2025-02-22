@@ -1,18 +1,23 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.business.SupplyContext;
+import it.unipv.ingsfw.bitebyte.dao.DistributoreDAO;
 import it.unipv.ingsfw.bitebyte.dao.FornituraDAO;
+import it.unipv.ingsfw.bitebyte.dao.SpedizioneDAO;
 import it.unipv.ingsfw.bitebyte.dao.StockDAO;
 import it.unipv.ingsfw.bitebyte.models.Carrello;
+import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Fornitura;
 import it.unipv.ingsfw.bitebyte.models.ItemCarrello;
 import it.unipv.ingsfw.bitebyte.models.Stock;
+import it.unipv.ingsfw.bitebyte.models.Spedizione;
 import it.unipv.ingsfw.bitebyte.strategyforn.IDiscountStrategy;
 import it.unipv.ingsfw.bitebyte.strategyforn.DiscountFactory;
 import it.unipv.ingsfw.bitebyte.view.CarrelloView;
 import it.unipv.ingsfw.bitebyte.view.ModificaPrezzoView;
 import it.unipv.ingsfw.bitebyte.view.ProdottiView;
 import it.unipv.ingsfw.bitebyte.view.RifornimentoView;
+import it.unipv.ingsfw.bitebyte.view.StoricoSpedizioniView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
@@ -20,26 +25,42 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class GestionePController {
 
     private StockDAO stockDAO;
     private FornituraDAO fornituraDAO;
+    private SpedizioneDAO spedizioneDAO;
+    private DistributoreDAO distributoreDAO;
     private ProdottiView prodottiView;
     private int idInventario;
 
+    // Aggiungi questa variabile membro per carrelloView
+    private CarrelloView carrelloView;
+
     public GestionePController() {
         this.stockDAO = new StockDAO();
+        this.spedizioneDAO = new SpedizioneDAO();
         this.fornituraDAO = new FornituraDAO();
+        this.distributoreDAO = new DistributoreDAO();
         this.prodottiView = new ProdottiView(this); // Passiamo il controller alla view
+        caricaDistributori();  
     }
 
     public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
         caricaProdotti();
     }
-
+    
+ // Metodo per caricare i distributori
+    public void caricaDistributori() {
+        List<Distributore> distributori = distributoreDAO.getAllDistributori(); // Otteniamo i distributori
+        prodottiView.setDistributori(distributori); // Passiamo i distributori alla vista
+    }
+    
     public void caricaProdotti() {
         ArrayList<Stock> stocks = stockDAO.getStockByInventario(idInventario);
         prodottiView.aggiornaProdotti(stocks);
@@ -96,6 +117,7 @@ public class GestionePController {
 
                 // ✅ Aggiorna la vista del carrello subito
                 aggiornaVistaCarrello();
+                apriCarrello();
             }
         });
         rifornimentoView.mostra();
@@ -106,9 +128,18 @@ public class GestionePController {
         Carrello carrello = Carrello.getInstance();
 
         // Crea la vista del carrello (questa è un'altra view che mostrerà gli articoli nel carrello)
-        CarrelloView carrelloView = new CarrelloView(carrello, this);
+        carrelloView = new CarrelloView(carrello, this);
         carrelloView.aggiornaVistaCarrello();
         carrelloView.mostra();
+    }
+    
+    public void apriStoricoSpedizioni() {
+        // Recupera tutte le spedizioni dal DAO
+        ArrayList<Spedizione> spedizioni = spedizioneDAO.getAllSpedizioni();
+
+        // Crea la vista e passa le spedizioni
+        StoricoSpedizioniView storicoView = new StoricoSpedizioniView();
+        storicoView.mostra(spedizioni);
     }
 
     public void handleSostituzione(Stock stock) {
@@ -135,13 +166,20 @@ public class GestionePController {
 
     public void concludiOrdine() {
         Carrello carrello = Carrello.getInstance();
+        
+        String idSpedizione = generaIdSpedizione();
         // 1. Somma tutte le quantità totali per ogni prodotto nel carrello
         Map<Integer, Integer> quantitaTotalePerProdotto = new HashMap<>();
+        Map<Integer, BigDecimal> prezzoTotalePerProdotto = new HashMap<>();
 
+        
         for (ItemCarrello item : carrello.getItems()) {
             int idProdotto = item.getFornitura().getProdotto().getIdProdotto();
             int quantita = item.getQuantita();
+            BigDecimal prezzo = item.getPrezzoTotale();
+            
             quantitaTotalePerProdotto.put(idProdotto, quantitaTotalePerProdotto.getOrDefault(idProdotto, 0) + quantita);
+            prezzoTotalePerProdotto.put(idProdotto, prezzoTotalePerProdotto.getOrDefault(idProdotto, BigDecimal.ZERO).add(prezzo));
         }
 
         // 2. Per ogni prodotto nel carrello, distribuisci le quantità tra gli inventari
@@ -151,7 +189,6 @@ public class GestionePController {
 
             // 3. Ottieni gli stock (inventari) che contengono il prodotto
             ArrayList<Stock> stocks = stockDAO.getStockByProdotto(idProdotto);
-
             // 4. Distribuisci le quantità tra gli inventari disponibili
             for (Stock stock : stocks) {
                 // Calcoliamo la quantità che possiamo aggiungere all'inventario
@@ -171,8 +208,12 @@ public class GestionePController {
                 }
             }
         }
-
-        // Se vuoi, aggiungi la logica per confermare l'ordine o per altre azioni come la gestione del pagamento
+        
+        salvaSpedizione(idSpedizione, quantitaTotalePerProdotto, prezzoTotalePerProdotto);
+        carrello.svuota();
+        caricaProdotti();
+        aggiornaVistaCarrello();
+       
         System.out.println("Ordine concluso con successo!");
     }
 
@@ -192,8 +233,32 @@ public class GestionePController {
     // Metodo per aggiornare la vista del carrello
     public void aggiornaVistaCarrello() {
         Carrello carrello = Carrello.getInstance();
-        CarrelloView carrelloView = new CarrelloView(carrello, this);
-        carrelloView.aggiornaVistaCarrello();  // Ricarica la vista del carrello con i nuovi dati
-        carrelloView.mostra();  // Mostra la vista aggiornata
+
+        // Se la vista del carrello non è stata ancora creata o è stata svuotata, creala
+        if (carrelloView == null) {
+            carrelloView = new CarrelloView(carrello, this);
+            carrelloView.mostra();  // Mostra la vista
+        } else {
+            // Se esiste già, aggiornala
+            carrelloView.aggiornaVistaCarrello();  // Aggiorna la vista
+        }
     }
+    
+    private void salvaSpedizione(String idSpedizione,  Map<Integer, Integer> quantitaTotalePerProdotto, Map<Integer, BigDecimal> prezzoTotalePerProdotto) {
+    	for (Integer idProdotto : quantitaTotalePerProdotto.keySet()) {
+            spedizioneDAO.salvaSpedizione(idSpedizione, idProdotto, quantitaTotalePerProdotto.get(idProdotto), prezzoTotalePerProdotto.get(idProdotto));
+        }
+    }
+    
+    private String generaIdSpedizione() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random rand = new Random();
+        StringBuilder sb = new StringBuilder(5);
+        for (int i = 0; i < 5; i++) {
+            sb.append(chars.charAt(rand.nextInt(chars.length())));
+        }
+        return sb.toString();
+    }
+    
+    
 }

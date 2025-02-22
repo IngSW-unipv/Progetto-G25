@@ -1,0 +1,108 @@
+/* Stile per la finestra principale */
+.root {
+    -fx-background-color: #dc143c; /* Colore di sfondo crimson red */
+    -fx-font-family: "Arial", sans-serif; /* Font generico */
+}
+
+/* Stile per la ScrollPane */
+.scroll-pane {
+    -fx-background-color: #dc143c; /* Sfondo crimson red */
+    -fx-border-width: 0;
+}
+
+/* Stile per il layout VBox (contenitore principale) */
+.vbox {
+    -fx-background-color: #dc143c; /* Colore crimson red per il contenitore */
+    -fx-alignment: center;
+    -fx-spacing: 10px; /* Distanza tra gli elementi */
+    -fx-padding: 20px;
+    -fx-max-height: 100%; /* Limitare l'altezza della VBox */
+    -fx-vgrow: ALWAYS; /* Permette alla VBox di espandersi solo se necessario */
+}
+
+/* Stile per ciascun HBox che contiene la spedizione */
+.hbox {
+    -fx-alignment: center-left;
+    -fx-spacing: 15px; /* Distanza tra l'immagine e le informazioni */
+    -fx-padding: 10px;
+    -fx-background-color: #EEB729; /* Colore di sfondo giallo per le spedizioni */
+    -fx-border-color: #000000;
+    -fx-border-radius: 3px;
+    -fx-margin: 5px; /* Puoi rimuoverlo se vuoi evitare spazi extra */
+}
+
+/* Stile per l'immagine */
+.image-view {
+    -fx-preserve-ratio: true;
+    -fx-fit-height: 100px;
+    -fx-fit-width: 100px;
+    -fx-border-radius: 50%; 
+    -fx-background-color: #f0f0f0; 
+}
+
+/* Stile per la VBox delle informazioni */
+.vbox-info {
+    -fx-alignment: center-left;
+    -fx-spacing: 5px;
+}
+
+/* Stile per la label ID Spedizione */
+.id-spedizione-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #dc143c;
+    -fx-font-weight: bold;
+}
+
+/* Stile per la label ID Prodotto */
+.id-prodotto-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #222222;
+    -fx-font-weight: bold;
+}
+
+/* Stile per la label Quantità */
+.quantita-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+    -fx-font-weight: bold; 
+}
+
+/* Stile per la label Prezzo Totale */
+.prezzo-totale-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgb(0, 155, 0); 
+    -fx-font-weight: bold;
+}
+
+/* Stile per la label Data Spedizione */
+.data-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgb(20, 15, 232); /* Blu */
+    -fx-font-weight: bold;
+}
+
+/* Stile per il bottone */
+.button {
+    -fx-background-color: #66cdaa; /* Colore blu per il bottone */
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-color: black;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0.5, 0, 3);
+}
+
+.button:hover {
+    -fx-background-color: #2e8b57; /* Colore blu più scuro al passaggio del mouse */
+}
+
+/* Stile per la barra in fondo (bottomBar) */
+.bottom-bar {
+    -fx-background-color: #dc143c; /* Colore crimson red per la barra inferiore */
+    -fx-alignment: center;
+    -fx-padding: 10px 0; /* Spaziatura verticale ridotta */
+    -fx-min-height: 40px; /* Imposta un'altezza minima per il bottone */
+    -fx-pref-height: 40px; /* Imposta un'altezza preferita per la bottom-bar */
+    -fx-max-height: 40px; /* Impedisci l'espansione oltre l'altezza minima */
+}

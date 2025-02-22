@@ -56,7 +56,7 @@ public class CarrelloView {
 
         Button confermaOrdineButton = new Button("Concludi Ordine");
         confermaOrdineButton.getStyleClass().add("conferma-ordine-button");
-        confermaOrdineButton.setOnAction(e -> concludiOrdine());
+        confermaOrdineButton.setOnAction(e -> controller.concludiOrdine());
 
         Button tornaAiProdottiButton = new Button("Torna ai Prodotti");
         tornaAiProdottiButton.getStyleClass().add("torna-ai-prodotti-button");
@@ -64,13 +64,6 @@ public class CarrelloView {
 
         buttonBox.getChildren().addAll(tornaAiProdottiButton, confermaOrdineButton);
         rootLayout.getChildren().add(buttonBox);
-
-        // Aggiungi ScrollPane per la lista di articoli nel carrello
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(rootLayout);
-        scrollPane.setFitToWidth(true);  // Assicura che il contenuto si adatti alla larghezza
-        scrollPane.setStyle("-fx-background-color: transparent;");  // Rimuove lo sfondo trasparente
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Mostra sempre la barra di scorrimento verticale
     }
 
     private HBox creaRiquadroProdotto(ItemCarrello item) {
@@ -126,13 +119,6 @@ public class CarrelloView {
 
         // Ricarica la vista aggiornata
         aggiornaVistaCarrello();
-    }
-
-    private void concludiOrdine() {
-        // Implementa la logica per concludere l'ordine (ad esempio, inviare al sistema di spedizione)
-        System.out.println("Ordine confermato!");
-        carrello.svuota();  // Svuota il carrello dopo l'ordine
-        aggiornaVistaCarrello(); // Ricarica la vista del carrello vuoto
     }
 
     private void tornaAiProdotti() {

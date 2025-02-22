@@ -220,3 +220,30 @@
     -fx-background-color: #1e6f43; /* Verde ancora più scuro */
     -fx-text-fill: white;
 }
+
+.storico-spedizioni-button {
+    -fx-background-color: #66cdaa; /* Stesso colore del restock */
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-padding: 6px 12px;
+    -fx-min-height: 40px;
+    -fx-min-width: 120px;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+/* Effetto hover */
+.storico-spedizioni-button:hover {
+    -fx-background-color: #2e8b57; /* Verde più scuro */
+    -fx-border-color: #222222;
+}
+
+/* Effetto click */
+.storico-spedizioni-button:pressed {
+    -fx-background-color: #1e6f43;
+    -fx-border-color: #111111;
+}
