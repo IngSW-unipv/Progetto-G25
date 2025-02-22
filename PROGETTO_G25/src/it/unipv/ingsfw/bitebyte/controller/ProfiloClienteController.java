@@ -80,7 +80,6 @@ public class ProfiloClienteController {
 	}
 
 	// Metodo per verificare se nome o cognome sono validi
-
 	public boolean isNomeOCognomeValido(String nomeOCognome) {
 		if (nomeOCognome == null || nomeOCognome.trim().isEmpty()) {
 			return false; // Il nome/cognome non può essere nullo o vuoto
@@ -94,21 +93,22 @@ public class ProfiloClienteController {
 	}
 
 	// Metodo per verificare se password valida
-
 	public boolean isPasswordValida(String password) {
 		if (password == null) {
 			return false; // La password non può essere nulla
 		}
 
-		// controlla che la password abbia esattamente 8 caratteri con almeno un numero
-		// e almeno una maiuscola
-		String regex = "^(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8}$";
-
+		// controlla che la password abbia:
+	    // - Almeno 8 caratteri
+	    // - Almeno una lettera maiuscola
+	    // - Almeno un numero
+	    // - Almeno un carattere speciale
+	    String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,}$";
+		
 		return password.matches(regex);
 	}
-
+	
 	// Metodo per modificare il profilo del cliente.
-
 	public void modificaProfilo(String nuovoNome, String nuovoCognome, String nuovoUsername, String nuovaPassword) {
 
 		ClienteDAO clienteDAO = new ClienteDAO();
@@ -160,4 +160,16 @@ public class ProfiloClienteController {
 			System.out.println("Errore nell'aggiornamento del profilo.");
 		}
 	}
+	
+	// Metodo chiamato quando l'utente fa clic sul pulsante "Logout"
+    public void logout() {
+        Sessione.getInstance().logout();
+        mostraLogin();
+    }
+
+    // Metodo per mostrare la schermata di login
+    private void mostraLogin() {
+        System.out.println("Sei stato disconnesso. Torna alla schermata di login.");
+    }
+	
 }
