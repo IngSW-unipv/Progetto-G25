@@ -23,7 +23,7 @@ public class ViewPrSelected {
     private Label dynamicLabel;  // La label dinamica
 
     // Metodo per creare l'interfaccia grafica
-    public void creaInterfaccia(Stock stock, boolean modalitaVisualizzazione, Runnable onSelectAction) {
+    public void creaInterfaccia(Stock stock, boolean modalitaVisualizzazione, Runnable onSelectAction, Stage stage) {
         // Creazione della VBox per la disposizione verticale
         VBox vboxStock = new VBox(5);  // Spaziatura di 5 tra gli elementi
         vboxStock.getStyleClass().add("product-box");
@@ -46,35 +46,6 @@ public class ViewPrSelected {
         statusLabel = new Label();
         statusLabel.getStyleClass().add("product-status");
 
-
-        /*       // Imposta lo stato e lo stile
-        if (stock.getQuantitaDisp() > 0) {
-            if ("Disponibile".equals(stock.getStato())) {
-                statusLabel.setText("Stato: Disponibile");
-                statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-            } else {
-                statusLabel.setText("Stato: Non disponibile");
-                statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-            }
-        } else {
-            statusLabel.setText("Stato: Esaurito");
-            statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-        }
-
-        // Bottone per visualizzare o selezionare
-       selectButton = new Button();
-        if (modalitaVisualizzazione) {
-            selectButton.setText("Visualizza");
-            selectButton.setDisable(true);  // Disabilita il bottone in modalità visualizzazione
-        } else {
-            if (stock.getQuantitaDisp() == 0) {
-                selectButton.setText("Visualizza distributori vicini");
-            } else {
-                selectButton.setText("Seleziona");
-            }
-            selectButton.setOnAction(e -> onSelectAction.run());
-        }
-*/
         // Imposta l'immagine del prodotto
         File imageFile = new File("resources/immaginiDB/" + stock.getProdotto().getIdProdotto() + ".jpg");
         if (imageFile.exists()) {
@@ -85,17 +56,22 @@ public class ViewPrSelected {
 
         // Aggiungi tutti gli elementi alla VBox
         vboxStock.getChildren().addAll(imageView, nameLabel, priceLabel, quantityLabel);
-
+        
         // Crea la scena
+        // Crea una nuova scena senza controllare se esiste una scena precedente
         Scene scene = new Scene(vboxStock, 300, 350); // Dimensione della finestra
         scene.getStylesheets().add(getClass().getResource("/CSS/styles2.css").toExternalForm());
-        // Creazione dello stage (finestra)
-        Stage stage = new Stage();
         stage.setTitle("Dettagli Prodotto");
         stage.setScene(scene);
         stage.show();
+
+        // Forza il ricalcolo del layout
+        scene.getRoot().applyCss();
+        scene.getRoot().layout();
+        
+       
+
     }
 
-    // Metodo per aggiornare la label dinamica (per esempio, modificare il contenuto quando viene premuto un bottone)
-
+ 
 }

@@ -158,10 +158,12 @@ public class ProdottiClienteController {
 
         // Imposta modalitaVisualizzazione a true o false a seconda dei casi
         boolean modalitaVisualizzazione = false;
-
+        
+        Stage stage = (Stage) prodottiContainer.getScene().getWindow();
+        	
         // Ora chiama creaInterfaccia passando tutti e tre gli argomenti
         ViewPrSelected viewPrSelected = new ViewPrSelected();
-        viewPrSelected.creaInterfaccia(stock, modalitaVisualizzazione, onSelectAction);
+        viewPrSelected.creaInterfaccia(stock, modalitaVisualizzazione, onSelectAction, stage);
         
         // Passa il controllo alla vista per la creazione dell'interfaccia
      /*   
