@@ -5,9 +5,10 @@ import it.unipv.ingsfw.bitebyte.test.BancomatService;
 /**
  * Adapter per la gestione del pagamento tramite Bancomat.
  */
-public class BancomatPaymentAdapter implements IPaymentStrategy {
-	private final BancomatService bancomatService;
+public class BancomatPaymentAdapter implements IPaymentAdapter {
+	private final BancomatService bancomatService;	
 
+	// costruttore
 	public BancomatPaymentAdapter(BancomatService bancomatService) {
 		this.bancomatService = bancomatService;
 	}
@@ -15,8 +16,6 @@ public class BancomatPaymentAdapter implements IPaymentStrategy {
 	@Override
 	public boolean ricarica(double amount) {
 		if (amount >= 5 && amount <= 50) {
-
-			System.out.println("Ricarica di " + amount + "€ effettuata tramite Bancomat.");
 			return bancomatService.effettuaPagamento(amount);
 		}
 

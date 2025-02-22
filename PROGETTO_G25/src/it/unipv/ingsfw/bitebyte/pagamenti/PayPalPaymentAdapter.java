@@ -5,7 +5,7 @@ import it.unipv.ingsfw.bitebyte.test.PayPalService;
 /**
  * Adapter per la gestione del pagamento tramite PayPal.
  */
-public class PayPalPaymentAdapter implements IPaymentStrategy {
+public class PayPalPaymentAdapter implements IPaymentAdapter {
 
 	private final PayPalService payPalService;
 
@@ -16,7 +16,6 @@ public class PayPalPaymentAdapter implements IPaymentStrategy {
 	@Override
 	public boolean ricarica(double amount) {
 		if (amount >= 5 && amount <= 50) {
-			System.out.println("Ricarica di " + amount + "€ effettuata tramite PayPal.");
 			return payPalService.processaPagamento(amount);
 		}
 

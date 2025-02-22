@@ -5,7 +5,7 @@ package it.unipv.ingsfw.bitebyte.pagamenti;
  * per le diverse strategie di pagamento (es. Bancomat, PayPal).
  */
 
-public interface IPaymentStrategy {
+public interface IPaymentAdapter {
 
 	    /**
 	     * Metodo per effettuare la ricarica del portafoglio virtuale.
