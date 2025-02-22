@@ -145,37 +145,24 @@ public class ProdottiClienteController {
     }
 
     public void handleSelect(Stock stock) {
-        System.out.println("Prodotto selezionato1: " + stock.getProdotto().getNome());
-        AcquistoController acquistoController = new AcquistoController();
-        
-        // Passo lo stock (prodotto selezionato) al controller
+        System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
+
+        // Ottieni lo Stage attuale
+        Stage stageAttuale = (Stage) prodottiContainer.getScene().getWindow();
+
+        // Crea una nuova finestra per la schermata di dettaglio
+        Stage newStage = new Stage();
+
+        // Crea il controller dell'acquisto e gli passa il prodotto selezionato
+        AcquistoController acquistoController = new AcquistoController(stageAttuale);
         acquistoController.setStockSelezionato(stock);
-        
-        Runnable onSelectAction = () -> {
-            // Codice da eseguire quando il bottone viene premuto, ad esempio, navigare a un'altra vista
-            System.out.println("Prodotto selezionato!");
-        };
 
-        // Imposta modalitaVisualizzazione a true o false a seconda dei casi
-        boolean modalitaVisualizzazione = false;
-        
-        Stage stage = (Stage) prodottiContainer.getScene().getWindow();
-        Stage previousStage = (Stage) prodottiContainer.getScene().getWindow();
-        // Ora chiama creaInterfaccia passando tutti e tre gli argomenti
-        ViewPrSelected viewPrSelected = new ViewPrSelected();
-        viewPrSelected.creaInterfaccia(stock, modalitaVisualizzazione, onSelectAction, stage, previousStage);
-        
-        // Passa il controllo alla vista per la creazione dell'interfaccia
-     /*   
-        ViewPrSelected view = new ViewPrSelected();
-        view.creaInterfaccia(stock);*/
+        // Mostra la schermata con il prodotto selezionato
+        acquistoController.mostraInterfaccia(stock, newStage);
+
+        // Nasconde la finestra attuale per simulare il cambio schermata
+        stageAttuale.hide();
     }
-	
-        
-        
-        
-        // Logica per l'azione di selezione (es. aggiungere al carrello)
-
 
     @FXML
     public void handleFilter(ActionEvent event) {

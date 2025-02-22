@@ -1,13 +1,15 @@
 package it.unipv.ingsfw.bitebyte.view;
 
-import javafx.scene.layout.VBox;
+import it.unipv.ingsfw.bitebyte.controller.AcquistoController;
 import it.unipv.ingsfw.bitebyte.models.Stock;
+import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
@@ -19,68 +21,80 @@ public class ViewPrSelected {
     private Label nameLabel;
     private Label priceLabel;
     private Label quantityLabel;
-    private Label statusLabel;
-    private Button selectButton;
-    private Label dynamicLabel;  // La label dinamica
     private ImageView loadingGif; // Aggiunta per la GIF di loading
-    private Stage previousStage;  // Per gestire la finestra precedente
+    private Button selectButton;
 
     // Metodo per creare l'interfaccia grafica
-    public void creaInterfaccia(Stock stock, boolean modalitaVisualizzazione, Runnable onSelectAction, Stage stage, Stage previousStage) {
-        // Salvo il riferimento al precedente stage
-        this.previousStage = previousStage;
+    public VBox creaInterfaccia(Stock stock, AcquistoController controller, Stage newStage, Stage previousStage) {
+        VBox vboxStock = new VBox(5);
 
-        // Creazione della VBox per la disposizione verticale
-        VBox vboxStock = new VBox(5);  // Spaziatura di 5 tra gli elementi
         vboxStock.getStyleClass().add("product-box");
-
-        // Aggiungi una StackPane per gestire la GIF di loading
-        StackPane loadingPane = new StackPane();
-
+        
         // Caricamento della GIF di loading
         InputStream gifInputStream = getClass().getResourceAsStream("/gif/Loading_icon.gif");
         if (gifInputStream != null) {
             loadingGif = new ImageView(new Image(gifInputStream));
             loadingGif.setFitWidth(50);
             loadingGif.setFitHeight(50);
+            loadingGif.setStyle("-fx-background-color: red;"); // Aggiungi un colore di sfondo per testare visibilità
+            nascondiGif(); // La GIF è inizialmente nascosta
         } else {
-            System.out.println("Errore nel caricamento della GIF: il file non è stato trovato." + gifInputStream);
-        }
-
-        // Aggiungi la GIF se è stata caricata correttamente
-        if (loadingGif != null) {
-            loadingPane.getChildren().add(loadingGif);
+            System.out.println("La GIF non è stata trovata!");
         }
 
         // Inizializza i nodi
         imageView = new ImageView();
-        imageView.setFitWidth(120);  // Larghezza fissa
-        imageView.setFitHeight(120); // Altezza fissa
-        imageView.setPreserveRatio(true);  // Mantiene la proporzione
+        imageView.setFitWidth(120);  
+        imageView.setFitHeight(120);
+        imageView.setPreserveRatio(true);  
 
         nameLabel = new Label(stock.getProdotto().getNome());
-        nameLabel.getStyleClass().add("product-name");
-
+        nameLabel.getStyleClass().add("product-name"); 
+        
         priceLabel = new Label(String.format("€ %.2f", stock.getProdotto().getPrezzo()));
         priceLabel.getStyleClass().add("product-price");
-
+        
         quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
-        quantityLabel.getStyleClass().add("product-quantity");
+        
+        Button backButton = new Button("Torna indietro");
+        backButton.setOnAction(e -> controller.tornaIndietro(newStage));  // Qui associ il metodo del controller
 
-        statusLabel = new Label();
-        statusLabel.getStyleClass().add("product-status");
+        // Bottone Seleziona
+        selectButton = new Button("Seleziona");
 
-        // Aggiungi il bottone Torna Indietro
-        Button backButton = new Button("Torna Indietro");
-        backButton.setOnAction(e -> {
-            // Chiudi la finestra attuale
-            stage.close();
-            // Mostra la finestra precedente
-            if (previousStage != null) {
-                previousStage.show();  // Torna alla finestra precedente
-            }
-        });
+        // Crea un StackPane per posizionare la GIF sopra l'immagine
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(imageView, loadingGif); // Aggiungi prima l'immagine, poi la GIF (perché deve essere sopra l'immagine)
 
+        // Aggiungi gli elementi alla VBox
+        vboxStock.getChildren().addAll(backButton, selectButton, stackPane, nameLabel, priceLabel, quantityLabel);
+
+        return vboxStock;
+    }
+
+    // Funzione per mostrare la GIF
+    public void mostraGif() {
+        if (loadingGif != null) {
+            System.out.println("Mostrando GIF...");
+
+            Platform.runLater(() -> {
+                loadingGif.setVisible(true);
+                loadingGif.getScene().getRoot().requestLayout(); // Forza il layout
+            });
+        }
+    }
+
+    // Funzione per nascondere la GIF
+    public void nascondiGif() {
+        if (loadingGif != null) {
+            Platform.runLater(() -> {
+                loadingGif.setVisible(false); // Nascondi la GIF
+            });
+        }
+    }
+
+    // Funzione per aggiornare l'immagine del prodotto
+    public void aggiornaImmagine(Stock stock) {
         // Imposta l'immagine del prodotto
         File imageFile = new File("resources/immaginiDB/" + stock.getProdotto().getIdProdotto() + ".jpg");
         if (imageFile.exists()) {
@@ -88,35 +102,5 @@ public class ViewPrSelected {
         } else {
             imageView.setImage(new Image(getClass().getResourceAsStream("/resources/immaginiDB/default.jpg")));
         }
-
-        // Aggiungi gli elementi alla VBox
-        vboxStock.getChildren().addAll(backButton, loadingGif, imageView, nameLabel, priceLabel, quantityLabel);
-
-        // Crea la scena
-        Scene scene = new Scene(vboxStock, 300, 350); // Dimensione della finestra
-        scene.getStylesheets().add(getClass().getResource("/CSS/styles2.css").toExternalForm());
-        stage.setTitle("Dettagli Prodotto");
-        stage.setScene(scene);
-        stage.show();
-
-        // Mostra la GIF di loading
-        if (loadingGif != null) {
-            loadingGif.setVisible(true);
-        }
-
-        // Simula il caricamento (puoi rimuoverlo quando il contenuto è pronto)
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000); // Simula un caricamento di 2 secondi
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            // Dopo il "caricamento", nascondi la GIF
-            if (loadingGif != null) {
-                loadingGif.setVisible(false);
-            }
-
-            // Dopo il caricamento, puoi continuare a configurare altri componenti
-        }).start();
     }
 }
