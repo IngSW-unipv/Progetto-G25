@@ -18,13 +18,16 @@ public class AcquistoController {
     }
 
     // Metodo che delega alla vista la creazione dell'interfaccia
+    /*
     public void passaAllaVista() {
         if (stockSelezionato != null) {
             ViewPrSelected view = new ViewPrSelected();
-            view.creaInterfaccia(stockSelezionato); // Passa lo stock alla vista
+            System.out.println("ciao2");
+            //view.creaInterfaccia(stockSelezionato); // Passa lo stock alla vista
             
         }
     }
+    */
 
 
 }

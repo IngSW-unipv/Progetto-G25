@@ -151,10 +151,22 @@ public class ProdottiClienteController {
         // Passo lo stock (prodotto selezionato) al controller
         acquistoController.setStockSelezionato(stock);
         
-        // Passa il controllo alla vista per la creazione dell'interfaccia
+        Runnable onSelectAction = () -> {
+            // Codice da eseguire quando il bottone viene premuto, ad esempio, navigare a un'altra vista
+            System.out.println("Prodotto selezionato!");
+        };
+
+        // Imposta modalitaVisualizzazione a true o false a seconda dei casi
+        boolean modalitaVisualizzazione = false;
+
+        // Ora chiama creaInterfaccia passando tutti e tre gli argomenti
+        ViewPrSelected viewPrSelected = new ViewPrSelected();
+        viewPrSelected.creaInterfaccia(stock, modalitaVisualizzazione, onSelectAction);
         
+        // Passa il controllo alla vista per la creazione dell'interfaccia
+     /*   
         ViewPrSelected view = new ViewPrSelected();
-        view.creaInterfaccia(stock);
+        view.creaInterfaccia(stock);*/
     }
 	
         
