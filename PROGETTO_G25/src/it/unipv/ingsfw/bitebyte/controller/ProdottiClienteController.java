@@ -6,13 +6,19 @@ import it.unipv.ingsfw.bitebyte.service.DistributoreService;
 import it.unipv.ingsfw.bitebyte.service.StockService;
 import it.unipv.ingsfw.bitebyte.view.ViewComponentProductBox;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
+import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -139,9 +145,23 @@ public class ProdottiClienteController {
     }
 
     public void handleSelect(Stock stock) {
-        System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
-        // Logica per l'azione di selezione (es. aggiungere al carrello)
+        System.out.println("Prodotto selezionato1: " + stock.getProdotto().getNome());
+        AcquistoController acquistoController = new AcquistoController();
+        
+        // Passo lo stock (prodotto selezionato) al controller
+        acquistoController.setStockSelezionato(stock);
+        
+        // Passa il controllo alla vista per la creazione dell'interfaccia
+        
+        ViewPrSelected view = new ViewPrSelected();
+        view.creaInterfaccia(stock);
     }
+	
+        
+        
+        
+        // Logica per l'azione di selezione (es. aggiungere al carrello)
+
 
     @FXML
     public void handleFilter(ActionEvent event) {
