@@ -6,14 +6,10 @@ import it.unipv.ingsfw.bitebyte.models.Stock;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
-
-//import immagini
-
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Font;
 
-import javafx.scene.control.Button;
 import java.io.File;
 
 public class ViewPrSelected {
@@ -24,6 +20,7 @@ public class ViewPrSelected {
     private Label quantityLabel;
     private Label statusLabel;
     private Button selectButton;
+    private Label dynamicLabel;  // La label dinamica
 
     // Metodo per creare l'interfaccia grafica
     public void creaInterfaccia(Stock stock, boolean modalitaVisualizzazione, Runnable onSelectAction) {
@@ -49,7 +46,8 @@ public class ViewPrSelected {
         statusLabel = new Label();
         statusLabel.getStyleClass().add("product-status");
 
-        // Imposta lo stato e lo stile
+
+        /*       // Imposta lo stato e lo stile
         if (stock.getQuantitaDisp() > 0) {
             if ("Disponibile".equals(stock.getStato())) {
                 statusLabel.setText("Stato: Disponibile");
@@ -64,7 +62,7 @@ public class ViewPrSelected {
         }
 
         // Bottone per visualizzare o selezionare
-        selectButton = new Button();
+       selectButton = new Button();
         if (modalitaVisualizzazione) {
             selectButton.setText("Visualizza");
             selectButton.setDisable(true);  // Disabilita il bottone in modalità visualizzazione
@@ -76,7 +74,7 @@ public class ViewPrSelected {
             }
             selectButton.setOnAction(e -> onSelectAction.run());
         }
-
+*/
         // Imposta l'immagine del prodotto
         File imageFile = new File("resources/immaginiDB/" + stock.getProdotto().getIdProdotto() + ".jpg");
         if (imageFile.exists()) {
@@ -86,7 +84,7 @@ public class ViewPrSelected {
         }
 
         // Aggiungi tutti gli elementi alla VBox
-        vboxStock.getChildren().addAll(imageView, nameLabel, priceLabel, quantityLabel, statusLabel, selectButton);
+        vboxStock.getChildren().addAll(imageView, nameLabel, priceLabel, quantityLabel);
 
         // Crea la scena
         Scene scene = new Scene(vboxStock, 300, 350); // Dimensione della finestra
@@ -97,4 +95,7 @@ public class ViewPrSelected {
         stage.setScene(scene);
         stage.show();
     }
+
+    // Metodo per aggiornare la label dinamica (per esempio, modificare il contenuto quando viene premuto un bottone)
+
 }
