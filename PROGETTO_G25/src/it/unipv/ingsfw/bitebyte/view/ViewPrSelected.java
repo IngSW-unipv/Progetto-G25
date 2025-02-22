@@ -1,7 +1,6 @@
 package it.unipv.ingsfw.bitebyte.view;
 
 import javafx.scene.layout.VBox;
-import it.unipv.ingsfw.bitebyte.models.Prodotto;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -39,18 +38,18 @@ public class ViewPrSelected {
         StackPane loadingPane = new StackPane();
 
         // Caricamento della GIF di loading
-        InputStream gifInputStream = getClass().getResourceAsStream("/resources/gif/Loading_icon.gif");
+        InputStream gifInputStream = getClass().getResourceAsStream("/gif/Loading_icon.gif");
         if (gifInputStream != null) {
             loadingGif = new ImageView(new Image(gifInputStream));
             loadingGif.setFitWidth(50);
             loadingGif.setFitHeight(50);
         } else {
-            System.out.println("Errore nel caricamento della GIF: il file non è stato trovato.");
+            System.out.println("Errore nel caricamento della GIF: il file non è stato trovato." + gifInputStream);
         }
 
         // Aggiungi la GIF se è stata caricata correttamente
         if (loadingGif != null) {
-        	loadingPane.getChildren().add(loadingGif);
+            loadingPane.getChildren().add(loadingGif);
         }
 
         // Inizializza i nodi
@@ -78,7 +77,7 @@ public class ViewPrSelected {
             stage.close();
             // Mostra la finestra precedente
             if (previousStage != null) {
-                previousStage.show();
+                previousStage.show();  // Torna alla finestra precedente
             }
         });
 
@@ -93,7 +92,6 @@ public class ViewPrSelected {
         // Aggiungi gli elementi alla VBox
         vboxStock.getChildren().addAll(backButton, loadingGif, imageView, nameLabel, priceLabel, quantityLabel);
 
-
         // Crea la scena
         Scene scene = new Scene(vboxStock, 300, 350); // Dimensione della finestra
         scene.getStylesheets().add(getClass().getResource("/CSS/styles2.css").toExternalForm());
@@ -102,7 +100,9 @@ public class ViewPrSelected {
         stage.show();
 
         // Mostra la GIF di loading
-        loadingGif.setVisible(true);
+        if (loadingGif != null) {
+            loadingGif.setVisible(true);
+        }
 
         // Simula il caricamento (puoi rimuoverlo quando il contenuto è pronto)
         new Thread(() -> {
@@ -112,9 +112,11 @@ public class ViewPrSelected {
                 e.printStackTrace();
             }
             // Dopo il "caricamento", nascondi la GIF
-            loadingGif.setVisible(false);
+            if (loadingGif != null) {
+                loadingGif.setVisible(false);
+            }
 
-            // Dopo il caricamento, puoi mostrare l'immagine del prodotto, ecc.
+            // Dopo il caricamento, puoi continuare a configurare altri componenti
         }).start();
     }
 }
