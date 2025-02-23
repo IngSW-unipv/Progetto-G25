@@ -19,6 +19,12 @@ public class PortafoglioVirtuale {
 		this.tipologiaPagamento = null;
 	}
 
+	public PortafoglioVirtuale(String idPort, double saldo, TipologiaPagamento tipologiaPagamento) {
+		 this.idPort = idPort;
+		 this.saldo = saldo;
+		 this.tipologiaPagamento = tipologiaPagamento;
+	}
+
 	// Getters and Setters
 	public double getSaldo() {
 		return saldo;

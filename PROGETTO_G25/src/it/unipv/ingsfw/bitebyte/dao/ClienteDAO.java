@@ -13,6 +13,7 @@ public class ClienteDAO implements IClienteDAO {
 		this.schema = "progettog25";
 	}
 
+	@Override
 	public boolean esisteUsername(String username) {
 		connection = DBConnection.startConnection(connection, schema);
 		String query = "SELECT COUNT(*) FROM cliente WHERE username = ? ";
@@ -33,6 +34,7 @@ public class ClienteDAO implements IClienteDAO {
 		return false;
 	}
 
+	@Override
 	public boolean esisteCliente(String email) {
 		connection = DBConnection.startConnection(connection, schema);
 		String query = "SELECT COUNT(*) FROM cliente WHERE email = ? ";

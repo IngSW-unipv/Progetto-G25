@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import it.unipv.ingsfw.bitebyte.test.BancomatService;
 import it.unipv.ingsfw.bitebyte.test.PayPalService;
+import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 
 //Alice
 /**
@@ -34,14 +35,14 @@ public class PaymentAdapterFactory {
 	/**
 	 * Ottiene l'adapter corrispondente al metodo di pagamento.
 	 * 
-	 * @param metodo Nome del metodo di pagamento.
+	 * @param tipologia di pagamento.
 	 * @return Un'istanza di IPaymentAdapter.
 	 * @throws IllegalArgumentException se il metodo non è supportato.
 	 */
-	public static IPaymentAdapter getPaymentAdapter(String metodo) {
-		Supplier<IPaymentAdapter> supplier = adapterRegistry.get(metodo.toLowerCase());
+	public static IPaymentAdapter getPaymentAdapter(TipologiaPagamento tipologia) {
+		Supplier<IPaymentAdapter> supplier = adapterRegistry.get(tipologia.name().toLowerCase());
 		if (supplier == null) {
-			throw new IllegalArgumentException("Metodo di pagamento non supportato: " + metodo);
+			throw new IllegalArgumentException("Metodo di pagamento non supportato: " + tipologia);
 		}
 		return supplier.get();
 	}
