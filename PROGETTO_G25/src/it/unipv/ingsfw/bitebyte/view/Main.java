@@ -10,7 +10,7 @@ public class Main extends Application {
 	    @Override
 	    public void start(Stage primaryStage) throws Exception {
 	    	System.out.println("prova");
-	        Parent root = FXMLLoader.load(getClass().getResource("/ModificaProfilo.fxml"));
+	        Parent root = FXMLLoader.load(getClass().getResource("/it/unipv/ingsfw/bitebyte/view/fxml/ModificaProfilo.fxml"));
 	        primaryStage.setTitle("Login	");
 	        primaryStage.setScene(new Scene(root, 600, 400));
 	        primaryStage.show();
