@@ -59,9 +59,13 @@ public class ViewPrSelected {
         priceLabel = new Label(String.format("€ %.2f", stock.getProdotto().getPrezzo()));
         priceLabel.getStyleClass().add("product-price");
         quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
+      
+       
+        imageView.setTranslateY(-40); // Sposta l'immagine verso l'alto
+        nameLabel.setTranslateY(-40);  // Sposta il nome prodotto verso l'alto
+        priceLabel.setTranslateY(-40); // Sposta il prezzo verso l'alto
+        quantityLabel.setTranslateY(-40); // Sposta la quantità verso l'alto
         
-        
-
         // Bottone Torna Indietro
         ImageView backImageView = new ImageView();
         backImageView.setFitWidth(50);  // Puoi regolare la dimensione come preferisci
@@ -88,7 +92,8 @@ public class ViewPrSelected {
         stackPane.getChildren().addAll(imageView, loadingGif); // Aggiungi prima l'immagine, poi la GIF (perché deve essere sopra l'immagine)
 
         // Aggiungi gli elementi alla VBox
-        vboxStock.getChildren().addAll(backButtonContainer, selectButton, stackPane, nameLabel, priceLabel, quantityLabel);
+        vboxStock.getChildren().addAll(backButtonContainer, stackPane, nameLabel, priceLabel, quantityLabel, selectButton);
+
 
         return vboxStock;
     }

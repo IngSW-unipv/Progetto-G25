@@ -23,9 +23,10 @@ public class AcquistoController {
     // Metodo per mostrare l'interfaccia
     public void mostraInterfaccia(Stock stock, Stage newStage) {
         VBox vbox = view.creaInterfaccia(stock, this, newStage, previousStage);
-        Scene scene = new Scene(vbox, 300, 400); // Puoi modificare le dimensioni come necessario
+        Scene scene = new Scene(vbox, 600, 400); // Imposta le dimensioni fisse
         scene.getStylesheets().add(getClass().getResource("/CSS/styles2.css").toExternalForm());
         newStage.setScene(scene);
+        newStage.setResizable(false); // Impedisce il ridimensionamento della finestra
         newStage.show();
         
         view.aggiornaImmagine(stock);
