@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 public class ProdottiClienteController {
 
+<<<<<<< HEAD
     private Distributore distributoreCorrente;
     private StockService stockService = new StockService();
     private DistributoreService distributoreService = new DistributoreService();
@@ -31,6 +32,13 @@ public class ProdottiClienteController {
     private int idInventario;
     private int currentSugar = 0;
 
+=======
+	 private Distributore distributoreCorrente; // Distributore corrente
+	 private StockDAO stockDAO = new StockDAO();
+	 private DistributoreDAO distributoreDAO = new DistributoreDAO();
+	 private boolean modalitaVisualizzazione = false;
+	 
+>>>>>>> Copia_alice_davide
     @FXML
     private FlowPane prodottiContainer;
     @FXML
@@ -68,6 +76,11 @@ public class ProdottiClienteController {
     }
 
     public void initialize() {
+<<<<<<< HEAD
+=======
+    	
+    	
+>>>>>>> Copia_alice_davide
         prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
         prodottiContainer.setPrefWrapLength(600);
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -143,7 +156,137 @@ public class ProdottiClienteController {
             });
         }
     }
+    
 
+<<<<<<< HEAD
+=======
+    
+    private VBox createProductBox(Stock stock) {
+        VBox box = new VBox(5);
+        box.getStyleClass().add("product-box");
+
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(120);
+        imageView.setPreserveRatio(true);
+
+        File productImageFile = new File("resources/immaginiDB/" + stock.getProdotto().getIdProdotto() + ".jpg");
+        if (productImageFile.exists()) {
+            imageView.setImage(new Image(productImageFile.toURI().toString()));
+        } else {
+            imageView.setImage(new Image(getClass().getResourceAsStream("/resources/immaginiDB/default.jpg")));
+        }
+
+        Label nameLabel = new Label(stock.getProdotto().getNome());
+        nameLabel.getStyleClass().add("product-name");
+
+        Label priceLabel = new Label(String.format("€ %.2f", stock.getProdotto().getPrezzo()));
+        priceLabel.getStyleClass().add("product-price");
+
+        Label quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
+        quantityLabel.getStyleClass().add("product-quantity");
+
+        Label statusLabel = new Label("Stato: " + stock.getStato());
+        statusLabel.getStyleClass().add("product-status");
+        if (stock.getQuantitaDisp() > 0) {
+            if (stock.getStato().equals("Disponibile")) {
+                statusLabel.setText("Stato: Disponibile");
+                statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+            } else if (stock.getStato().equals("Non disponibile")) {
+                statusLabel.setText("Stato: Non disponibile");
+                statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            }
+        } else { 
+            statusLabel.setText("Stato: Esaurito");
+            statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+        }
+
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+        // Aggiungi gli elementi nella sequenza: immagine, nome, prezzo, quantità, stato
+        box.getChildren().addAll(imageView, nameLabel, priceLabel, quantityLabel, statusLabel);
+
+        // Se non siamo in modalità visualizzazione, aggiungi il bottone sotto lo stato
+        if (!modalitaVisualizzazione) {
+            Button purchaseButton = createProductButton(stock);  // Nuovo nome del metodo
+            purchaseButton.setOnAction(e -> { 
+            	try {
+                // Carica la schermata di acquisto
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/acquisto-view.fxml"));
+                AcquistoController acquistoController = new AcquistoController(); // Crea il controller
+                loader.setController(acquistoController); // Imposta il controller
+                VBox vbox = loader.load(); // Carica il file FXML
+
+                // Passa lo stock al controller
+                acquistoController.setSelectedStock(stock);
+
+                // Crea una scena per la schermata di acquisto
+                Scene acquistoScene = new Scene(vbox);
+                Stage primaryStage = (Stage) purchaseButton.getScene().getWindow(); // Usa la finestra corrente
+                primaryStage.setScene(acquistoScene); // Imposta la scena
+                primaryStage.setTitle("Acquisto Prodotto");
+                primaryStage.show(); // Mostra la finestra
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            });
+        
+        box.getChildren().add(purchaseButton);    
+        box.getChildren().add(spacer);
+        
+        }
+        return box;
+    }
+    
+    private Button createProductButton(Stock stock) {
+        Button button = new Button("Aggiungi al carrello");
+        button.getStyleClass().add("product-button");
+        button.setPrefWidth(200);
+        // Aggiungi altre configurazioni del bottone, se necessario
+        return button;
+    }
+    /*
+    public Button createSelectButton(Stock stock) {
+        Button button = new Button("Seleziona");
+        button.getStyleClass().add("select-button");
+        button.setOnAction(e -> handleSelect(stock));
+        return button;
+    }
+
+ 
+    public void handleSelect(Stock stock) {
+        System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
+        if (stock.getQuantitaDisp() == 0) {
+            // Passa il nome del prodotto anziché l'ID
+            mostraDistributoriAlternativiByName(stock.getProdotto().getNome());
+        }
+    }
+    
+   */
+    
+    /*
+    public Button createSelectButton(Stock stock) {
+        Button button;
+        
+        if (stock.getQuantitaDisp() == 0) {
+            // Se il prodotto è esaurito, crea il pulsante "Visualizza distributori vicini"
+            button = new Button("Visualizza distributori vicini");
+            button.getStyleClass().add("select-button");
+            button.setOnAction(e -> mostraDistributoriAlternativiByName(stock.getProdotto().getNome()));
+        } else {
+            // Se il prodotto è disponibile, crea il pulsante "Seleziona"
+            button = new Button("Seleziona");
+            button.getStyleClass().add("select-button");
+            button.setOnAction(e -> handleSelect(stock));
+        }
+
+        return button;
+    }
+    */
+
+>>>>>>> Copia_alice_davide
     public void handleSelect(Stock stock) {
         System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
 
@@ -232,9 +375,46 @@ public class ProdottiClienteController {
 
   
 
+<<<<<<< HEAD
 
 
 
 
 
 
+=======
+    
+    /*
+    public void mostraDistributoriAlternativiByName(String nomeProdotto) {
+        if(distributoreCorrente == null) {
+            System.err.println("distributoreCorrente è null! Assicurati di impostarlo correttamente.");
+            return;
+        }
+        
+        DistributoreDAO distributoreDAO = new DistributoreDAO();
+        List<Distributore> distributori = distributoreDAO.getDistributoriConProdottoDisponibileByName(
+                distributoreCorrente.getIdDistr(), nomeProdotto);
+
+        if (distributori.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Prodotto non disponibile");
+            alert.setHeaderText(null);
+            alert.setContentText("Non ci sono distributori alternativi disponibili per questo prodotto.");
+            alert.showAndWait();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/distributoriAlternativi.fxml"));
+                Parent root = loader.load();
+                DistributoriAlternativiController controller = loader.getController();
+                controller.setDistributori(distributori, distributoreCorrente);
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Distributori Alternativi");
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+*/
+>>>>>>> Copia_alice_davide
