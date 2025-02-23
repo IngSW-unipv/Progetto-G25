@@ -1,6 +1,4 @@
 package it.unipv.ingsfw.bitebyte.view;
-
-import it.unipv.ingsfw.bitebyte.models.Spedizione;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +12,11 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.Priority;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import it.unipv.ingsfw.bitebyte.models.Spedizione;
 
 public class StoricoSpedizioniView {
 
@@ -34,60 +37,84 @@ public class StoricoSpedizioniView {
         scrollPane.getStyleClass().add("scroll-pane");  // Aggiungi classe CSS per lo ScrollPane
         scrollPane.setFitToWidth(true); // Imposta la larghezza della finestra a quella del contenuto
 
-        // Aggiungi ogni spedizione alla vista
+        // Raggruppa le spedizioni per ID spedizione
+        Map<String, ArrayList<Spedizione>> spedizioniRaggruppate = new HashMap<>();
         for (Spedizione spedizione : spedizioni) {
-            // Crea il layout orizzontale per la spedizione
-            HBox hbox = new HBox(10);
-            hbox.getStyleClass().add("hbox");  // Aggiungi classe CSS per l'HBox
-            hbox.setAlignment(Pos.CENTER_LEFT); // Allinea gli elementi al centro
+            spedizioniRaggruppate
+                .computeIfAbsent(spedizione.getIdSpedizione(), k -> new ArrayList<>())
+                .add(spedizione);
+        }
 
-            // Crea un'ImageView per l'immagine del prodotto
-            ImageView imageView = new ImageView();
-            imageView.getStyleClass().add("image-view");  // Aggiungi classe CSS per l'immagine
-            imageView.setPreserveRatio(true); // Mantieni il rapporto di aspetto
-            imageView.setFitHeight(100); // Imposta un'altezza fissa per l'immagine
-            imageView.setFitWidth(100); // Imposta la larghezza fissa per l'immagine
+        // Aggiungi ogni gruppo di spedizioni al layout
+        for (Map.Entry<String, ArrayList<Spedizione>> entry : spedizioniRaggruppate.entrySet()) {
+            String idSpedizione = entry.getKey();
+            List<Spedizione> prodotti = entry.getValue();
 
-            // Carica l'immagine corrispondente al prodotto
-            File imageFile = new File("resources/immaginiDB/" + spedizione.getIdProdotto() + ".jpg");
-            if (imageFile.exists()) {
-                Image image = new Image(imageFile.toURI().toString());
-                imageView.setImage(image);
-            } else {
-                // Se l'immagine non esiste, carica un'immagine di default
-                Image image = new Image("resources/immaginiDB/default.jpg"); // esempio di immagine di default
-                imageView.setImage(image);
+            // Crea un box per il gruppo di prodotti della stessa spedizione
+            VBox spedizioneBox = new VBox(10);
+            spedizioneBox.getStyleClass().add("spedizione-box");
+            spedizioneBox.setAlignment(Pos.CENTER_LEFT);
+
+            // Aggiungi un titolo per l'ID spedizione
+            Label titoloSpedizione = new Label("ID Spedizione: " + idSpedizione);
+            titoloSpedizione.getStyleClass().add("titolo-spedizione");
+            spedizioneBox.getChildren().add(titoloSpedizione);
+
+            // Aggiungi ogni prodotto alla spedizioneBox
+            for (Spedizione spedizione : prodotti) {
+                // Crea un layout orizzontale per la spedizione
+                HBox hbox = new HBox(10);
+                hbox.getStyleClass().add("hbox");  // Aggiungi classe CSS per l'HBox
+                hbox.setAlignment(Pos.CENTER_LEFT); // Allinea gli elementi al centro
+
+                // Crea un'ImageView per l'immagine del prodotto
+                ImageView imageView = new ImageView();
+                imageView.getStyleClass().add("image-view");  // Aggiungi classe CSS per l'immagine
+                imageView.setPreserveRatio(true); // Mantieni il rapporto di aspetto
+                imageView.setFitHeight(100); // Imposta un'altezza fissa per l'immagine
+                imageView.setFitWidth(100); // Imposta la larghezza fissa per l'immagine
+
+                // Carica l'immagine corrispondente al prodotto
+                File imageFile = new File("resources/immaginiDB/" + spedizione.getIdProdotto() + ".jpg");
+                if (imageFile.exists()) {
+                    Image image = new Image(imageFile.toURI().toString());
+                    imageView.setImage(image);
+                } else {
+                    // Se l'immagine non esiste, carica un'immagine di default
+                    Image image = new Image("resources/immaginiDB/default.jpg"); // esempio di immagine di default
+                    imageView.setImage(image);
+                }
+
+                // Crea una VBox per le informazioni del prodotto
+                VBox infoBox = new VBox(5);
+                infoBox.getStyleClass().add("vbox-info");  // Aggiungi classe CSS per la VBox delle info
+                infoBox.setAlignment(Pos.CENTER_LEFT); // Allinea a sinistra dentro la VBox
+
+                // Crea le label con classi uniche
+                Label idProdottoLabel = new Label("ID Prodotto: " + spedizione.getIdProdotto());
+                idProdottoLabel.getStyleClass().add("id-prodotto-label");  // Classe CSS unica
+
+                Label quantitaLabel = new Label("Quantità: " + spedizione.getqOrd());
+                quantitaLabel.getStyleClass().add("quantita-label");  // Classe CSS unica
+
+                Label prezzoTotLabel = new Label("Prezzo Totale: €" + spedizione.getPrezzoTot());
+                prezzoTotLabel.getStyleClass().add("prezzo-totale-label");  // Classe CSS unica
+
+                Label dataLabel = new Label("Data spedizione: " + spedizione.getDataSp());
+                dataLabel.getStyleClass().add("data-label");  // Classe CSS unica
+
+                // Aggiungi le label alla VBox
+                infoBox.getChildren().addAll(idProdottoLabel, quantitaLabel, prezzoTotLabel, dataLabel);
+
+                // Aggiungi l'immagine e le informazioni al layout orizzontale
+                hbox.getChildren().addAll(imageView, infoBox);
+
+                // Aggiungi il riquadro del prodotto al box della spedizione
+                spedizioneBox.getChildren().add(hbox);
             }
 
-            // Crea una VBox per le informazioni del prodotto
-            VBox infoBox = new VBox(5);
-            infoBox.getStyleClass().add("vbox-info");  // Aggiungi classe CSS per la VBox delle info
-            infoBox.setAlignment(Pos.CENTER_LEFT); // Allinea a sinistra dentro la VBox
-
-            // Crea le label con classi uniche
-            Label idSpedizioneLabel = new Label("ID Spedizione: " + spedizione.getIdSpedizione());
-            idSpedizioneLabel.getStyleClass().add("id-spedizione-label");  // Classe CSS unica
-
-            Label idProdottoLabel = new Label("ID Prodotto: " + spedizione.getIdProdotto());
-            idProdottoLabel.getStyleClass().add("id-prodotto-label");  // Classe CSS unica
-
-            Label quantitaLabel = new Label("Quantità: " + spedizione.getqOrd());
-            quantitaLabel.getStyleClass().add("quantita-label");  // Classe CSS unica
-
-            Label prezzoTotLabel = new Label("Prezzo Totale: €" + spedizione.getPrezzoTot());
-            prezzoTotLabel.getStyleClass().add("prezzo-totale-label");  // Classe CSS unica
-
-            Label dataLabel = new Label("Data spedizione: " + spedizione.getDataSp());
-            dataLabel.getStyleClass().add("data-label");  // Classe CSS unica
-
-            // Aggiungi le label alla VBox
-            infoBox.getChildren().addAll(idSpedizioneLabel, idProdottoLabel, quantitaLabel, prezzoTotLabel, dataLabel);
-
-            // Aggiungi l'immagine e le informazioni al layout orizzontale
-            hbox.getChildren().addAll(imageView, infoBox);
-
-            // Aggiungi il riquadro della spedizione al layout principale
-            vbox.getChildren().add(hbox);
+            // Aggiungi il box della spedizione al layout principale
+            vbox.getChildren().add(spedizioneBox);
         }
 
         // Crea la bottomBar con il bottone

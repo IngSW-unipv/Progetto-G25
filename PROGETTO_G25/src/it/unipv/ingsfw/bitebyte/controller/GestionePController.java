@@ -3,12 +3,14 @@ package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.business.SupplyContext;
 import it.unipv.ingsfw.bitebyte.dao.DistributoreDAO;
 import it.unipv.ingsfw.bitebyte.dao.FornituraDAO;
+import it.unipv.ingsfw.bitebyte.dao.ProdottoDAO;
 import it.unipv.ingsfw.bitebyte.dao.SpedizioneDAO;
 import it.unipv.ingsfw.bitebyte.dao.StockDAO;
 import it.unipv.ingsfw.bitebyte.models.Carrello;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Fornitura;
 import it.unipv.ingsfw.bitebyte.models.ItemCarrello;
+import it.unipv.ingsfw.bitebyte.models.Prodotto;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import it.unipv.ingsfw.bitebyte.models.Spedizione;
 import it.unipv.ingsfw.bitebyte.strategyforn.IDiscountStrategy;
@@ -17,6 +19,7 @@ import it.unipv.ingsfw.bitebyte.view.CarrelloView;
 import it.unipv.ingsfw.bitebyte.view.ModificaPrezzoView;
 import it.unipv.ingsfw.bitebyte.view.ProdottiView;
 import it.unipv.ingsfw.bitebyte.view.RifornimentoView;
+import it.unipv.ingsfw.bitebyte.view.SostituzioneView;
 import it.unipv.ingsfw.bitebyte.view.StoricoSpedizioniView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
@@ -35,6 +38,7 @@ public class GestionePController {
     private FornituraDAO fornituraDAO;
     private SpedizioneDAO spedizioneDAO;
     private DistributoreDAO distributoreDAO;
+    private ProdottoDAO prodottoDAO; 
     private ProdottiView prodottiView;
     private int idInventario;
 
@@ -46,6 +50,7 @@ public class GestionePController {
         this.spedizioneDAO = new SpedizioneDAO();
         this.fornituraDAO = new FornituraDAO();
         this.distributoreDAO = new DistributoreDAO();
+        this.prodottoDAO = new ProdottoDAO();
         this.prodottiView = new ProdottiView(this); // Passiamo il controller alla view
         caricaDistributori();  
     }
@@ -143,7 +148,12 @@ public class GestionePController {
     }
 
     public void handleSostituzione(Stock stock) {
-        System.out.println("🔁 Sostituzione per: " + stock.getProdotto().getNome());
+    	ArrayList<Prodotto> prodottiSostitutivi = prodottoDAO.getProdottiByCategoria(stock, stock.getProdotto().getCategoria());
+    	new SostituzioneView(prodottiSostitutivi, prodottoSostituito -> {
+            stockDAO.sostituisciStock(stock, prodottoSostituito.getIdProdotto());
+            prodottiView.aggiornaProdotti(stockDAO.getStockByInventario(stock.getIdInventario()));
+        });
+    	System.out.println("🔁 Sostituzione per: " + stock.getProdotto().getNome());
     }
 
     public void handleCambioPrezzo(Stock stock) {

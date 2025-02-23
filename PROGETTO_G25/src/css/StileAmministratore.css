@@ -128,6 +128,7 @@
 /* Bottone "Visualizza Carrello" */
 .carrello-button {
     -fx-background-color: #66cdaa; /* Stesso colore del restock */
+    -fx-background-radius: 3px;
     -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-background-radius: 5px;

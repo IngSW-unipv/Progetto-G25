@@ -20,6 +20,26 @@
     -fx-vgrow: ALWAYS; /* Permette alla VBox di espandersi solo se necessario */
 }
 
+/* Stile per il titolo della spedizione */
+.titolo-spedizione {
+    -fx-font-size: 18px;               /* Imposta una dimensione del font */
+    -fx-font-weight: bold;             /* Imposta il testo come grassetto */
+    -fx-text-fill: white;            /* Cambia il colore del testo */
+    -fx-text-align: center;            /* Centra il testo */
+    -fx-margin: 10px 0;                /* Aggiungi margine sopra e sotto */
+    -fx-padding: 5px;                  /* Aggiungi un po' di padding */
+    -fx-border-width: 2px;             /* Aggiungi un bordo di colore verde */
+    -fx-border-color: white;         /* Colore verde per il bordo */
+    -fx-border-radius: 5px;            /* Rendi gli angoli arrotondati */
+    -fx-background-radius: 5px;
+    -fx-background-color: #dc143c;     /* Imposta uno sfondo chiaro */
+}
+
+.titolo-spedizione:hover {
+    -fx-background-color: #e0e0e0;     /* Cambia lo sfondo al passaggio del mouse */
+    -fx-cursor: hand;                  /* Cambia il cursore per far capire che è interattivo */
+}
+
 /* Stile per ciascun HBox che contiene la spedizione */
 .hbox {
     -fx-alignment: center-left;
@@ -90,6 +110,7 @@
     -fx-padding: 10px 20px;
     -fx-border-color: black;
     -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0.5, 0, 3);
 }
 

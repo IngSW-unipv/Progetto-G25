@@ -76,7 +76,7 @@ public class SpedizioneDAO implements ISpedizioneDAO {
 	public ArrayList<Spedizione> getAllSpedizioni() {
 		ArrayList<Spedizione> spedizioni = new ArrayList<>();
 		connection = DBConnection.startConnection(connection, schema);
-		String query = "SELECT sd.*, Data_sp FROM sped_dettagli sd NATURAL JOIN spedizione";
+		String query = "SELECT sd.*, Data_sp FROM sped_dettagli sd NATURAL JOIN spedizione ORDER BY Data_sp";
 		try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {

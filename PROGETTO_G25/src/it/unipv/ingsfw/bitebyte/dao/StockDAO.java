@@ -105,9 +105,6 @@ public class StockDAO implements IStockDAO {
 	    }
 	    
 	    
-	    
-	    
-	    
 	    @Override
 	    public void addStock(Stock stock) {
 	        connection = DBConnection.startConnection(connection, schema);
@@ -180,7 +177,21 @@ public class StockDAO implements IStockDAO {
 	        }
 	    }
 	    
-	    
+	   public void sostituisciStock(Stock stock, int idProdotto) {
+		   connection = DBConnection.startConnection(connection, schema);
+		   String query = "UPDATE stock_dettagli SET ID_Prodotto = ?, Q_disp = ? WHERE ID_Inventario = ? AND ID_Prodotto = ?";
+		   try (PreparedStatement stmt = connection.prepareStatement(query)) {
+	            stmt.setInt(1, idProdotto);
+	            stmt.setInt(2, 0);
+	            stmt.setInt(3, stock.getIdInventario());
+	            stmt.setInt(4, stock.getProdotto().getIdProdotto());
+	            stmt.executeUpdate();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            DBConnection.closeConnection(connection);
+	        }
+	   }
 
 	
 	}
