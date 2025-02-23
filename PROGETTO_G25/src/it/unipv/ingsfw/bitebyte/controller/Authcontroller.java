@@ -85,6 +85,8 @@ public class Authcontroller implements Initializable {
 		}
 	}
 
+	
+	/*
 	@FXML
 	public void cambiaScena2(ActionEvent event) {
 		String nomeUtente = usernameLogin.getText();
@@ -114,6 +116,7 @@ public class Authcontroller implements Initializable {
 		
 
 	}
+	*/
 
 	@FXML
 	public void accedi() {
