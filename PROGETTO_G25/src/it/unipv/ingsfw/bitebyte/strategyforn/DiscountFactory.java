@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class DiscountFactory {
     
-    private static final String PROPERTIES_PATH = "properties/discountfactory.properties"; //  Percorso file
+    private static final String PROPERTIES_PATH = "properties/discountfactory.properties"; //  Percorso file properties
 
     public static IDiscountStrategy getDiscountStrategy(String strategyKey) {
         Properties properties = new Properties();

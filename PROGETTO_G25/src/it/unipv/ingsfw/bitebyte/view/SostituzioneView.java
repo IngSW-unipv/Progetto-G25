@@ -24,37 +24,29 @@ public class SostituzioneView {
         this.onSelect = onSelect;
         stage = new Stage();
         rootLayout = new VBox(20);
-        rootLayout.getStyleClass().add("root-layout"); // Aggiungi la classe per il layout
+        rootLayout.getStyleClass().add("root-layout"); 
 
-        // Aggiungi la Label del titolo con il suo StyleClass
         Label titleLabel = new Label("Seleziona un prodotto sostitutivo");
-        titleLabel.getStyleClass().add("label-title"); // Aggiungi la classe per la label del titolo
+        titleLabel.getStyleClass().add("label-title"); 
 
         // FlowPane che contiene i prodotti
         FlowPane prodottiContainer = new FlowPane();
-        prodottiContainer.getStyleClass().add("prodotti-container"); // Aggiungi la classe per il contenitore dei prodotti
+        prodottiContainer.getStyleClass().add("prodotti-container"); 
         prodottiContainer.setAlignment(Pos.CENTER);
-
-        // Aggiungi i prodotti al container
+        // Aggiunta dei prodotti al container
         for (Prodotto prodotto : prodotti) {
             prodottiContainer.getChildren().add(creaProductBox(prodotto));
         }
 
-        // Inserisci la Label del titolo e il FlowPane nel rootLayout
         rootLayout.getChildren().addAll(titleLabel, prodottiContainer);
 
-        // Aggiungi lo ScrollPane per permettere lo scorrimento
         ScrollPane scrollPane = new ScrollPane(rootLayout);
-        scrollPane.setFitToWidth(true);  // Adatta la larghezza del contenuto
-        scrollPane.setFitToHeight(true); // Adatta l'altezza del contenuto (se necessario)
+        scrollPane.setFitToWidth(true);  
+        scrollPane.setFitToHeight(true); 
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        // Crea la scena con il ScrollPane
         Scene scene = new Scene(scrollPane, 650, 400);
-        
-        // Associa il file CSS
         scene.getStylesheets().add(getClass().getResource("/css/StileSostituzione.css").toExternalForm());
-
         stage.setScene(scene);
         stage.setTitle("Sostituzione Prodotto");
         stage.show();
@@ -62,10 +54,10 @@ public class SostituzioneView {
 
     private VBox creaProductBox(Prodotto prodotto) {
         VBox box = new VBox(10);
-        box.getStyleClass().add("product-box"); // Aggiungi la classe per il box prodotto
+        box.getStyleClass().add("product-box"); 
 
         ImageView imageView = new ImageView();
-        imageView.getStyleClass().add("product-image"); // Aggiungi la classe per l'immagine del prodotto
+        imageView.getStyleClass().add("product-image"); 
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
         File imageFile = new File("resources/immaginiDB/" + prodotto.getIdProdotto() + ".jpg");
@@ -75,15 +67,14 @@ public class SostituzioneView {
 
         Label nameLabel = new Label(prodotto.getNome());
         nameLabel.getStyleClass().add("label-name");
-        
         Label priceLabel = new Label(String.format("€ %.2f", prodotto.getPrezzo()));
         priceLabel.getStyleClass().add("label-price");
         
         Button selectButton = new Button("Seleziona");
-        selectButton.getStyleClass().add("select-button"); // Aggiungi la classe per il bottone
+        selectButton.getStyleClass().add("select-button");
         selectButton.setOnAction(e -> {
             onSelect.accept(prodotto);
-            stage.close(); // Chiude la finestra
+            stage.close(); 
         });
 
         box.getChildren().addAll(imageView, nameLabel, priceLabel, selectButton);

@@ -1,4 +1,4 @@
-package it.unipv.ingsfw.bitebyte.business;
+package it.unipv.ingsfw.bitebyte.service;
 
 import java.math.BigDecimal;
 import it.unipv.ingsfw.bitebyte.models.Stock;

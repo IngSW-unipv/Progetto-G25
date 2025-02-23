@@ -9,6 +9,7 @@ import it.unipv.ingsfw.bitebyte.models.Prodotto;
 
 public interface IFornituraDAO {
 	
+	//Ottengo le informazioni sulla fornitura del prodotto che specifico come parametro
 	ArrayList<Fornitura> getFornitoriInfo(Stock stock)throws SQLException;
 
 }

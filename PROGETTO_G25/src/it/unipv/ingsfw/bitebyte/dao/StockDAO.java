@@ -131,9 +131,9 @@ public class StockDAO implements IStockDAO {
 	        connection = DBConnection.startConnection(connection, schema);
 	        String query = "UPDATE stock_dettagli SET Q_disp = ? WHERE ID_Inventario = ? AND ID_Prodotto = ?";
 	        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-	            stmt.setInt(1, stock.getQuantitaDisp());  // Aggiorniamo la quantità disponibile
+	            stmt.setInt(1, stock.getQuantitaDisp());  
 	            stmt.setInt(2, stock.getIdInventario());
-	            stmt.setInt(3, stock.getProdotto().getIdProdotto());  // Aggiunto ID del prodotto
+	            stmt.setInt(3, stock.getProdotto().getIdProdotto());  
 	            stmt.executeUpdate();
 	        } catch (SQLException e) {
 	            e.printStackTrace();

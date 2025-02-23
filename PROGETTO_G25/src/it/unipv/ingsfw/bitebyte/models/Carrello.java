@@ -24,7 +24,6 @@ public class Carrello {
     // Aggiungi un prodotto al carrello (sommando la quantità se il prodotto è già presente)
     public void aggiungiItem(Fornitura fornitura, int quantita, BigDecimal prezzoTotale) {
         boolean prodottoEsistente = false;
-        
         // Verifica se il prodotto è già presente nel carrello
         for (ItemCarrello item : items) {
             if (item.getFornitura().getProdotto().getIdProdotto() == fornitura.getProdotto().getIdProdotto() && item.getFornitura().getFornitore().getIdFornitore() == fornitura.getFornitore().getIdFornitore() ) {
@@ -34,8 +33,7 @@ public class Carrello {
                 break;
             }
         }
-
-        // Se il prodotto non è nel carrello, aggiungilo come nuovo
+        // Se il prodotto non è nel carrello, viene aggiunto
         if (!prodottoEsistente) {
             items.add(new ItemCarrello(fornitura, quantita, prezzoTotale));
         }
@@ -47,13 +45,12 @@ public class Carrello {
         while (iterator.hasNext()) {
             ItemCarrello currentItem = iterator.next();
             if (currentItem.equals(item)) {
-                iterator.remove(); // Rimuove l'item
-                break; // Uscita dal ciclo dopo aver rimosso l'item
+                iterator.remove(); 
+                break; 
             }
         }
     }
 
-    // Restituisci gli articoli nel carrello
     public List<ItemCarrello> getItems() {
         return items;
     }
@@ -67,7 +64,6 @@ public class Carrello {
         return totale;
     }
 
-    // Svuota il carrello
     public void svuota() {
         items.clear();
     }

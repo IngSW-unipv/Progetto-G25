@@ -1,6 +1,5 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
-import it.unipv.ingsfw.bitebyte.business.SupplyContext;
 import it.unipv.ingsfw.bitebyte.dao.DistributoreDAO;
 import it.unipv.ingsfw.bitebyte.dao.FornituraDAO;
 import it.unipv.ingsfw.bitebyte.dao.ProdottoDAO;
@@ -12,6 +11,7 @@ import it.unipv.ingsfw.bitebyte.models.Fornitura;
 import it.unipv.ingsfw.bitebyte.models.ItemCarrello;
 import it.unipv.ingsfw.bitebyte.models.Prodotto;
 import it.unipv.ingsfw.bitebyte.models.Stock;
+import it.unipv.ingsfw.bitebyte.service.SupplyContext;
 import it.unipv.ingsfw.bitebyte.models.Spedizione;
 import it.unipv.ingsfw.bitebyte.strategyforn.IDiscountStrategy;
 import it.unipv.ingsfw.bitebyte.strategyforn.DiscountFactory;
@@ -33,16 +33,16 @@ import java.util.Map;
 import java.util.Random;
 
 public class GestionePController {
-
+   
+	private int idInventario;
+	
     private StockDAO stockDAO;
     private FornituraDAO fornituraDAO;
     private SpedizioneDAO spedizioneDAO;
     private DistributoreDAO distributoreDAO;
     private ProdottoDAO prodottoDAO; 
+    
     private ProdottiView prodottiView;
-    private int idInventario;
-
-    // Aggiungi questa variabile membro per carrelloView
     private CarrelloView carrelloView;
 
     public GestionePController() {
@@ -51,7 +51,7 @@ public class GestionePController {
         this.fornituraDAO = new FornituraDAO();
         this.distributoreDAO = new DistributoreDAO();
         this.prodottoDAO = new ProdottoDAO();
-        this.prodottiView = new ProdottiView(this); // Passiamo il controller alla view
+        this.prodottiView = new ProdottiView(this); 
         caricaDistributori();  
     }
 
@@ -60,10 +60,9 @@ public class GestionePController {
         caricaProdotti();
     }
     
- // Metodo per caricare i distributori
     public void caricaDistributori() {
-        List<Distributore> distributori = distributoreDAO.getAllDistributori(); // Otteniamo i distributori
-        prodottiView.setDistributori(distributori); // Passiamo i distributori alla vista
+        List<Distributore> distributori = distributoreDAO.getAllDistributori(); 
+        prodottiView.setDistributori(distributori); 
     }
     
     public void caricaProdotti() {
@@ -80,19 +79,15 @@ public class GestionePController {
             mostraErrore("Slot prodotto già pieno");
             return;
         }
-
-        System.out.println("🔄 Rifornimento per: " + stock.getProdotto().getNome());
-
+        System.out.println("Rifornimento per: " + stock.getProdotto().getNome());
         ArrayList<Fornitura> forniture = fornituraDAO.getFornitoriInfo(stock);
-
         RifornimentoView rifornimentoView = new RifornimentoView(forniture, stock, new RifornimentoView.RifornimentoListener() {
-
             @Override
             public void onFornitoreSelezionato(Fornitura fornitura, int quantita) {
                 int disponibile = stock.getQuantitaDisp();
                 int maxInseribile = stock.getQMaxInseribile();
 
-                // ✅ Controllo validità quantità
+                // Controllo validità quantità
                 if (quantita <= 0) {
                     mostraErrore("Inserisci una quantità valida.");
                     return;
@@ -101,26 +96,19 @@ public class GestionePController {
                     mostraErrore("Quantità non disponibile! Puoi ordinare al massimo " + (maxInseribile - disponibile) + " unità.");
                     return;
                 }
-
-                // ✅ Determina la strategia in base alla quantità massima
+                // Determina la strategia confrontando quantità inserita con quella massima
                 String strategyKey = (quantita == maxInseribile) ? "maxquantity.strategy" : "quantity.strategy";
-
-                // ✅ Creazione della strategia
                 IDiscountStrategy discountStrategy = DiscountFactory.getDiscountStrategy(strategyKey);
                 if (discountStrategy == null) {
                     mostraErrore("Errore nel caricamento della strategia di sconto.");
                     return;
                 }
-
-                // ✅ Calcolo del prezzo finale con la strategia di sconto applicata
+                //Calcolo del prezzo finale con la strategia di sconto applicata
                 SupplyContext supplyContext = new SupplyContext(discountStrategy, fornitura.getPpu());
                 BigDecimal finalPrice = supplyContext.calculateFinalPrice(quantita, stock);
-
-                // ✅ Aggiungi l'elemento al carrello
+                // Aggiunta dell'elemento al carrello
                 Carrello carrello = Carrello.getInstance();
                 carrello.aggiungiItem(fornitura, quantita, finalPrice);
-
-                // ✅ Aggiorna la vista del carrello subito
                 aggiornaVistaCarrello();
                 apriCarrello();
             }
@@ -129,20 +117,15 @@ public class GestionePController {
     }
 
     public void apriCarrello() {
-        // Recupera l'istanza del carrello
+        // Recupera l'istanza del carrello (singleton)
         Carrello carrello = Carrello.getInstance();
-
-        // Crea la vista del carrello (questa è un'altra view che mostrerà gli articoli nel carrello)
         carrelloView = new CarrelloView(carrello, this);
         carrelloView.aggiornaVistaCarrello();
         carrelloView.mostra();
     }
     
     public void apriStoricoSpedizioni() {
-        // Recupera tutte le spedizioni dal DAO
         ArrayList<Spedizione> spedizioni = spedizioneDAO.getAllSpedizioni();
-
-        // Crea la vista e passa le spedizioni
         StoricoSpedizioniView storicoView = new StoricoSpedizioniView();
         storicoView.mostra(spedizioni);
     }
@@ -153,7 +136,7 @@ public class GestionePController {
             stockDAO.sostituisciStock(stock, prodottoSostituito.getIdProdotto());
             prodottiView.aggiornaProdotti(stockDAO.getStockByInventario(stock.getIdInventario()));
         });
-    	System.out.println("🔁 Sostituzione per: " + stock.getProdotto().getNome());
+    	System.out.println("Sostituzione per: " + stock.getProdotto().getNome());
     }
 
     public void handleCambioPrezzo(Stock stock) {
@@ -164,10 +147,9 @@ public class GestionePController {
             }
             boolean aggiornato = stockDAO.updatePrice(stock.getProdotto().getIdProdotto(), idInventario, nuovoPrezzo);
             if (!aggiornato) {
-                mostraErrore("❌ Errore durante l'aggiornamento del prezzo!");
+                mostraErrore("Errore durante l'aggiornamento del prezzo!");
                 return;
             }
-
             prodottiView.aggiornaProdotti(stockDAO.getStockByInventario(idInventario));
         });
 
@@ -176,13 +158,10 @@ public class GestionePController {
 
     public void concludiOrdine() {
         Carrello carrello = Carrello.getInstance();
-        
-        String idSpedizione = generaIdSpedizione();
-        // 1. Somma tutte le quantità totali per ogni prodotto nel carrello
+        String idSpedizione = generaIdSpedizione();        
         Map<Integer, Integer> quantitaTotalePerProdotto = new HashMap<>();
         Map<Integer, BigDecimal> prezzoTotalePerProdotto = new HashMap<>();
 
-        
         for (ItemCarrello item : carrello.getItems()) {
             int idProdotto = item.getFornitura().getProdotto().getIdProdotto();
             int quantita = item.getQuantita();
@@ -191,39 +170,29 @@ public class GestionePController {
             quantitaTotalePerProdotto.put(idProdotto, quantitaTotalePerProdotto.getOrDefault(idProdotto, 0) + quantita);
             prezzoTotalePerProdotto.put(idProdotto, prezzoTotalePerProdotto.getOrDefault(idProdotto, BigDecimal.ZERO).add(prezzo));
         }
-
-        // 2. Per ogni prodotto nel carrello, distribuisci le quantità tra gli inventari
+        // Per ogni prodotto nel carrello, le quantità vengono distribute tra gli inventari che lo contengono
         for (Map.Entry<Integer, Integer> entry : quantitaTotalePerProdotto.entrySet()) {
             int idProdotto = entry.getKey();
             int quantitaTotale = entry.getValue();
-
-            // 3. Ottieni gli stock (inventari) che contengono il prodotto
+            // Inventari che contengono il prodotto
             ArrayList<Stock> stocks = stockDAO.getStockByProdotto(idProdotto);
-            // 4. Distribuisci le quantità tra gli inventari disponibili
             for (Stock stock : stocks) {
                 // Calcoliamo la quantità che possiamo aggiungere all'inventario
                 int quantitaDisponibile = stock.getQMaxInseribile() - stock.getQuantitaDisp();
                 int quantitaDaDistribuire = Math.min(quantitaTotale, quantitaDisponibile);
-
                 // Aggiorna la quantità nello stock
                 stock.setQuantitaDisp(stock.getQuantitaDisp() + quantitaDaDistribuire);
                 stockDAO.updateStock(stock);
-
-                // Riduci la quantità totale da distribuire
                 quantitaTotale -= quantitaDaDistribuire;
-
-                // Se non ci sono più unità da distribuire, esci dal ciclo
                 if (quantitaTotale <= 0) {
                     break;
                 }
             }
         }
-        
         salvaSpedizione(idSpedizione, quantitaTotalePerProdotto, prezzoTotalePerProdotto);
         carrello.svuota();
         caricaProdotti();
         aggiornaVistaCarrello();
-       
         System.out.println("Ordine concluso con successo!");
     }
 
@@ -236,21 +205,18 @@ public class GestionePController {
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("/css/StileModificaPrezzo.css").toExternalForm());
         dialogPane.getStyleClass().add("custom-alert");
-
         alert.showAndWait();
     }
 
-    // Metodo per aggiornare la vista del carrello
     public void aggiornaVistaCarrello() {
         Carrello carrello = Carrello.getInstance();
-
-        // Se la vista del carrello non è stata ancora creata o è stata svuotata, creala
+        // Se la vista del carrello non è stata ancora creata, viene creata
         if (carrelloView == null) {
             carrelloView = new CarrelloView(carrello, this);
-            carrelloView.mostra();  // Mostra la vista
+            carrelloView.mostra();  
         } else {
-            // Se esiste già, aggiornala
-            carrelloView.aggiornaVistaCarrello();  // Aggiorna la vista
+            // Se esiste già, la vista viene aggiornata
+            carrelloView.aggiornaVistaCarrello();  
         }
     }
     
@@ -269,6 +235,4 @@ public class GestionePController {
         }
         return sb.toString();
     }
-    
-    
 }

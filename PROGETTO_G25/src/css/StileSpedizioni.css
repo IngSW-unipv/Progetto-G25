@@ -1,54 +1,54 @@
 /* Stile per la finestra principale */
 .root {
-    -fx-background-color: #dc143c; /* Colore di sfondo crimson red */
-    -fx-font-family: "Arial", sans-serif; /* Font generico */
+    -fx-background-color: #dc143c; 
+    -fx-font-family: "Arial", sans-serif; 
 }
 
 /* Stile per la ScrollPane */
 .scroll-pane {
-    -fx-background-color: #dc143c; /* Sfondo crimson red */
+    -fx-background-color: #dc143c; 
     -fx-border-width: 0;
 }
 
 /* Stile per il layout VBox (contenitore principale) */
 .vbox {
-    -fx-background-color: #dc143c; /* Colore crimson red per il contenitore */
+    -fx-background-color: #dc143c; 
     -fx-alignment: center;
-    -fx-spacing: 10px; /* Distanza tra gli elementi */
+    -fx-spacing: 10px; 
     -fx-padding: 20px;
-    -fx-max-height: 100%; /* Limitare l'altezza della VBox */
-    -fx-vgrow: ALWAYS; /* Permette alla VBox di espandersi solo se necessario */
+    -fx-max-height: 100%; 
+    -fx-vgrow: ALWAYS; 
 }
 
 /* Stile per il titolo della spedizione */
 .titolo-spedizione {
-    -fx-font-size: 18px;               /* Imposta una dimensione del font */
-    -fx-font-weight: bold;             /* Imposta il testo come grassetto */
-    -fx-text-fill: white;            /* Cambia il colore del testo */
-    -fx-text-align: center;            /* Centra il testo */
-    -fx-margin: 10px 0;                /* Aggiungi margine sopra e sotto */
-    -fx-padding: 5px;                  /* Aggiungi un po' di padding */
-    -fx-border-width: 2px;             /* Aggiungi un bordo di colore verde */
-    -fx-border-color: white;         /* Colore verde per il bordo */
-    -fx-border-radius: 5px;            /* Rendi gli angoli arrotondati */
+    -fx-font-size: 18px;              
+    -fx-font-weight: bold;             
+    -fx-text-fill: white;           
+    -fx-text-align: center;            
+    -fx-margin: 10px 0;              
+    -fx-padding: 5px;                 
+    -fx-border-width: 2px;            
+    -fx-border-color: white;         
+    -fx-border-radius: 5px;           
     -fx-background-radius: 5px;
-    -fx-background-color: #dc143c;     /* Imposta uno sfondo chiaro */
+    -fx-background-color: #dc143c;     
 }
 
 .titolo-spedizione:hover {
-    -fx-background-color: #e0e0e0;     /* Cambia lo sfondo al passaggio del mouse */
-    -fx-cursor: hand;                  /* Cambia il cursore per far capire che è interattivo */
+    -fx-background-color: #e0e0e0;     
+    -fx-cursor: hand;                  
 }
 
 /* Stile per ciascun HBox che contiene la spedizione */
 .hbox {
     -fx-alignment: center-left;
-    -fx-spacing: 15px; /* Distanza tra l'immagine e le informazioni */
+    -fx-spacing: 15px; 
     -fx-padding: 10px;
-    -fx-background-color: #EEB729; /* Colore di sfondo giallo per le spedizioni */
+    -fx-background-color: #EEB729; 
     -fx-border-color: #000000;
     -fx-border-radius: 3px;
-    -fx-margin: 5px; /* Puoi rimuoverlo se vuoi evitare spazi extra */
+    -fx-margin: 5px; 
 }
 
 /* Stile per l'immagine */
@@ -97,13 +97,13 @@
 /* Stile per la label Data Spedizione */
 .data-label {
     -fx-font-size: 14px;
-    -fx-text-fill: rgb(20, 15, 232); /* Blu */
+    -fx-text-fill: rgb(20, 15, 232); 
     -fx-font-weight: bold;
 }
 
 /* Stile per il bottone */
 .button {
-    -fx-background-color: #66cdaa; /* Colore blu per il bottone */
+    -fx-background-color: #66cdaa; 
     -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
@@ -115,15 +115,15 @@
 }
 
 .button:hover {
-    -fx-background-color: #2e8b57; /* Colore blu più scuro al passaggio del mouse */
+    -fx-background-color: #2e8b57; 
 }
 
 /* Stile per la barra in fondo (bottomBar) */
 .bottom-bar {
-    -fx-background-color: #dc143c; /* Colore crimson red per la barra inferiore */
+    -fx-background-color: #dc143c; 
     -fx-alignment: center;
-    -fx-padding: 10px 0; /* Spaziatura verticale ridotta */
-    -fx-min-height: 40px; /* Imposta un'altezza minima per il bottone */
-    -fx-pref-height: 40px; /* Imposta un'altezza preferita per la bottom-bar */
-    -fx-max-height: 40px; /* Impedisci l'espansione oltre l'altezza minima */
+    -fx-padding: 10px 0; 
+    -fx-min-height: 40px; 
+    -fx-pref-height: 40px; 
+    -fx-max-height: 40px; 
 }

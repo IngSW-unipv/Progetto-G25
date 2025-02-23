@@ -1,26 +1,26 @@
 /* Stile generale */
 .root {
-    -fx-background-color: #dc143c; /* Rosso */
+    -fx-background-color: #dc143c; 
 }
 
 /* Stile dell'AnchorPane */
 .anchor-pane {
-    -fx-background-color: #dc143c; /* Rosso */
+    -fx-background-color: #dc143c; 
 }
 
 /* Stile dello ScrollPane */
 .scroll-pane {
-    -fx-background-color: transparent; /* Evita che copra il colore */
+    -fx-background-color: transparent; 
 }
 
 /* Forza il colore anche dentro lo ScrollPane */
 .scroll-pane .viewport {
-    -fx-background-color: #dc143c; /* Rosso */
+    -fx-background-color: #dc143c; 
 }
 
 /* Stile del FlowPane */
 .flow-pane {
-    -fx-background-color: #dc143c; /* Rosso */
+    -fx-background-color: #dc143c; 
     -fx-padding: 10;
     -fx-hgap: 15;
     -fx-vgap: 15;
@@ -55,7 +55,7 @@
 /* Stile del box prodotto */
 .product-box {
     -fx-padding: 15;
-    -fx-background-color: #EEB729; /* Giallo per i box prodotto */
+    -fx-background-color: #EEB729; 
     -fx-border-color: #000000;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
@@ -94,13 +94,13 @@
 /* Stato del prodotto */
 .product-status {
     -fx-font-size: 14px;
-    -fx-text-fill: #008000; /* Verde per disponibile */
+    -fx-text-fill: #008000; 
     -fx-font-weight: bold;
 }
 
 /* Bottone di rifornimento */
 .restock-button {
-    -fx-background-color: #66cdaa; /* Verde acqua */
+    -fx-background-color: #66cdaa; 
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 5px;
@@ -115,7 +115,7 @@
 
 /* Effetto hover */
 .restock-button:hover {
-    -fx-background-color: #2e8b57; /* Verde più scuro */
+    -fx-background-color: #2e8b57; 
     -fx-border-color: #222222;
 }
 
@@ -127,7 +127,7 @@
 
 /* Bottone "Visualizza Carrello" */
 .carrello-button {
-    -fx-background-color: #66cdaa; /* Stesso colore del restock */
+    -fx-background-color: #66cdaa; 
     -fx-background-radius: 3px;
     -fx-text-fill: black;
     -fx-font-weight: bold;
@@ -144,7 +144,7 @@
 
 /* Effetto hover */
 .carrello-button:hover {
-    -fx-background-color: #2e8b57; /* Verde più scuro */
+    -fx-background-color: #2e8b57; 
     -fx-border-color: #222222;
 }
 
@@ -156,7 +156,7 @@
 
 /* Menu a tendina per i distributori */
 .distributore-dropdown {
-    -fx-background-color: #66cdaa; /* Stesso colore degli altri bottoni */
+    -fx-background-color: #66cdaa; 
     -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-border-color: #000000;
@@ -171,31 +171,30 @@
 
 /* Cambia colore quando il menu è aperto */
 .distributore-dropdown:hover {
-    -fx-background-color: #2e8b57; /* Verde più scuro */
+    -fx-background-color: #2e8b57; 
     -fx-border-color: #222222;
 }
 
 .distributore-dropdown .combo-box {
     -fx-background-color: transparent;
-    -fx-text-fill: #222222; /* Mantiene il testo visibile */
+    -fx-text-fill: #222222; 
 }
 
-/* Rimuove lo sfondo verde scuro dietro il testo selezionato */
 .distributore-dropdown .combo-box .button-cell {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-padding: 0;
     -fx-border-color: transparent;
-    -fx-text-fill: white; /* Cambia il colore del testo se necessario */
+    -fx-text-fill: white; 
 }
 
-/* Evita che si ripresenti quando il ComboBox è focalizzato */
+
 .distributore-dropdown .combo-box:focused .button-cell {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
 
-/* Rimuove qualsiasi sfondo quando il ComboBox è aperto */
+
 .distributore-dropdown .combo-box:showing .button-cell {
     -fx-background-color: transparent;
 }
@@ -212,18 +211,18 @@
 }
 
 .distributore-dropdown .list-cell:hover {
-    -fx-background-color: #FFA500; /* Arancione */
+    -fx-background-color: #FFA500; 
     -fx-text-fill: black;
 }
 
 /* Cambia colore quando un elemento è selezionato */
 .distributore-dropdown .list-cell:filled:selected {
-    -fx-background-color: #1e6f43; /* Verde ancora più scuro */
+    -fx-background-color: #1e6f43; 
     -fx-text-fill: white;
 }
 
 .storico-spedizioni-button {
-    -fx-background-color: #66cdaa; /* Stesso colore del restock */
+    -fx-background-color: #66cdaa; 
     -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-background-radius: 5px;
@@ -239,7 +238,7 @@
 
 /* Effetto hover */
 .storico-spedizioni-button:hover {
-    -fx-background-color: #2e8b57; /* Verde più scuro */
+    -fx-background-color: #2e8b57; 
     -fx-border-color: #222222;
 }
 

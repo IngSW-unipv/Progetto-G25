@@ -31,21 +31,16 @@ public class ProdottiView {
 
         rootLayout = new VBox(10);
         rootLayout.setPadding(new Insets(10));
-
-        // 🟢 Barra del titolo
+        //Barra del titolo
         HBox topBar = creaTopBar();
 
         prodottiContainer = new FlowPane();
         scrollPane = new ScrollPane(prodottiContainer);
-
         initialize();
-
-        // 🔻 Barra inferiore con menu distributore e bottone carrello
+        //Barra inferiore 
         HBox bottomBar = creaBottomBar();
 
         rootLayout.getChildren().addAll(topBar, scrollPane, bottomBar);
-
-        // Caricamento CSS
         rootLayout.getStylesheets().add(getClass().getResource("/css/StileAmministratore.css").toExternalForm());
     }
 
@@ -78,38 +73,30 @@ public class ProdottiView {
         bottomBar.setAlignment(Pos.CENTER);
         bottomBar.setPadding(new Insets(10));
         bottomBar.getStyleClass().add("bottom-bar");
-
-        // 🔻 Bottone Carrello
+        
         carrelloButton = new Button("🛒 Carrello");
         carrelloButton.getStyleClass().add("carrello-button");
         carrelloButton.setOnAction(e -> controller.apriCarrello());
-        
-        // Bottone storico spedizioni
+     
         Button storicoSpedizioniButton = new Button("Storico Spedizioni");
         storicoSpedizioniButton.getStyleClass().add("storico-spedizioni-button");
         storicoSpedizioniButton.setOnAction(e -> controller.apriStoricoSpedizioni());
         
-        // 🔻 Dropdown per selezione Distributore
         distributoreDropdown = new ComboBox<>();
         distributoreDropdown.setPrefHeight(90);
         distributoreDropdown.setPromptText("Seleziona Distributore");
         distributoreDropdown.getStyleClass().add("distributore-dropdown");
 
-       
-
-        // Quando cambia il distributore, aggiorniamo i prodotti
         distributoreDropdown.setOnAction(e -> {
             Distributore distributoreSelezionato = distributoreDropdown.getValue();
             if (distributoreSelezionato != null) {
                 controller.setIdInventario(distributoreSelezionato.getIdInventario());
             }
         });
-
         bottomBar.getChildren().addAll(carrelloButton, distributoreDropdown, storicoSpedizioniButton);
         return bottomBar;
     }
 
- // Questo metodo verrà chiamato dal controller per passare la lista di distributori
     public void setDistributori(List<Distributore> distributori) {
         distributoreDropdown.getItems().clear();
         distributoreDropdown.getItems().addAll(distributori);
@@ -151,15 +138,13 @@ public class ProdottiView {
 
         Label nameLabel = new Label(stock.getProdotto().getNome());
         nameLabel.getStyleClass().add("product-name");
-
         Label priceLabel = new Label(String.format("€ %.2f", stock.getProdotto().getPrezzo()));
         priceLabel.getStyleClass().add("product-price");
-
         Label quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
         quantityLabel.getStyleClass().add("product-quantity");
-
         Label statusLabel = new Label();
         statusLabel.getStyleClass().add("product-status");
+        
         if (stock.getQuantitaDisp() > 0) {
             statusLabel.setText("Stato: Disponibile");
             statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
@@ -193,7 +178,6 @@ public class ProdottiView {
         } else {
             System.err.println("❌ Icona non trovata -> " + imageFile.getAbsolutePath());
         }
-
         Button button = new Button();
         button.setGraphic(icon);
         button.getStyleClass().add("restock-button");

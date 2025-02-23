@@ -73,7 +73,7 @@
     -fx-background-color: #2e8b57;
 }
 
-/* Bottone per rimuovere il prodotto (icona cestino) */
+/* Bottone per rimuovere il prodotto */
 .remove-button {
     -fx-background-color: red;
     -fx-text-fill: white;

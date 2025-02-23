@@ -9,16 +9,16 @@ public class QuantityDiscount implements IDiscountStrategy {
 	
     @Override
     public BigDecimal applyDiscount(BigDecimal price, int quantity, Stock stock) {
-        int maxQuantity = stock.getQMaxInseribile(); // Ottengo la quantità massima disponibile
+        int maxQuantity = stock.getQMaxInseribile(); // Ottengo la quantità massima inseribile per quel prodotto
 
         BigDecimal discountRate = BigDecimal.ZERO;
 
-        if (quantity >= maxQuantity * 0.8) { // Se ordini almeno l'80% della quantità massima
-            discountRate = new BigDecimal("0.10"); // 10% di sconto
+        if (quantity >= maxQuantity * 0.8) { // 
+            discountRate = new BigDecimal("0.10"); // 10% di sconto per l'80% della quantità massima
         } else if (quantity >= maxQuantity * 0.5) {
-            discountRate = new BigDecimal("0.07"); // 7% di sconto
+            discountRate = new BigDecimal("0.07"); // 7% di sconto per il 50% della quantità massima
         } else if (quantity >= maxQuantity * 0.2) {
-            discountRate = new BigDecimal("0.05"); // 5% di sconto
+            discountRate = new BigDecimal("0.05"); // 5% di sconto per il 20% della quantità massima
         }
 
         BigDecimal discountPrice = price.subtract(price.multiply(discountRate)).multiply(new BigDecimal(quantity));

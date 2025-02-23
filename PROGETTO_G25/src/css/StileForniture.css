@@ -23,7 +23,7 @@
     -fx-transition: 0.3s;
 }
 
-/* Cambia colore di una specifica Label nel riquadro */
+/* Stile delle label */
 .nome-fornitore {
     -fx-text-fill: #FFFFFF;  
     -fx-font-size: 18px;
@@ -32,13 +32,13 @@
 }
 
 .citta-fornitore {
-    -fx-text-fill: #8b0000;  /* Rosso scuro */
+    -fx-text-fill: #8b0000;  
     -fx-font-weight: bold;
     -fx-font-size: 15px;
 }
 
 .prezzo-fornitore {
-    -fx-text-fill: #006400;  /* Verde scuro */
+    -fx-text-fill: #006400;  
     -fx-font-weight: bold;
     -fx-font-size: 15px;
 }

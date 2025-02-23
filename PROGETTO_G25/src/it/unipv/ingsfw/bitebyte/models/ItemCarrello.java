@@ -3,9 +3,9 @@ package it.unipv.ingsfw.bitebyte.models;
 import java.math.BigDecimal;
 
 public class ItemCarrello {
-    private Fornitura fornitura;  // Il fornitore e il prodotto
-    private int quantita;         // La quantità del prodotto ordinato
-    private BigDecimal prezzoTotale; // Il prezzo totale (quantità * prezzo unitario)
+    private Fornitura fornitura;  // Presenta fornitore e prodotto associati
+    private int quantita;         // Quantità del prodotto ordinato
+    private BigDecimal prezzoTotale; // Prezzo totale (quantità * prezzo unitario)
 
     public ItemCarrello(Fornitura fornitura, int quantita, BigDecimal prezzoTotale) {
         this.fornitura = fornitura;

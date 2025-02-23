@@ -41,9 +41,7 @@ public class ModificaPrezzoView {
         layout.getChildren().addAll(istruzioni, prezzoField, confermaButton);
 
         Scene scene = new Scene(layout, 300, 200);
-
-        // **Aggiunta del file CSS**
-        String cssPath = "/css/StileModificaPrezzo.css"; // Percorso corretto per le risorse
+        String cssPath = "/css/StileModificaPrezzo.css"; 
         try {
             scene.getStylesheets().add(
                 Objects.requireNonNull(getClass().getResource(cssPath)).toExternalForm()
@@ -51,7 +49,6 @@ public class ModificaPrezzoView {
         } catch (NullPointerException e) {
             System.err.println("Errore: Il file CSS non è stato trovato in " + cssPath);
         }
-
         stage.setScene(scene);
     }
 
@@ -70,7 +67,7 @@ public class ModificaPrezzoView {
         alert.setTitle("Errore");
         alert.setHeaderText(null);
         alert.setContentText(messaggio);
-        // Associa il CSS al dialog pane dell'alert
+        
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("/css/StileModificaPrezzo.css").toExternalForm());
         dialogPane.getStyleClass().add("custom-alert"); 
@@ -80,7 +77,7 @@ public class ModificaPrezzoView {
     public void show() {
         stage.showAndWait();
     }
-
+    //Interfaccia implementata come classe anonima nel controller
     public interface OnPriceUpdateListener {
         void onPriceUpdated(Stock stock, BigDecimal nuovoPrezzo);
     }

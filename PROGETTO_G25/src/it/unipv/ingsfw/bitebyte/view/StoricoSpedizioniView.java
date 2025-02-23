@@ -20,118 +20,92 @@ import it.unipv.ingsfw.bitebyte.models.Spedizione;
 
 public class StoricoSpedizioniView {
 
-    // Metodo per mostrare lo storico delle spedizioni
     public void mostra(ArrayList<Spedizione> spedizioni) {
-        // Crea la finestra
+        
         Stage stage = new Stage();
         stage.setTitle("Storico Spedizioni");
 
-        // Crea un layout principale (VBox)
         VBox vbox = new VBox(10);
-        vbox.getStyleClass().add("vbox");  // Aggiungi classe CSS per il VBox
-        vbox.setAlignment(Pos.CENTER); // Allinea gli elementi al centro
+        vbox.getStyleClass().add("vbox");  
+        vbox.setAlignment(Pos.CENTER); 
 
-        // Usa uno ScrollPane per la lista delle spedizioni (per gestire le spedizioni lunghe)
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vbox);
-        scrollPane.getStyleClass().add("scroll-pane");  // Aggiungi classe CSS per lo ScrollPane
-        scrollPane.setFitToWidth(true); // Imposta la larghezza della finestra a quella del contenuto
+        scrollPane.getStyleClass().add("scroll-pane");  
+        scrollPane.setFitToWidth(true); 
 
-        // Raggruppa le spedizioni per ID spedizione
+        //Raggruppamento delle spedizioni per ID
         Map<String, ArrayList<Spedizione>> spedizioniRaggruppate = new HashMap<>();
         for (Spedizione spedizione : spedizioni) {
             spedizioniRaggruppate
                 .computeIfAbsent(spedizione.getIdSpedizione(), k -> new ArrayList<>())
                 .add(spedizione);
         }
-
-        // Aggiungi ogni gruppo di spedizioni al layout
         for (Map.Entry<String, ArrayList<Spedizione>> entry : spedizioniRaggruppate.entrySet()) {
             String idSpedizione = entry.getKey();
             List<Spedizione> prodotti = entry.getValue();
 
-            // Crea un box per il gruppo di prodotti della stessa spedizione
             VBox spedizioneBox = new VBox(10);
             spedizioneBox.getStyleClass().add("spedizione-box");
             spedizioneBox.setAlignment(Pos.CENTER_LEFT);
 
-            // Aggiungi un titolo per l'ID spedizione
             Label titoloSpedizione = new Label("ID Spedizione: " + idSpedizione);
             titoloSpedizione.getStyleClass().add("titolo-spedizione");
             spedizioneBox.getChildren().add(titoloSpedizione);
 
-            // Aggiungi ogni prodotto alla spedizioneBox
+            // Aggiunta dei prodotti alla rispettiva spedizione
             for (Spedizione spedizione : prodotti) {
-                // Crea un layout orizzontale per la spedizione
+
                 HBox hbox = new HBox(10);
-                hbox.getStyleClass().add("hbox");  // Aggiungi classe CSS per l'HBox
-                hbox.setAlignment(Pos.CENTER_LEFT); // Allinea gli elementi al centro
-
-                // Crea un'ImageView per l'immagine del prodotto
+                hbox.getStyleClass().add("hbox");  
+                hbox.setAlignment(Pos.CENTER_LEFT); 
+                
                 ImageView imageView = new ImageView();
-                imageView.getStyleClass().add("image-view");  // Aggiungi classe CSS per l'immagine
-                imageView.setPreserveRatio(true); // Mantieni il rapporto di aspetto
-                imageView.setFitHeight(100); // Imposta un'altezza fissa per l'immagine
-                imageView.setFitWidth(100); // Imposta la larghezza fissa per l'immagine
-
-                // Carica l'immagine corrispondente al prodotto
+                imageView.getStyleClass().add("image-view");  
+                imageView.setPreserveRatio(true); 
+                imageView.setFitHeight(100); 
+                imageView.setFitWidth(100); 
+                
                 File imageFile = new File("resources/immaginiDB/" + spedizione.getIdProdotto() + ".jpg");
                 if (imageFile.exists()) {
                     Image image = new Image(imageFile.toURI().toString());
                     imageView.setImage(image);
-                } else {
-                    // Se l'immagine non esiste, carica un'immagine di default
-                    Image image = new Image("resources/immaginiDB/default.jpg"); // esempio di immagine di default
-                    imageView.setImage(image);
-                }
-
-                // Crea una VBox per le informazioni del prodotto
+                } 
+                
                 VBox infoBox = new VBox(5);
-                infoBox.getStyleClass().add("vbox-info");  // Aggiungi classe CSS per la VBox delle info
-                infoBox.setAlignment(Pos.CENTER_LEFT); // Allinea a sinistra dentro la VBox
+                infoBox.getStyleClass().add("vbox-info");  
+                infoBox.setAlignment(Pos.CENTER_LEFT); 
 
-                // Crea le label con classi uniche
+                
                 Label idProdottoLabel = new Label("ID Prodotto: " + spedizione.getIdProdotto());
-                idProdottoLabel.getStyleClass().add("id-prodotto-label");  // Classe CSS unica
-
+                idProdottoLabel.getStyleClass().add("id-prodotto-label"); 
                 Label quantitaLabel = new Label("Quantità: " + spedizione.getqOrd());
-                quantitaLabel.getStyleClass().add("quantita-label");  // Classe CSS unica
-
+                quantitaLabel.getStyleClass().add("quantita-label");  
                 Label prezzoTotLabel = new Label("Prezzo Totale: €" + spedizione.getPrezzoTot());
-                prezzoTotLabel.getStyleClass().add("prezzo-totale-label");  // Classe CSS unica
-
+                prezzoTotLabel.getStyleClass().add("prezzo-totale-label");  
                 Label dataLabel = new Label("Data spedizione: " + spedizione.getDataSp());
-                dataLabel.getStyleClass().add("data-label");  // Classe CSS unica
+                dataLabel.getStyleClass().add("data-label");  
 
-                // Aggiungi le label alla VBox
+               
                 infoBox.getChildren().addAll(idProdottoLabel, quantitaLabel, prezzoTotLabel, dataLabel);
-
-                // Aggiungi l'immagine e le informazioni al layout orizzontale
                 hbox.getChildren().addAll(imageView, infoBox);
-
-                // Aggiungi il riquadro del prodotto al box della spedizione
                 spedizioneBox.getChildren().add(hbox);
             }
-
-            // Aggiungi il box della spedizione al layout principale
             vbox.getChildren().add(spedizioneBox);
         }
 
-        // Crea la bottomBar con il bottone
         HBox bottomBar = new HBox();
-        bottomBar.getStyleClass().add("bottom-bar");  // Aggiungi classe CSS per la bottom bar
-        bottomBar.setAlignment(Pos.CENTER); // Allinea il bottone al centro della bottom bar
+        bottomBar.getStyleClass().add("bottom-bar"); 
+        bottomBar.setAlignment(Pos.CENTER);
         Button closeButton = new Button("Chiudi");
-        closeButton.getStyleClass().add("button");  // Aggiungi classe CSS per il bottone
+        closeButton.getStyleClass().add("button"); 
         closeButton.setOnAction(e -> stage.close());
         bottomBar.getChildren().add(closeButton);
 
-        // Aggiungi la bottomBar al layout principale
         vbox.getChildren().add(bottomBar);
 
-        // Crea la scena e imposta la scena della finestra
-        Scene scene = new Scene(scrollPane, 600, 500); // Imposta una larghezza di default
-        scene.getStylesheets().add(getClass().getResource("/css/StileSpedizioni.css").toExternalForm()); // Carica il file CSS
+        Scene scene = new Scene(scrollPane, 600, 500); 
+        scene.getStylesheets().add(getClass().getResource("/css/StileSpedizioni.css").toExternalForm()); 
         stage.setScene(scene);
         stage.show();
     }
