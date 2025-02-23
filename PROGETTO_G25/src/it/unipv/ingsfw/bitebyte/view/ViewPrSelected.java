@@ -13,7 +13,13 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
-import java.io.InputStream;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
+
+
+
 
 public class ViewPrSelected {
 
@@ -26,22 +32,22 @@ public class ViewPrSelected {
 
     // Metodo per creare l'interfaccia grafica
     public VBox creaInterfaccia(Stock stock, AcquistoController controller, Stage newStage, Stage previousStage) {
-        VBox vboxStock = new VBox(5);
 
+
+        VBox vboxStock = new VBox(5); // Spazio minimo tra elementi
+        vboxStock.getStyleClass().add("product-box");
+        vboxStock.setAlignment(Pos.TOP_LEFT); // Allinea tutto in alto a sinistra
+        vboxStock.setPadding(new Insets(0, 0, 0, 0)); // Rimuove margini extra
         vboxStock.getStyleClass().add("product-box");
         
         // Caricamento della GIF di loading
-        InputStream gifInputStream = getClass().getResourceAsStream("/gif/Loading_icon.gif");
-        if (gifInputStream != null) {
-            loadingGif = new ImageView(new Image(gifInputStream));
-            loadingGif.setFitWidth(50);
-            loadingGif.setFitHeight(50);
-            loadingGif.setStyle("-fx-background-color: red;"); // Aggiungi un colore di sfondo per testare visibilità
-            nascondiGif(); // La GIF è inizialmente nascosta
-        } else {
-            System.out.println("La GIF non è stata trovata!");
-        }
-
+        Image gifImage = new Image(getClass().getResource("/gif/Loading_icon.gif").toString());
+        loadingGif = new ImageView(gifImage);
+        loadingGif.setFitWidth(50);
+        loadingGif.setFitHeight(50);
+        loadingGif.setStyle("-fx-background-color: red;"); // Aggiungi un colore di sfondo per testare visibilità
+        nascondiGif(); // La GIF è inizialmente nascosta
+        
         // Inizializza i nodi
         imageView = new ImageView();
         imageView.setFitWidth(120);  
@@ -50,24 +56,39 @@ public class ViewPrSelected {
 
         nameLabel = new Label(stock.getProdotto().getNome());
         nameLabel.getStyleClass().add("product-name"); 
-        
         priceLabel = new Label(String.format("€ %.2f", stock.getProdotto().getPrezzo()));
         priceLabel.getStyleClass().add("product-price");
-        
         quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
         
-        Button backButton = new Button("Torna indietro");
-        backButton.setOnAction(e -> controller.tornaIndietro(newStage));  // Qui associ il metodo del controller
+        
 
+        // Bottone Torna Indietro
+        ImageView backImageView = new ImageView();
+        backImageView.setFitWidth(50);  // Puoi regolare la dimensione come preferisci
+        backImageView.setFitHeight(50);
+        backImageView.setPreserveRatio(true);
+
+        // Imposta l'immagine (ad esempio un'icona di freccia)
+        backImageView.setImage(new Image(getClass().getResource("/immagini/back_arrow.png").toString()));
+
+        // Aggiungi un listener al click per tornare indietro
+        backImageView.setOnMouseClicked(e -> controller.tornaIndietro(newStage));
+
+        // Contenitore per l'ImageView
+        HBox backButtonContainer = new HBox(backImageView);
+        backButtonContainer.setAlignment(Pos.TOP_LEFT);
+        VBox.setMargin(backButtonContainer, new Insets(0, 0, 90, 0));  // Posizione in alto a sinistra con margine
+        
+        
         // Bottone Seleziona
-        selectButton = new Button("Seleziona");
-
+        selectButton = new Button("Conferma Acquisto");	
+        selectButton.setOnAction(e -> controller.acquistaProdotto(stock));
         // Crea un StackPane per posizionare la GIF sopra l'immagine
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(imageView, loadingGif); // Aggiungi prima l'immagine, poi la GIF (perché deve essere sopra l'immagine)
 
         // Aggiungi gli elementi alla VBox
-        vboxStock.getChildren().addAll(backButton, selectButton, stackPane, nameLabel, priceLabel, quantityLabel);
+        vboxStock.getChildren().addAll(backButtonContainer, selectButton, stackPane, nameLabel, priceLabel, quantityLabel);
 
         return vboxStock;
     }
@@ -78,7 +99,7 @@ public class ViewPrSelected {
             System.out.println("Mostrando GIF...");
 
             Platform.runLater(() -> {
-                loadingGif.setVisible(true);
+                loadingGif.setVisible(true); // Mostra la GIF
                 loadingGif.getScene().getRoot().requestLayout(); // Forza il layout
             });
         }

@@ -37,4 +37,11 @@ public class AcquistoController {
         currentStage.close(); // Chiude la finestra attuale
         previousStage.show(); // Riporta in primo piano la finestra precedente
     }
+    
+    public void acquistaProdotto(Stock stock) {
+        System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
+        // Qui puoi aggiungere la logica per gestire l'acquisto
+    }
+    
+    
 }
