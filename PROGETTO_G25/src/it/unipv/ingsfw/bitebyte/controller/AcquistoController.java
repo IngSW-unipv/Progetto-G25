@@ -1,5 +1,7 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
+import it.unipv.ingsfw.bitebyte.models.Cliente;
+import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import javafx.scene.Scene;
@@ -17,12 +19,25 @@ public class AcquistoController {
     }
 
     public void setStockSelezionato(Stock stock) {
+    	Cliente clienteLoggato = Sessione.getInstance().getClienteConnesso();
         this.stockSelezionato = stock;
+        if (clienteLoggato != null) {
+            System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
+            System.out.println("Utente che ha effettuato l'acquisto: " + clienteLoggato.getNome() + " " + clienteLoggato.getCognome());
+            
+            // Aggiungi la logica per gestire l'acquisto, associando l'acquisto al cliente loggato
+            // Puoi ad esempio chiamare un metodo di acquisto passando il cliente loggato e lo stock
+        } else {
+            System.out.println("Nessun cliente connesso. Impossibile completare l'acquisto.");
+        }
     }
 
     // Metodo per mostrare l'interfaccia
     public void mostraInterfaccia(Stock stock, Stage newStage) {
-        VBox vbox = view.creaInterfaccia(stock, this, newStage, previousStage);
+    	Cliente clienteLoggato = Sessione.getInstance().getClienteConnesso(); // Recupera il cliente loggato
+
+        // Passa il cliente loggato alla vista per aggiornare l'interfaccia con i suoi dettagli
+        VBox vbox = view.creaInterfaccia(stock, this, newStage, previousStage, clienteLoggato);
         Scene scene = new Scene(vbox, 600, 400); // Imposta le dimensioni fisse
         scene.getStylesheets().add(getClass().getResource("/CSS/styles2.css").toExternalForm());
         newStage.setScene(scene);
