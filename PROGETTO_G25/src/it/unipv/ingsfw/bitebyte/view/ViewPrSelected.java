@@ -5,7 +5,9 @@ import it.unipv.ingsfw.bitebyte.models.Stock;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
@@ -72,11 +74,25 @@ public class ViewPrSelected {
         backImageView.setFitHeight(50);
         backImageView.setPreserveRatio(true);
 
-        // Imposta l'immagine (ad esempio un'icona di freccia)
         backImageView.setImage(new Image(getClass().getResource("/immagini/back_arrow.png").toString()));
 
-        // Aggiungi un listener al click per tornare indietro
-        backImageView.setOnMouseClicked(e -> controller.tornaIndietro(newStage));
+        // Listener al click per tornare indietro
+        backImageView.setOnMouseClicked(e -> {
+            mostraFinestraCaricamento();
+
+            // Dopo 2 secondi chiudi la finestra e torna indietro
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000); // Attendi 2 secondi
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                
+                Platform.runLater(() -> {
+                    controller.tornaIndietro(newStage);
+                });
+            }).start();
+        });
 
         // Contenitore per l'ImageView
         HBox backButtonContainer = new HBox(backImageView);
@@ -98,16 +114,42 @@ public class ViewPrSelected {
         return vboxStock;
     }
 
-    // Funzione per mostrare la GIF
-    public void mostraGif() {
-        if (loadingGif != null) {
-            System.out.println("Mostrando GIF...");
+    // Funzione mostra GIF
+    public void mostraFinestraCaricamento() {
+        Stage loadingStage = new Stage();
+        loadingStage.setTitle("Caricamento...");
 
-            Platform.runLater(() -> {
-                loadingGif.setVisible(true); // Mostra la GIF
-                loadingGif.getScene().getRoot().requestLayout(); // Forza il layout
-            });
-        }
+        // Rimuove la "X" e la barra del titolo
+        loadingStage.initStyle(StageStyle.UNDECORATED);
+
+        // Blocca l'interazione con la finestra principale finché questa non si chiude
+        loadingStage.initModality(Modality.APPLICATION_MODAL);
+
+        // Caricamento della GIF
+        Image gifImage = new Image(getClass().getResource("/gif/Loading_icon.gif").toString());
+        ImageView loadingGif = new ImageView(gifImage);
+        loadingGif.setFitWidth(100);
+        loadingGif.setFitHeight(100);
+
+        VBox layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+        layout.getChildren().add(loadingGif);
+
+        Scene scene = new Scene(layout, 200, 200);
+        loadingStage.setScene(scene);
+
+        // Mostra la finestra di caricamento
+        loadingStage.show();
+
+        // Dopo 2 secondi chiude la finestra
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Platform.runLater(loadingStage::close);
+        }).start();
     }
 
     // Funzione per nascondere la GIF

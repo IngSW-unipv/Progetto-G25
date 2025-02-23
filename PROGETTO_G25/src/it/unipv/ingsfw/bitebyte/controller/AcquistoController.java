@@ -34,7 +34,6 @@ public class AcquistoController {
 
     // Metodo chiamato quando si preme il bottone "Torna indietro"
     public void tornaIndietro(Stage currentStage) {
-        view.mostraGif(); // Mostra la GIF prima di chiudere la finestra
         currentStage.close(); // Chiude la finestra attuale
         previousStage.show(); // Riporta in primo piano la finestra precedente
     }
