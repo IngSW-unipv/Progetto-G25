@@ -3,6 +3,8 @@ package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.service.DistributoreService;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
+
+// Importo le classi di JavaFX necessarie per gestire l'interfaccia grafica e mostrare finestre di dialogo.
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -18,20 +20,24 @@ public class ProdottoController {
     private Button collegatiButton;
 
     private DistributoreService distributoreService;
+    
+ //Costruttore della classe ProdottoController che inizializza un'istanza di DistributoreService.
 
     public ProdottoController() {
         distributoreService = new DistributoreService(); // Inizializzazione del servizio
     }
 
+ //Metodo pubblico annotato con @FXML che viene eseguito quando l'utente clicca sul pulsante "Collegati".
+ // Legge il testo inserito nel campo di input e verifica che non sia vuoto. Se è vuoto, mostra un messaggio di errore.
     @FXML
     public void onCollegatiClicked() {
         String codiceDistributore = codiceDistributoreField.getText();
 
-        if (codiceDistributore.trim().isEmpty()) {
+        if (codiceDistributore.trim().isEmpty()) {     //trim per rimuovere gli spazi
             showError("Errore", "Inserisci un codice distributore.");
             return;
         }
-
+       // Converte il codice del distributore in un numero intero e utilizza il servizio per recuperare il distributore corrispondente.
         try {
             int idDistributore = Integer.parseInt(codiceDistributore);
             Distributore distributore = distributoreService.getDistributoreById(idDistributore); // Usa il servizio
@@ -59,6 +65,7 @@ public class ProdottoController {
         }
     }
 
+    // Metodi privati per mostrare un messaggio di errore
     private void showError(String title, String message) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);

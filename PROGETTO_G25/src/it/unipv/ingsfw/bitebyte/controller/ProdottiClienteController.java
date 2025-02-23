@@ -17,69 +17,66 @@ import java.util.List;
 
 public class ProdottiClienteController {
 
-    private Distributore distributoreCorrente;
-    private RicercaFacade ricercaFacade = new RicercaFacade(); // Usa RicercaFacade
+	//Attributi 
+    private Distributore distributoreCorrente;   //distributore selezionato dal cliente
+    private RicercaFacade ricercaFacade = new RicercaFacade(); // Uso RicercaFacade
     private boolean modalitaVisualizzazione = false;
-
-    @FXML private FlowPane prodottiContainer;
-    @FXML private ScrollPane scrollPane;
-    @FXML private TextField searchField;
-    @FXML private Button filterButton;
-    @FXML private VBox filterPanel;
-    @FXML private ComboBox<String> categoryFilter;
-    @FXML private CheckBox availabilityFilter;
-    @FXML private ToggleGroup priceToggleGroup;
-    @FXML private RadioButton priceAsc;
-    @FXML private RadioButton priceDesc;
-    @FXML private HBox sugarControls;
-    @FXML private Button btnSugarMinus;
+    private int currentSugar = 0;   //Contatore che indica il livello di zucchero selezionato (da 0 a 5).
+    private int idInventario;       //Identificatore dell'inventario del distributore corrente.
+    
+    
+    @FXML private FlowPane prodottiContainer;         //Contenitore per i prodotti.
+    @FXML private ScrollPane scrollPane;              //Permette lo scrolling verticale dei prodotti.
+    @FXML private TextField searchField;              //Campo per la ricerca dei prodotti.
+    @FXML private Button filterButton;                //Bottone che mostra/nasconde il pannello dei filtri.
+    @FXML private VBox filterPanel;                   // Pannello che contiene i filtri.
+    @FXML private ComboBox<String> categoryFilter;    //Filtro per la categoria dei prodotti.
+    @FXML private CheckBox availabilityFilter;        //Filtro per visualizzare solo i prodotti disponibili.
+    @FXML private ToggleGroup priceToggleGroup;       //Raggruppamento dei radio button per ordinare il prezzo.
+    @FXML private RadioButton priceAsc;               //Ordina i prodotti per prezzo crescente.
+    @FXML private RadioButton priceDesc;              //Ordina i prodotti per prezzo decrescente
+    @FXML private HBox sugarControls;                 //Controlli per la gestione del livello di zucchero
+    @FXML private Button btnSugarMinus;               //Pulsanti per modificare il livello di zucchero.
     @FXML private Button btnSugarPlus;
-    @FXML private Label sugarLevel;
+    @FXML private Label sugarLevel;                   //Mostra il livello attuale di zuccher
 
-    private int currentSugar = 0;
-    private int idInventario;
+    
+    // Inizializzazione
 
+    public void initialize() {
+        prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));   /*Questo codice imposta la larghezza preferita del contenitore dei prodotti (prodottiContainer) 
+                                                                                                 in modo che sia sempre 20 pixel più stretta rispetto alla larghezza dello scrollPane.
+                                                                                                */
+        prodottiContainer.setPrefWrapLength(600);
+        scrollPane.widthProperty().addListener((obs, oldVal, newVal) ->
+                prodottiContainer.setPrefWrapLength(newVal.doubleValue() - 20));
+
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> caricaProdotti(newVal));
+        searchField.setFocusTraversable(false);  // Impedisce che il campo di testo searchField riceva automaticamente il focus quando la finestra viene aperta. così non ci sarà il cursore sulla barra di ricerca
+        filterPanel.setVisible(false);           //pannello dei filtri non visibile inizialemnte
+        
+        //imposto le opzioni disponibili pe ril filtro delle categorie di prodotto nel box categoryFilter
+        categoryFilter.setItems(javafx.collections.FXCollections.observableArrayList(
+                "Bevanda Calda", "Bevanda Fredda", "Snack Salato", "Snack Dolce"
+        ));
+
+        sugarControls.setVisible(false);    //I controlli dello zucchero vengono mostrati solo per i distributori di beveande calde
+        sugarLevel.setText(String.valueOf(currentSugar));
+        btnSugarMinus.setOnAction(e -> handleSugarMinus());
+        btnSugarPlus.setOnAction(e -> handleSugarPlus());
+    }
+    
+    //METODI SETTER PER CONFIGURARE IL CONTESTO
+    
+    //metodo per impostare il distributore corrente
     public void setDistributoreCorrente(Distributore distributore) {
         this.distributoreCorrente = distributore;
         if (distributore != null) {
             setIdInventario(distributore.getIdInventario());
         }
     }
-
-    public void initialize() {
-        prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
-        prodottiContainer.setPrefWrapLength(600);
-        scrollPane.widthProperty().addListener((obs, oldVal, newVal) ->
-                prodottiContainer.setPrefWrapLength(newVal.doubleValue() - 20));
-
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> caricaProdotti(newVal));
-        searchField.setFocusTraversable(false);
-        filterPanel.setVisible(false);
-
-        categoryFilter.setItems(javafx.collections.FXCollections.observableArrayList(
-                "Bevanda Calda", "Bevanda Fredda", "Snack Salato", "Snack Dolce"
-        ));
-
-        sugarControls.setVisible(false);
-        sugarLevel.setText(String.valueOf(currentSugar));
-        btnSugarMinus.setOnAction(e -> handleSugarMinus());
-        btnSugarPlus.setOnAction(e -> handleSugarPlus());
-    }
-
-    private void handleSugarMinus() {
-        if (currentSugar > 0) {
-            currentSugar--;
-            sugarLevel.setText(String.valueOf(currentSugar));
-        }
-    }
-
-    private void handleSugarPlus() {
-        if (currentSugar < 5) {
-            currentSugar++;
-            sugarLevel.setText(String.valueOf(currentSugar));
-        }
-    }
-
+    
+    // Questo metodo imposta l'ID dell'inventario e aggiorna la visibilità dei controlli dello zucchero.
     public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
         if (idInventario == 1 || idInventario == 3 || idInventario == 5) {
@@ -89,10 +86,24 @@ public class ProdottiClienteController {
         }
         caricaProdotti("");
     }
+  
+    
+    public void setModalitaVisualizzazione(boolean visualizza) {
+        this.modalitaVisualizzazione = visualizza;
+        caricaProdotti(searchField.getText());
+    }
 
+    public void setSearchQuery(String query) {
+        searchField.setText(query);
+        caricaProdotti(query);
+    }
+    
+    //METODI PER LA LOGICA PRINCIPALE
+    
+    // Questo metodo cerca e carica i prodotti in base a una query di ricerca.
     public void caricaProdotti(String query) {
         List<Stock> stocks = ricercaFacade.cercaProdotti(query, idInventario);
-        prodottiContainer.getChildren().clear();
+        prodottiContainer.getChildren().clear();  // Evita di accumulare prodotti duplicati ad ogni nuova ricerca.
 
         if (stocks.isEmpty() && !query.trim().isEmpty()) {
             Label info = new Label("Prodotto non disponibile in questo distributore.");
@@ -123,11 +134,15 @@ public class ProdottiClienteController {
             }
         }
     }
-
+    
+    
+    //Viene creato  nella classe ProductView tramite il metodo ProductView.createProductView(...).
     public void handleSelect(Stock stock) {
         System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
     }
-
+    
+    //METODI DI GESTIONE DEGLI EVENTI
+    
     @FXML
     public void handleFilter(ActionEvent event) {
         filterPanel.setVisible(!filterPanel.isVisible());
@@ -145,6 +160,25 @@ public class ProdottiClienteController {
         aggiornaProdotti(stocks);
     }
 
+    
+    //METODI DI SUPPORTO
+    private void handleSugarMinus() {
+        if (currentSugar > 0) {
+            currentSugar--;
+            sugarLevel.setText(String.valueOf(currentSugar));
+        }
+    }
+
+    private void handleSugarPlus() {
+        if (currentSugar < 5) {
+            currentSugar++;
+            sugarLevel.setText(String.valueOf(currentSugar));
+        }
+    }
+    
+   
+    //METODI PER LA GESTIONE DELLE ALTERNATIVE
+   
     public void mostraDistributoriAlternativiByName(String nomeProdotto) {
         if (distributoreCorrente == null) {
             System.err.println("distributoreCorrente è null! Assicurati di impostarlo correttamente.");
@@ -166,15 +200,7 @@ public class ProdottiClienteController {
         }
     }
 
-    public void setModalitaVisualizzazione(boolean visualizza) {
-        this.modalitaVisualizzazione = visualizza;
-        caricaProdotti(searchField.getText());
-    }
-
-    public void setSearchQuery(String query) {
-        searchField.setText(query);
-        caricaProdotti(query);
-    }
+   
 }
 
 

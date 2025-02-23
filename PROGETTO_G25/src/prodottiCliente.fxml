@@ -8,7 +8,7 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" 
             fx:controller="it.unipv.ingsfw.bitebyte.controller.ProdottiClienteController" 
-            stylesheets="@/CSS/styles.css">
+            stylesheets="@/CSS/stylesProdottiCliente.css">
     <fx:define>
         <!-- Definiamo il ToggleGroup come oggetto non visuale -->
         <ToggleGroup fx:id="priceToggleGroup"/>

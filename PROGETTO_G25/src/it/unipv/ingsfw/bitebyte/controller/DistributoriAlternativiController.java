@@ -10,12 +10,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
-
-import java.awt.Desktop;
+import java.awt.Desktop;  //Permette di aprire URL e applicazioni esterne tramite il metodo Desktop.getDesktop().browse(...)
 import java.net.URI;
 import java.util.List;
 
+//controller per gestire la logica della visualizzazione dei distributori alternativi che hanno un determinato prodotto disponibile.
 public class DistributoriAlternativiController {
 
     @FXML private TableView<DistributoreBin> distributoriTable;
@@ -24,7 +23,8 @@ public class DistributoriAlternativiController {
     @FXML private TableColumn<DistributoreBin, Double> distanzaColumn;
     @FXML private TableColumn<DistributoreBin, Button> azioneColumn;
     @FXML private TableColumn<DistributoreBin, Button> visualizzaProdottoColumn;
-
+    
+    //attributi
     private Distributore distributoreCorrente;
     private String searchQuery = "";
     private DistributoreService distributoreService = new DistributoreService();
@@ -50,6 +50,7 @@ public class DistributoriAlternativiController {
         distributoriTable.setItems(data);
     }
 
+    
     private void handleVai(Distributore d) {
         apriGoogleMaps(d.getLat(), d.getLon());
     }
@@ -76,6 +77,8 @@ public class DistributoriAlternativiController {
         prodController.setModalitaVisualizzazione(true);
     }
 
+    //inizializzazione della tabella
+    //Configura le colonne della tabella collegandole ai campi dell’oggetto DistributoreBin.
     @FXML
     public void initialize() {
         nomeColumn.setCellValueFactory(new PropertyValueFactory<>("nome"));
