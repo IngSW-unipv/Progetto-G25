@@ -62,12 +62,12 @@ public class ViewPrSelected {
         userLabel.setStyle("-fx-font-size: 16px;"); 
         userLabel.setTranslateY(-180); // Posiziona la label un po' più in alto se necessario
         userLabel.setTranslateX(-190);
-
+/*
         imageView.setTranslateY(-40); // Sposta l'immagine verso l'alto
         nameLabel.setTranslateY(-40);  // Sposta il nome prodotto verso l'alto
         priceLabel.setTranslateY(-40); // Sposta il prezzo verso l'alto
         quantityLabel.setTranslateY(-40); // Sposta la quantità verso l'alto
-
+*/
         // Bottone Torna Indietro
         ImageView backImageView = new ImageView();
         backImageView.setFitWidth(50);
