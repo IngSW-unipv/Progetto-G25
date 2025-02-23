@@ -183,13 +183,22 @@ public class Authcontroller implements Initializable {
 		return email.endsWith("@universitadipavia.it");
 	}
 
-	// Controlla se la password è valida (min. 8 caratteri, un numero, una
-	// maiuscola, un carattere speciale)
-	private boolean passwordValida(String password) {
-		return password.length() >= 8 && password.matches(".*\\d.*") && // Deve contenere almeno un numero
-				password.matches(".*[A-Z].*") && // Deve contenere almeno una lettera maiuscola
-				password.matches(".*[!@#$%^&*()].*"); // Deve contenere almeno un carattere speciale
+	// Controlla se password valida
+	public boolean passwordValida(String password) {
+		if (password == null) {
+			return false; // La password non può essere nulla
+		}
+
+		// controlla che la password abbia:
+	    // - Almeno 8 caratteri
+	    // - Almeno una lettera maiuscola
+	    // - Almeno un numero
+	    // - Almeno un carattere speciale
+	    String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,}$";
+		
+		return password.matches(regex);
 	}
+	
 
 	private void showAlert(String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);

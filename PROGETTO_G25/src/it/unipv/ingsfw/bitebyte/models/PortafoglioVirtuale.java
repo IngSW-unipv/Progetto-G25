@@ -1,17 +1,22 @@
 package it.unipv.ingsfw.bitebyte.models;
 
 import it.unipv.ingsfw.bitebyte.pagamenti.IPaymentAdapter;
+import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 
 // Alice
 public class PortafoglioVirtuale {
 
 	private final String idPort;
 	private double saldo;
+	private Bancomat cartaCliente;
+	private TipologiaPagamento tipologiaPagamento;
 
 	// costruttore
 	public PortafoglioVirtuale(String idPort) {
 		this.idPort = idPort;
 		this.saldo = 0.0;
+		this.cartaCliente = null;
+		this.tipologiaPagamento = null;
 	}
 
 	// Getters and Setters
@@ -25,6 +30,22 @@ public class PortafoglioVirtuale {
 
 	public String getIdPort() {
 		return idPort;
+	}
+
+	public Bancomat getCartaCliente() {
+		return cartaCliente;
+	}
+
+	public void setCartaCliente(Bancomat cartaCliente) {
+		this.cartaCliente = cartaCliente;
+	}
+
+	public TipologiaPagamento getTipologiaPagamento() {
+		return tipologiaPagamento;
+	}
+
+	public void setTipologiaPagamento(TipologiaPagamento tipologiaPagamento) {
+		this.tipologiaPagamento = tipologiaPagamento;
 	}
 
 	/**

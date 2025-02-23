@@ -3,7 +3,7 @@ package it.unipv.ingsfw.bitebyte.models;
 import java.time.YearMonth;
 
 // Alice
-public class MetodoDiPagamento {
+public class Bancomat {
 	private String numCarta;
 	private String titolare;
 	private YearMonth dataScadenza;
@@ -11,7 +11,7 @@ public class MetodoDiPagamento {
 	private int codice;
 
 	// Costruttore
-	public MetodoDiPagamento(String numCarta, String titolare, YearMonth dataScadenza, String circuito, int codice) {
+	public Bancomat(String numCarta, String titolare, YearMonth dataScadenza, String circuito, int codice) {
 		super();
 		this.numCarta = numCarta;
 		this.titolare = titolare;
