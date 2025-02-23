@@ -1,43 +1,31 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
-import it.unipv.ingsfw.bitebyte.utils.CalcolaDistanza;
 import it.unipv.ingsfw.bitebyte.view.DistributoreBin;
+import it.unipv.ingsfw.bitebyte.view.DistributoreBinFactory;
+import it.unipv.ingsfw.bitebyte.view.ViewManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
 import java.awt.Desktop;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
 public class DistributoriAlternativiController {
 
-    @FXML
-    private TableView<DistributoreBin> distributoriTable;
-    @FXML
-    private TableColumn<DistributoreBin, String> nomeColumn;
-    @FXML
-    private TableColumn<DistributoreBin, String> indirizzoColumn;
-    @FXML
-    private TableColumn<DistributoreBin, Double> distanzaColumn;
-    @FXML
-    private TableColumn<DistributoreBin, Button> azioneColumn;
-    @FXML
-    private TableColumn<DistributoreBin, Button> visualizzaProdottoColumn; // Nuova colonna
-    
-    
-    // Il distributore corrente serve per calcolare la distanza
+    @FXML private TableView<DistributoreBin> distributoriTable;
+    @FXML private TableColumn<DistributoreBin, String> nomeColumn;
+    @FXML private TableColumn<DistributoreBin, String> indirizzoColumn;
+    @FXML private TableColumn<DistributoreBin, Double> distanzaColumn;
+    @FXML private TableColumn<DistributoreBin, Button> azioneColumn;
+    @FXML private TableColumn<DistributoreBin, Button> visualizzaProdottoColumn;
+
     private Distributore distributoreCorrente;
     private String searchQuery = "";
+
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
     }
@@ -46,32 +34,26 @@ public class DistributoriAlternativiController {
         this.distributoreCorrente = distributoreCorrente;
         ObservableList<DistributoreBin> data = FXCollections.observableArrayList();
         for (Distributore d : distributori) {
-            double distanza = CalcolaDistanza.calcolaDistanza(distributoreCorrente, d);
-            
-            // Crea il pulsante "Vai" per aprire Google Maps
-            Button btnVai = new Button("Vai");
-            btnVai.setOnAction((ActionEvent event) -> {
-                apriGoogleMaps(d.getLat(), d.getLon());
-            });
-            
-         // Crea il pulsante "Visualizza prodotto" per aprire l'inventario del distributore
-            Button btnVisualizzaProdotto = new Button("Visualizza prodotto");
-            btnVisualizzaProdotto.setOnAction((ActionEvent event) -> {
-            	 apriInventarioDistributore(d, this.searchQuery);
-            });
-            
-            data.add(new DistributoreBin(
-                    String.valueOf(d.getIdDistr()),          // Nome/ID del distributore
-                    d.getVia() + " " + d.getNCivico(),           // Indirizzo
-                    distanza,                                    // Distanza
-                    btnVai,                                      // Pulsante "Vai"
-                    btnVisualizzaProdotto                        // Pulsante "Visualizza prodotto"
-                ));
-            }
+            DistributoreBin bin = DistributoreBinFactory.createDistributoreBin(
+                d,
+                distributoreCorrente,
+                this.searchQuery,
+                this::handleVai,
+                this::handleVisualizzaProdotto
+            );
+            data.add(bin);
+        }
         distributoriTable.setItems(data);
     }
 
-    
+    private void handleVai(Distributore d) {
+        apriGoogleMaps(d.getLat(), d.getLon());
+    }
+
+    private void handleVisualizzaProdotto(Distributore d) {
+        apriInventarioDistributore(d, this.searchQuery);
+    }
+
     private void apriGoogleMaps(double lat, double lon) {
         try {
             String url = "https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lon;
@@ -80,30 +62,16 @@ public class DistributoriAlternativiController {
             e.printStackTrace();
         }
     }
-    
- // Metodo per aprire l'inventario del distributore (schermata ProdottiCliente)
-    
+
     private void apriInventarioDistributore(Distributore distributore, String searchQuery) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/prodottiCliente.fxml"));
-            Parent root = loader.load();
-            ProdottiClienteController controller = loader.getController();
-            controller.setDistributoreCorrente(distributore);
-            controller.setSearchQuery(searchQuery);
-            controller.setModalitaVisualizzazione(true);
-            
-            Stage stage = new Stage();
-            // Imposta una Scene con dimensioni maggiori (ad es. 800x600)
-            Scene scene = new Scene(root, 800, 600);
-            stage.setScene(scene);
-            stage.setTitle("Prodotti del Distributore " + distributore.getIdDistr());
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Usa il ViewManager per aprire la schermata ProdottiCliente
+        ProdottiClienteController prodController = ViewManager.getInstance()
+                .showStageWithController("/prodottiCliente.fxml", 800, 600, "Prodotti del Distributore " + distributore.getIdDistr());
+        prodController.setDistributoreCorrente(distributore);
+        prodController.setSearchQuery(searchQuery);
+        prodController.setModalitaVisualizzazione(true);
     }
 
-    
     @FXML
     public void initialize() {
         nomeColumn.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -113,3 +81,4 @@ public class DistributoriAlternativiController {
         visualizzaProdottoColumn.setCellValueFactory(new PropertyValueFactory<>("visualizzaProdotto"));
     }
 }
+
