@@ -14,7 +14,7 @@ public class FornituraService {
 		this.fornituraDAO = new FornituraDAO();
 	}
     
-    ArrayList<Fornitura> getFornitoriInfo(Stock stock) {
+    public ArrayList<Fornitura> getFornitoriInfo(Stock stock) {
     	return fornituraDAO.getFornitoriInfo(stock);
     }
 }

@@ -1,20 +1,23 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
-import it.unipv.ingsfw.bitebyte.dao.DistributoreDAO;
-import it.unipv.ingsfw.bitebyte.dao.FornituraDAO;
-import it.unipv.ingsfw.bitebyte.dao.ProdottoDAO;
-import it.unipv.ingsfw.bitebyte.dao.SpedizioneDAO;
-import it.unipv.ingsfw.bitebyte.dao.StockDAO;
+import it.unipv.ingsfw.bitebyte.service.DistributoreService;
+import it.unipv.ingsfw.bitebyte.service.StockService;
+import it.unipv.ingsfw.bitebyte.service.FornituraService;
+import it.unipv.ingsfw.bitebyte.service.ProdottoService;
+import it.unipv.ingsfw.bitebyte.service.SpedizioneService;
+import it.unipv.ingsfw.bitebyte.service.SupplyContext;
+
 import it.unipv.ingsfw.bitebyte.models.Carrello;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Fornitura;
 import it.unipv.ingsfw.bitebyte.models.ItemCarrello;
 import it.unipv.ingsfw.bitebyte.models.Prodotto;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import it.unipv.ingsfw.bitebyte.service.SupplyContext;
 import it.unipv.ingsfw.bitebyte.models.Spedizione;
+
 import it.unipv.ingsfw.bitebyte.strategyforn.IDiscountStrategy;
 import it.unipv.ingsfw.bitebyte.strategyforn.DiscountFactory;
+
 import it.unipv.ingsfw.bitebyte.view.CarrelloView;
 import it.unipv.ingsfw.bitebyte.view.ModificaPrezzoView;
 import it.unipv.ingsfw.bitebyte.view.ProdottiView;
@@ -36,21 +39,21 @@ public class GestionePController {
    
 	private int idInventario;
 	
-    private StockDAO stockDAO;
-    private FornituraDAO fornituraDAO;
-    private SpedizioneDAO spedizioneDAO;
-    private DistributoreDAO distributoreDAO;
-    private ProdottoDAO prodottoDAO; 
+    private StockService stockService;
+    private FornituraService fornituraService;
+    private SpedizioneService spedizioneService;
+    private DistributoreService distributoreService;
+    private ProdottoService prodottoService; 
     
     private ProdottiView prodottiView;
     private CarrelloView carrelloView;
 
     public GestionePController() {
-        this.stockDAO = new StockDAO();
-        this.spedizioneDAO = new SpedizioneDAO();
-        this.fornituraDAO = new FornituraDAO();
-        this.distributoreDAO = new DistributoreDAO();
-        this.prodottoDAO = new ProdottoDAO();
+        this.stockService = new StockService();
+        this.spedizioneService= new SpedizioneService();
+        this.fornituraService = new FornituraService();
+        this.distributoreService = new DistributoreService();
+        this.prodottoService = new ProdottoService();
         this.prodottiView = new ProdottiView(this); 
         caricaDistributori();  
     }
@@ -61,12 +64,12 @@ public class GestionePController {
     }
     
     public void caricaDistributori() {
-        List<Distributore> distributori = distributoreDAO.getAllDistributori(); 
+        List<Distributore> distributori = distributoreService.getAllDistributori(); 
         prodottiView.setDistributori(distributori); 
     }
     
     public void caricaProdotti() {
-        ArrayList<Stock> stocks = stockDAO.getStockByInventario(idInventario);
+        ArrayList<Stock> stocks = stockService.getStockByInventario(idInventario);
         prodottiView.aggiornaProdotti(stocks);
     }
 
@@ -80,7 +83,7 @@ public class GestionePController {
             return;
         }
         System.out.println("Rifornimento per: " + stock.getProdotto().getNome());
-        ArrayList<Fornitura> forniture = fornituraDAO.getFornitoriInfo(stock);
+        ArrayList<Fornitura> forniture = fornituraService.getFornitoriInfo(stock);
         RifornimentoView rifornimentoView = new RifornimentoView(forniture, stock, new RifornimentoView.RifornimentoListener() {
             @Override
             public void onFornitoreSelezionato(Fornitura fornitura, int quantita) {
@@ -125,16 +128,16 @@ public class GestionePController {
     }
     
     public void apriStoricoSpedizioni() {
-        ArrayList<Spedizione> spedizioni = spedizioneDAO.getAllSpedizioni();
+        ArrayList<Spedizione> spedizioni = spedizioneService.getAllSpedizioni();
         StoricoSpedizioniView storicoView = new StoricoSpedizioniView();
         storicoView.mostra(spedizioni);
     }
 
     public void handleSostituzione(Stock stock) {
-    	ArrayList<Prodotto> prodottiSostitutivi = prodottoDAO.getProdottiByCategoria(stock, stock.getProdotto().getCategoria());
+    	ArrayList<Prodotto> prodottiSostitutivi = prodottoService.getProdottiByCategoria(stock, stock.getProdotto().getCategoria());
     	new SostituzioneView(prodottiSostitutivi, prodottoSostituito -> {
-            stockDAO.sostituisciStock(stock, prodottoSostituito.getIdProdotto());
-            prodottiView.aggiornaProdotti(stockDAO.getStockByInventario(stock.getIdInventario()));
+            stockService.sostituisciStock(stock, prodottoSostituito.getIdProdotto());
+            prodottiView.aggiornaProdotti(stockService.getStockByInventario(stock.getIdInventario()));
         });
     	System.out.println("Sostituzione per: " + stock.getProdotto().getNome());
     }
@@ -145,12 +148,12 @@ public class GestionePController {
                 mostraErrore("Il prezzo deve essere compreso tra €0.01 e €5.00!");
                 return;
             }
-            boolean aggiornato = stockDAO.updatePrice(stock.getProdotto().getIdProdotto(), idInventario, nuovoPrezzo);
+            boolean aggiornato = stockService.updatePrice(stock.getProdotto().getIdProdotto(), idInventario, nuovoPrezzo);
             if (!aggiornato) {
                 mostraErrore("Errore durante l'aggiornamento del prezzo!");
                 return;
             }
-            prodottiView.aggiornaProdotti(stockDAO.getStockByInventario(idInventario));
+            prodottiView.aggiornaProdotti(stockService.getStockByInventario(idInventario));
         });
 
         view.show();
@@ -175,14 +178,14 @@ public class GestionePController {
             int idProdotto = entry.getKey();
             int quantitaTotale = entry.getValue();
             // Inventari che contengono il prodotto
-            ArrayList<Stock> stocks = stockDAO.getStockByProdotto(idProdotto);
+            ArrayList<Stock> stocks = stockService.getStockByProdotto(idProdotto);
             for (Stock stock : stocks) {
                 // Calcoliamo la quantità che possiamo aggiungere all'inventario
                 int quantitaDisponibile = stock.getQMaxInseribile() - stock.getQuantitaDisp();
                 int quantitaDaDistribuire = Math.min(quantitaTotale, quantitaDisponibile);
                 // Aggiorna la quantità nello stock
                 stock.setQuantitaDisp(stock.getQuantitaDisp() + quantitaDaDistribuire);
-                stockDAO.updateStock(stock);
+                stockService.updateStock(stock);
                 quantitaTotale -= quantitaDaDistribuire;
                 if (quantitaTotale <= 0) {
                     break;
@@ -194,18 +197,6 @@ public class GestionePController {
         caricaProdotti();
         aggiornaVistaCarrello();
         System.out.println("Ordine concluso con successo!");
-    }
-
-    public void mostraErrore(String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Errore");
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
-
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/css/StileModificaPrezzo.css").toExternalForm());
-        dialogPane.getStyleClass().add("custom-alert");
-        alert.showAndWait();
     }
 
     public void aggiornaVistaCarrello() {
@@ -222,7 +213,7 @@ public class GestionePController {
     
     private void salvaSpedizione(String idSpedizione,  Map<Integer, Integer> quantitaTotalePerProdotto, Map<Integer, BigDecimal> prezzoTotalePerProdotto) {
     	for (Integer idProdotto : quantitaTotalePerProdotto.keySet()) {
-            spedizioneDAO.salvaSpedizione(idSpedizione, idProdotto, quantitaTotalePerProdotto.get(idProdotto), prezzoTotalePerProdotto.get(idProdotto));
+            spedizioneService.salvaSpedizione(idSpedizione, idProdotto, quantitaTotalePerProdotto.get(idProdotto), prezzoTotalePerProdotto.get(idProdotto));
         }
     }
     
@@ -234,5 +225,17 @@ public class GestionePController {
             sb.append(chars.charAt(rand.nextInt(chars.length())));
         }
         return sb.toString();
+    }
+    
+    public void mostraErrore(String messaggio) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Errore");
+        alert.setHeaderText(null);
+        alert.setContentText(messaggio);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/StileModificaPrezzo.css").toExternalForm());
+        dialogPane.getStyleClass().add("custom-alert");
+        alert.showAndWait();
     }
 }
