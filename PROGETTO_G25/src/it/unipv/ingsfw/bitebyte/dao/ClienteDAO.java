@@ -151,5 +151,34 @@ public class ClienteDAO implements IClienteDAO {
 
 		return false;
 	}
+	
+	public double getSaldo(String cf) {
+	    double saldo = 0;
 
+	    connection = DBConnection.startConnection(connection, schema);
+	    String query = "SELECT p.Saldo " +
+	                   "FROM progettog25.portafoglio_virtuale p " +
+	                   "JOIN progettog25.cliente c ON c.Cf = p.Cf " +
+	                   "WHERE c.Cf = ?";
+
+	    try {
+	        // Prepara la query
+	        PreparedStatement ps = connection.prepareStatement(query);
+	        ps.setString(1, cf);  // Imposta il codice fiscale come parametro
+
+	        ResultSet rs = ps.executeQuery();
+
+	        // Verifica se il risultato esiste e ottieni il saldo
+	        if (rs.next()) {
+	            saldo = rs.getDouble("Saldo");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        DBConnection.closeConnection(connection);
+	    }
+
+	    return saldo;
+	}
+	
 }

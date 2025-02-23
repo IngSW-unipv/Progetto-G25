@@ -30,8 +30,8 @@ public class ViewPrSelected {
     private Button selectButton;
 
     // Metodo per creare l'interfaccia grafica, includendo il cliente loggato
-    public VBox creaInterfaccia(Stock stock, AcquistoController controller, Stage newStage, Stage previousStage, Cliente clienteLoggato) {
-
+    public VBox creaInterfaccia(Stock stock, AcquistoController controller, Stage newStage, Stage previousStage, Cliente clienteLoggato, double saldo) {
+    	System.out.println(saldo);
         VBox vboxStock = new VBox(5);
         vboxStock.getStyleClass().add("product-box");
         vboxStock.setAlignment(Pos.TOP_LEFT);

@@ -3,60 +3,78 @@ package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
+import it.unipv.ingsfw.bitebyte.service.ClienteService;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 public class AcquistoController {
 
     private ViewPrSelected view;
     private Stock stockSelezionato;
-    private Stage previousStage; // Memorizza la finestra precedente
-    
+    private Stage previousStage;
+    private ClienteService clienteService; // Imposto il servizio per evitare di crearlo ogni volta
+
     public AcquistoController(Stage previousStage) {
         this.view = new ViewPrSelected();
         this.previousStage = previousStage;
+        this.clienteService = new ClienteService(); // Creiamo una sola istanza per tutto il controller
     }
 
     public void setStockSelezionato(Stock stock) {
-    	Cliente clienteLoggato = Sessione.getInstance().getClienteConnesso();
-        this.stockSelezionato = stock;
+        Cliente clienteLoggato = Sessione.getInstance().getClienteConnesso();
         if (clienteLoggato != null) {
-            System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
-            System.out.println("Utente che ha effettuato l'acquisto: " + clienteLoggato.getNome() + " " + clienteLoggato.getCognome());
-            
-            // Aggiungi la logica per gestire l'acquisto, associando l'acquisto al cliente loggato
-            // Puoi ad esempio chiamare un metodo di acquisto passando il cliente loggato e lo stock
+            System.out.println("Utente connesso: " + stock.getProdotto().getNome());
+            this.stockSelezionato = stock;
         } else {
             System.out.println("Nessun cliente connesso. Impossibile completare l'acquisto.");
         }
     }
 
-    // Metodo per mostrare l'interfaccia
     public void mostraInterfaccia(Stock stock, Stage newStage) {
-    	Cliente clienteLoggato = Sessione.getInstance().getClienteConnesso(); // Recupera il cliente loggato
+        Cliente clienteLoggato = ottieniClienteLoggato();
+        if (clienteLoggato == null) {
+            System.out.println("Errore: Nessun cliente loggato.");
+            return;
+        }
 
-        // Passa il cliente loggato alla vista per aggiornare l'interfaccia con i suoi dettagli
-        VBox vbox = view.creaInterfaccia(stock, this, newStage, previousStage, clienteLoggato);
-        Scene scene = new Scene(vbox, 600, 400); // Imposta le dimensioni fisse
+        double saldo = ottieniSaldoCliente(clienteLoggato);
+        VBox vbox = creaVista(stock, newStage, clienteLoggato, saldo);
+
+        configuraEVisualizzaFinestra(newStage, vbox);
+    }
+
+    private Cliente ottieniClienteLoggato() {
+        return Sessione.getInstance().getClienteConnesso();
+    }
+
+    private double ottieniSaldoCliente(Cliente cliente) {
+        return clienteService.getSaldo(cliente);
+    }
+
+    private VBox creaVista(Stock stock, Stage newStage, Cliente cliente, double saldo) {
+        return view.creaInterfaccia(stock, this, newStage, previousStage, cliente, saldo);
+    }
+
+    private void configuraEVisualizzaFinestra(Stage newStage, VBox vbox) {
+        Scene scene = new Scene(vbox, 600, 400);
         scene.getStylesheets().add(getClass().getResource("/CSS/styles2.css").toExternalForm());
+
         newStage.setScene(scene);
-        newStage.setResizable(false); // Impedisce il ridimensionamento della finestra
+        newStage.setResizable(false);
         newStage.show();
-        
-        view.aggiornaImmagine(stock);
+
+        view.aggiornaImmagine(stockSelezionato);
     }
 
-    // Metodo chiamato quando si preme il bottone "Torna indietro"
     public void tornaIndietro(Stage currentStage) {
-        currentStage.close(); // Chiude la finestra attuale
-        previousStage.show(); // Riporta in primo piano la finestra precedente
+        currentStage.close();
+        previousStage.show();
     }
-    
+
     public void acquistaProdotto(Stock stock) {
         System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
         // Qui puoi aggiungere la logica per gestire l'acquisto
     }
-    
-    
 }
