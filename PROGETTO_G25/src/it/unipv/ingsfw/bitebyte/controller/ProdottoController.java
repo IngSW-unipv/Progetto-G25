@@ -1,8 +1,7 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
-import java.io.IOException;
-import it.unipv.ingsfw.bitebyte.dao.DistributoreDAO;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
+import it.unipv.ingsfw.bitebyte.service.DistributoreService;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -18,10 +17,10 @@ public class ProdottoController {
     @FXML
     private Button collegatiButton;
 
-    private DistributoreDAO distributoreDAO;
+    private DistributoreService distributoreService;
 
     public ProdottoController() {
-        distributoreDAO = new DistributoreDAO();
+        distributoreService = new DistributoreService(); // Inizializzazione del servizio
     }
 
     @FXML
@@ -35,7 +34,7 @@ public class ProdottoController {
 
         try {
             int idDistributore = Integer.parseInt(codiceDistributore);
-            Distributore distributore = distributoreDAO.getDistributoreById(idDistributore);
+            Distributore distributore = distributoreService.getDistributoreById(idDistributore); // Usa il servizio
 
             if (distributore != null) {
                 showInfo("Collegamento riuscito", "Sei connesso al distributore "  
@@ -77,7 +76,6 @@ public class ProdottoController {
     }
 }
 
-	
 	
 	
 	

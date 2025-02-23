@@ -1,6 +1,7 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
+import it.unipv.ingsfw.bitebyte.service.DistributoreService;
 import it.unipv.ingsfw.bitebyte.view.DistributoreBin;
 import it.unipv.ingsfw.bitebyte.view.DistributoreBinFactory;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
@@ -10,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
 import java.awt.Desktop;
 import java.net.URI;
 import java.util.List;
@@ -25,13 +27,15 @@ public class DistributoriAlternativiController {
 
     private Distributore distributoreCorrente;
     private String searchQuery = "";
+    private DistributoreService distributoreService = new DistributoreService();
 
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
     }
 
-    public void setDistributori(List<Distributore> distributori, Distributore distributoreCorrente) {
-        this.distributoreCorrente = distributoreCorrente;
+    public void setDistributori(int distributoreCorrenteId, String nomeProdotto) {
+        this.distributoreCorrente = distributoreService.getDistributoreById(distributoreCorrenteId);
+        List<Distributore> distributori = distributoreService.getDistributoriConProdottoDisponibileByName(distributoreCorrenteId, nomeProdotto);
         ObservableList<DistributoreBin> data = FXCollections.observableArrayList();
         for (Distributore d : distributori) {
             DistributoreBin bin = DistributoreBinFactory.createDistributoreBin(

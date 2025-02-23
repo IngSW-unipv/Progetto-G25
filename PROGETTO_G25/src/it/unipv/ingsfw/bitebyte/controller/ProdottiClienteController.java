@@ -1,12 +1,8 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
+import it.unipv.ingsfw.bitebyte.facade.RicercaFacade;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import it.unipv.ingsfw.bitebyte.service.DistributoreService;
-import it.unipv.ingsfw.bitebyte.service.StockService;
-import it.unipv.ingsfw.bitebyte.filtri.FilterByNome;
-import it.unipv.ingsfw.bitebyte.filtri.FilterFactory;
-import it.unipv.ingsfw.bitebyte.filtri.IFilterStrategy;
 import it.unipv.ingsfw.bitebyte.view.ProductView;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
 import javafx.event.ActionEvent;
@@ -16,13 +12,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
 import java.util.List;
 
 public class ProdottiClienteController {
 
     private Distributore distributoreCorrente;
-    private StockService stockService = new StockService();
-    private DistributoreService distributoreService = new DistributoreService();
+    private RicercaFacade ricercaFacade = new RicercaFacade(); // Usa RicercaFacade
     private boolean modalitaVisualizzazione = false;
 
     @FXML private FlowPane prodottiContainer;
@@ -95,19 +91,19 @@ public class ProdottiClienteController {
     }
 
     public void caricaProdotti(String query) {
-        List<Stock> stocks = stockService.getStockByInventario(idInventario);
-        List<Stock> stocksFiltrati = new FilterByNome(query).applyFilter(stocks);
+        List<Stock> stocks = ricercaFacade.cercaProdotti(query, idInventario);
         prodottiContainer.getChildren().clear();
 
-        if (stocksFiltrati.isEmpty() && !query.trim().isEmpty()) {
+        if (stocks.isEmpty() && !query.trim().isEmpty()) {
             Label info = new Label("Prodotto non disponibile in questo distributore.");
             Button btnVisualizza = new Button("Visualizza distributori vicini");
             btnVisualizza.setOnAction(e -> mostraDistributoriAlternativiByName(query));
             prodottiContainer.getChildren().addAll(info, btnVisualizza);
         } else {
-            aggiornaProdotti(stocksFiltrati);
+            aggiornaProdotti(stocks);
         }
     }
+
 
     private void aggiornaProdotti(List<Stock> stocks) {
         prodottiContainer.getChildren().clear();
@@ -117,7 +113,6 @@ public class ProdottiClienteController {
             prodottiContainer.getChildren().add(noResultsLabel);
         } else {
             for (Stock stock : stocks) {
-                // ProductView crea un BorderPane per ogni prodotto
                 BorderPane productBox = ProductView.createProductView(
                         stock,
                         modalitaVisualizzazione,
@@ -131,7 +126,6 @@ public class ProdottiClienteController {
 
     public void handleSelect(Stock stock) {
         System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
-        // Logica per gestire la selezione (es. aggiungere al carrello)
     }
 
     @FXML
@@ -141,15 +135,13 @@ public class ProdottiClienteController {
 
     @FXML
     public void applyFilters() {
-        List<Stock> stocks = stockService.getStockByInventario(idInventario);
         String searchQuery = searchField.getText();
         String selectedCategory = categoryFilter.getValue();
         boolean availability = availabilityFilter.isSelected();
         boolean sortAsc = priceAsc.isSelected();
         boolean sortDesc = priceDesc.isSelected();
 
-        IFilterStrategy filter = FilterFactory.createFilter(searchQuery, selectedCategory, availability, sortAsc, sortDesc);
-        stocks = filter.applyFilter(stocks);
+        List<Stock> stocks = ricercaFacade.applicaFiltri(idInventario, searchQuery, selectedCategory, availability, sortAsc, sortDesc);
         aggiornaProdotti(stocks);
     }
 
@@ -158,8 +150,7 @@ public class ProdottiClienteController {
             System.err.println("distributoreCorrente è null! Assicurati di impostarlo correttamente.");
             return;
         }
-        List<Distributore> distributori = distributoreService.getDistributoriConProdottoDisponibileByName(
-                distributoreCorrente.getIdDistr(), nomeProdotto);
+        List<Distributore> distributori = ricercaFacade.cercaDistributoriConProdotto(distributoreCorrente.getIdDistr(), nomeProdotto);
         if (distributori.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Prodotto non disponibile");
@@ -167,11 +158,11 @@ public class ProdottiClienteController {
             alert.setContentText("Non ci sono distributori alternativi disponibili per questo prodotto.");
             alert.showAndWait();
         } else {
-            // Utilizza il ViewManager per aprire la schermata DistributoriAlternativi
-            DistributoriAlternativiController controller = ViewManager.getInstance()
-                    .showStageWithController("/distributoriAlternativi.fxml", 800, 600, "Distributori Alternativi");
-            controller.setSearchQuery(nomeProdotto);
-            controller.setDistributori(distributori, distributoreCorrente);
+        	DistributoriAlternativiController controller = ViewManager.getInstance()
+        	        .showStageWithController("/distributoriAlternativi.fxml", 800, 600, "Distributori Alternativi");
+        	controller.setSearchQuery(nomeProdotto);
+        	controller.setDistributori(distributoreCorrente.getIdDistr(), nomeProdotto);
+
         }
     }
 
@@ -185,5 +176,6 @@ public class ProdottiClienteController {
         caricaProdotti(query);
     }
 }
+
 
    
