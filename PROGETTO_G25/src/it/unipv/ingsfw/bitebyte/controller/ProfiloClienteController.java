@@ -8,6 +8,9 @@ import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.control.Label;
 
 public class ProfiloClienteController {
 
@@ -26,18 +29,39 @@ public class ProfiloClienteController {
 	private TextField txtEmail;
 	@FXML
 	private TextField txtDataNascita;
+	@FXML
+	private Label nomeL;
+	@FXML
+	private Label cognomeL;
+	@FXML
+	private Label passwordL;
+	@FXML
+	private Label usernameL;
 
-	/**
-	 * Metodo per inizializzare la view con i dati del cliente.
-	 */
 	@FXML
 	public void initialize() {
+
+		// se il cliente connesso esiste carica i dati profilo
 		if (Sessione.getInstance().getClienteConnesso() != null) {
 			caricaDatiProfilo();
 		} else {
 			System.out.println("Errore: Nessun cliente connesso.");
 			return;
 		}
+
+		// assicura che il controllo venga fatto solo quando si perde il focus
+		txtNome.focusedProperty().addListener((obs, oldVal, newVal) -> {
+			if (!newVal) {
+				isNomeOCognomeValido();
+			}
+		});
+
+		txtCognome.focusedProperty().addListener((obs, oldVal, newVal) -> {
+			if (!newVal) {
+				isNomeOCognomeValido();
+			}
+		});
+
 	}
 
 	/**
@@ -79,17 +103,40 @@ public class ProfiloClienteController {
 		}
 	}
 
-	// Metodo per verificare se nome o cognome sono validi
-	public boolean isNomeOCognomeValido(String nomeOCognome) {
-		if (nomeOCognome == null || nomeOCognome.trim().isEmpty()) {
-			return false; // Il nome/cognome non può essere nullo o vuoto
+	@FXML
+	public void isNomeOCognomeValido() {
+		controllaCampo(txtNome, nomeL, "Nome");
+		controllaCampo(txtCognome, cognomeL, "Cognome");
+	}
+
+	private void controllaCampo(TextField campo, Label erroreLabel, String tipoCampo) {
+		String testo = campo.getText().trim();
+
+		if (testo.isEmpty()) {
+			erroreLabel.setText(tipoCampo + " obbligatorio!");
+			erroreLabel.setTextFill(Color.RED);
+			return;
 		}
 
-		// controlla che nome/cognome abbiano prima lettera maiuscola, seguite solo da
-		// minuscole e lettere accentate
 		String regex = "^[A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+$";
+		if (!testo.matches(regex)) {
+			erroreLabel.setText(tipoCampo + " non valido!");
+			erroreLabel.setTextFill(Color.RED);
+		} else {
+			erroreLabel.setText(""); // Nasconde l'errore se il campo è valido
+		}
+	}
 
-		return nomeOCognome.matches(regex);
+	// Controlla la password in tempo reale mentre l'utente digita
+	@FXML
+	private void controllaPassword(KeyEvent evento) {
+		String password = txtPassword.getText();
+		if (!isPasswordValida(password)) {
+			passwordL.setText("Min. 8 caratteri, un numero,\n una lettera maiuscola e un carattere speciale.");
+			passwordL.setTextFill(Color.RED);
+		} else {
+			passwordL.setText(""); // Nasconde il messaggio d'errore
+		}
 	}
 
 	// Metodo per verificare se password valida
@@ -99,38 +146,19 @@ public class ProfiloClienteController {
 		}
 
 		// controlla che la password abbia:
-	    // - Almeno 8 caratteri
-	    // - Almeno una lettera maiuscola
-	    // - Almeno un numero
-	    // - Almeno un carattere speciale
-	    String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,}$";
-		
+		// - Almeno 8 caratteri
+		// - Almeno una lettera maiuscola
+		// - Almeno un numero
+		// - Almeno un carattere speciale
+		String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,}$";
+
 		return password.matches(regex);
 	}
-	
+
 	// Metodo per modificare il profilo del cliente.
 	public void modificaProfilo(String nuovoNome, String nuovoCognome, String nuovoUsername, String nuovaPassword) {
 
 		ClienteDAO clienteDAO = new ClienteDAO();
-
-		// Verifica validità del nome
-		if (!isNomeOCognomeValido(nuovoNome)) {
-			System.out.println("Errore: Il nome non è valido.");
-			return;
-		}
-
-		// Verifica validità del cognome
-		if (!isNomeOCognomeValido(nuovoCognome)) {
-			System.out.println("Errore: Il cognome non è valido.");
-			return;
-		}
-
-		// Verifica validità della password
-		if (!isPasswordValida(nuovaPassword)) {
-			System.out.println(
-					"Errore: La password non è valida. Deve avere esattamente 8 caratteri, almeno una maiuscola e un numero.");
-			return;
-		}
 
 		// Verifica se ho messo uno username uguale al precedente e se il nuovo username
 		// esiste già nel database
@@ -160,16 +188,16 @@ public class ProfiloClienteController {
 			System.out.println("Errore nell'aggiornamento del profilo.");
 		}
 	}
-	
-	// Metodo chiamato quando l'utente fa clic sul pulsante "Logout"
-    public void logout() {
-        Sessione.getInstance().logout();
-        mostraLogin();
-    }
 
-    // Metodo per mostrare la schermata di login
-    private void mostraLogin() {
-        System.out.println("Sei stato disconnesso. Torna alla schermata di login.");
-    }
-	
+	// Metodo chiamato quando l'utente fa clic sul pulsante "Logout"
+	public void logout() {
+		Sessione.getInstance().logout();
+		mostraLogin();
+	}
+
+	// Metodo per mostrare la schermata di login
+	private void mostraLogin() {
+		System.out.println("Sei stato disconnesso. Torna alla schermata di login.");
+	}
+
 }

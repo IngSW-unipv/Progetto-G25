@@ -85,36 +85,6 @@ public class Authcontroller implements Initializable {
 		}
 	}
 
-//	@FXML
-/**	public void cambiaScena2(ActionEvent event) {
-*		String nomeUtente = usernameLogin.getText();
-*		String password = passwordLogin.getText();
-*		Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
-	*	
-	*	if (clienteDAO.verificaLogin(nomeUtente, password)) {
-	*		Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
-*
-*			try {
-*				FXMLLoader loader = new FXMLLoader(getClass().getResource("/ProfiloCliente.fxml"));
-*				Parent root = loader.load();
-*
-*				ProfiloClienteController controller = loader.getController();
-*				Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-*				Scene scene = new Scene(root);
-*				stage.setScene(scene);
-*				stage.show();
-*			} catch (IOException e) {
-*				e.printStackTrace();
-*				System.out.println("Errore nel caricamento della vista: ProfiloCliente");
-*			}
-*		} else {
-*			showAlert("Errore", "Credenziali errate");
-*			return;
-*		}
-*		
-
-	}*/
-
 	@FXML
 	public void accedi() {
 		String nomeUtente = usernameLogin.getText();
