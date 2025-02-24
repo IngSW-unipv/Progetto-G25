@@ -6,7 +6,8 @@ import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import it.unipv.ingsfw.bitebyte.service.ClienteService;
-import it.unipv.ingsfw.bitebyte.service.PortafoglioService; // Importa il servizio per gestire il saldo
+import it.unipv.ingsfw.bitebyte.service.PortafoglioService;
+import it.unipv.ingsfw.bitebyte.service.StockService;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -18,13 +19,15 @@ public class AcquistoController {
     private Stock stockSelezionato;
     private Stage previousStage;
     private ClienteService clienteService;
-    private PortafoglioService portafoglioService; // Aggiungi PortafoglioService
+    private PortafoglioService portafoglioService;
+    private StockService stockService;
 
     public AcquistoController(Stage previousStage) {
         this.view = new ViewPrSelected();
         this.previousStage = previousStage;
         this.clienteService = new ClienteService();
-        this.portafoglioService = new PortafoglioService(); // Crea l'istanza di PortafoglioService
+        this.portafoglioService = new PortafoglioService();
+        this.stockService = new StockService();
     }
 
     public void setStockSelezionato(Stock stock) {
@@ -85,20 +88,28 @@ public class AcquistoController {
             return;
         }
 
-        BigDecimal prezzoProdotto = stock.getProdotto().getPrezzo(); // Ottieni il prezzo del prodotto (BigDecimal)
+        BigDecimal prezzoProdotto = stock.getProdotto().getPrezzo();
         
         if (clienteService.saldoSufficiente(clienteLoggato, prezzoProdotto)) {
-            System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
-            
-            // Logica per scalare il saldo
-            double saldoAttuale = clienteService.getSaldo(clienteLoggato);  // Ottieni il saldo attuale
-            double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue(); // Calcola il nuovo saldo
-            
-            // Usa PortafoglioService per aggiornare il saldo
-            portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo); // Metodo corretto per aggiornare il saldo
-            
-            System.out.println("Il nuovo saldo è: " + nuovoSaldo);
-            // Logica per completare l'acquisto, ad esempio ridurre il numero di unità del prodotto
+            int quantitaDisponibile = stock.getQuantitaDisp(); //Faccio il retrieving della quantità del prodotto ora
+            if (quantitaDisponibile > 0) {
+                System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
+                
+                double saldoAttuale = clienteService.getSaldo(clienteLoggato);
+                double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue();
+                
+                portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo);
+                
+                // Riduci la quantità del prodotto nello stock
+                int nuovaQuantita = quantitaDisponibile - 1; //Diminuisco la quantità di 1
+                stock.setQuantitaDisp(nuovaQuantita); // Aggiorno l'oggetto Stock
+                stockService.aggiornaQuantita(stock); // Passo l'oggetto aggiornato
+                
+                System.out.println("Il nuovo saldo è: " + nuovoSaldo);
+                System.out.println("Nuova quantità disponibile: " + nuovaQuantita);
+            } else {
+                System.out.println("Prodotto esaurito: " + stock.getProdotto().getNome());
+            }
         } else {
             System.out.println("Saldo insufficiente per acquistare: " + stock.getProdotto().getNome());
         }

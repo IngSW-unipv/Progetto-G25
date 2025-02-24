@@ -14,4 +14,8 @@ public class StockService {
     public List<Stock> getStocksByInventario(int idInventario) {
         return stockDAO.getStockByInventario(idInventario);
     }
+    
+    public void aggiornaQuantita(Stock stock) {
+        stockDAO.updateStock(stock); // Chiama il DAO per aggiornare il DB
+    }
 }
