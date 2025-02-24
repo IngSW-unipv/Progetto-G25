@@ -61,6 +61,12 @@ public class ProfiloClienteController {
 				isNomeOCognomeValido();
 			}
 		});
+		
+		txtUsername.focusedProperty().addListener((obs, oldVal, newVal) -> {
+			if (!newVal) {
+				isUsernameValido();
+			}
+		});
 
 	}
 
@@ -154,6 +160,27 @@ public class ProfiloClienteController {
 
 		return password.matches(regex);
 	}
+	
+	public boolean isUsernameValido() {
+		String nuovoUsername = txtUsername.getText();
+		ClienteDAO clienteDAO = new ClienteDAO();
+		String usernameAttuale = Sessione.getInstance().getClienteConnesso().getUsername();
+
+		if (nuovoUsername.equals(usernameAttuale)) {
+			usernameL.setText("è uguale allo username precedente!");
+			usernameL.setTextFill(Color.RED);
+			return true; 
+		}
+		if (clienteDAO.esisteUsername(nuovoUsername)) {
+			usernameL.setText("Username già in uso.");
+			usernameL.setTextFill(Color.RED);
+			return false;
+		}
+
+		usernameL.setText("");
+		return true;
+	}
+
 
 	// Metodo per modificare il profilo del cliente.
 	public void modificaProfilo(String nuovoNome, String nuovoCognome, String nuovoUsername, String nuovaPassword) {
@@ -162,11 +189,11 @@ public class ProfiloClienteController {
 
 		// Verifica se ho messo uno username uguale al precedente e se il nuovo username
 		// esiste già nel database
-		if (!nuovoUsername.equals(Sessione.getInstance().getClienteConnesso().getUsername())
+	/*	if (!nuovoUsername.equals(Sessione.getInstance().getClienteConnesso().getUsername())
 				&& clienteDAO.esisteUsername(nuovoUsername)) {
 			System.out.println("Errore: Username già in uso. Scegliere un altro username.");
 			return;
-		}
+		}*/
 
 		// Creazione di un oggetto Cliente con i nuovi dati
 		Cliente clienteModificato = new Cliente(Sessione.getInstance().getClienteConnesso().getCf(), nuovoNome,
