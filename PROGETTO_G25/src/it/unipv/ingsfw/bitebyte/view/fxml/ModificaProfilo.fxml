@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #eeb729;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipv.ingsfw.bitebyte.controller.ProfiloClienteController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #eeb729;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipv.ingsfw.bitebyte.controller.ProfiloClientController">
    <children>
       <Label layoutX="56.0" layoutY="92.0" text="Nome:">
          <font>
@@ -44,9 +44,9 @@
             <Font name="System Bold Italic" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="txtNome" layoutX="172.0" layoutY="89.0" onMouseExited="#isNomeOCognomeValido" promptText="nome" />
-      <TextField fx:id="txtUsername" layoutX="170.0" layoutY="214.0" promptText="username" onMouseExited="#isUsernameValido"/>
-      <TextField fx:id="txtCognome" layoutX="171.0" layoutY="150.0" onMouseExited="#isNomeOCognomeValido" promptText="cognome" />
+      <TextField fx:id="txtNome" layoutX="172.0" layoutY="89.0" onMouseExited="#controllaNomeOCognome" promptText="nome" />
+      <TextField fx:id="txtUsername" layoutX="170.0" layoutY="214.0" promptText="username" onMouseExited="#controllaUsername"/>
+      <TextField fx:id="txtCognome" layoutX="171.0" layoutY="150.0" onMouseExited="#controllaNomeOCognome" promptText="cognome" />
       <PasswordField fx:id="txtPassword" layoutX="170.0" layoutY="281.0" onKeyReleased="#controllaPassword" promptText="password" />
       <Label fx:id="nomeL" layoutX="172.0" layoutY="121.0" prefHeight="17.0" prefWidth="149.0">
          <font>

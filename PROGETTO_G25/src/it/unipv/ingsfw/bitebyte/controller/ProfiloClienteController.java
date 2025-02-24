@@ -37,7 +37,7 @@ public class ProfiloClienteController {
 	private Label passwordL;
 	@FXML
 	private Label usernameL;
-
+/*
 	@FXML
 	public void initialize() {
 
@@ -70,9 +70,9 @@ public class ProfiloClienteController {
 
 	}
 
-	/**
+	
 	 * Popola i campi della UI con i dati di clienteConnesso.
-	 */
+	
 	private void caricaDatiProfilo() {
 		// Imposta i valori nei campi della UI
 		txtNome.setText(Sessione.getInstance().getClienteConnesso().getNome());
@@ -88,13 +88,13 @@ public class ProfiloClienteController {
 				.setText(dataNascita != null ? dataNascita.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A");
 	}
 
-	/**
+	
 	 * Metodo per visualizzare il profilo del cliente.
 	 * 
 	 * @param cf il codice fiscale del cliente di cui si vogliono visualizzare i
 	 *           dettagli.
-	 */
-	public void visualizzaProfilo() {
+	
+		public void visualizzaProfilo() {
 
 		// Verifica che c'è un cliente connesso
 		if (Sessione.getInstance().getClienteConnesso() != null) {
@@ -193,7 +193,7 @@ public class ProfiloClienteController {
 				&& clienteDAO.esisteUsername(nuovoUsername)) {
 			System.out.println("Errore: Username già in uso. Scegliere un altro username.");
 			return;
-		}*/
+		}
 
 		// Creazione di un oggetto Cliente con i nuovi dati
 		Cliente clienteModificato = new Cliente(Sessione.getInstance().getClienteConnesso().getCf(), nuovoNome,
@@ -226,5 +226,5 @@ public class ProfiloClienteController {
 	private void mostraLogin() {
 		System.out.println("Sei stato disconnesso. Torna alla schermata di login.");
 	}
-
+*/
 }
