@@ -31,12 +31,10 @@ public class ViewPrSelected {
     private Button selectButton;
 
     public VBox creaInterfaccia(Stock stock, AcquistoController controller, Stage newStage, Stage previousStage, Cliente clienteLoggato, double saldo) {
-        // VBox per le informazioni del prodotto e cliente
         VBox vboxStock = new VBox(15);
         vboxStock.getStyleClass().add("product-box");
         vboxStock.setPadding(new Insets(15));
 
-        // Immagine Prodotto a sinistra
         imageView = new ImageView();
         imageView.setFitWidth(150);
         imageView.setFitHeight(150);
@@ -51,11 +49,9 @@ public class ViewPrSelected {
         quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
         quantityLabel.setStyle("-fx-font-size: 20px;");
 
-        // VBox per le informazioni del prodotto
         VBox vboxInfoProdotto = new VBox(10, imageView, nameLabel, priceLabel, quantityLabel);
         vboxInfoProdotto.setAlignment(Pos.CENTER_LEFT);
 
-        // Informazioni Utente a destra
         saldoLabel = new Label("Saldo disponibile: €" + String.format("%.2f", saldo));
         saldoLabel.setStyle("-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;");
 
@@ -64,14 +60,12 @@ public class ViewPrSelected {
 
         VBox vboxInfoUtente = new VBox(10, userLabel, saldoLabel);
         vboxInfoUtente.setAlignment(Pos.CENTER_RIGHT);
-        HBox.setHgrow(vboxInfoUtente, javafx.scene.layout.Priority.ALWAYS); // Spinge le info a destra
+        HBox.setHgrow(vboxInfoUtente, javafx.scene.layout.Priority.ALWAYS);
 
-        // Creiamo l'area centrale con il prodotto e l'utente
         HBox infoContainer = new HBox(25, vboxInfoProdotto, vboxInfoUtente);
         infoContainer.setAlignment(Pos.CENTER_LEFT);
         infoContainer.setPadding(new Insets(10));
 
-        // Bottone Indietro (spostato più in alto)
         ImageView backImageView = new ImageView(new Image(getClass().getResource("/immagini/back_arrow.png").toString()));
         backImageView.setFitWidth(40);
         backImageView.setFitHeight(40);
@@ -88,36 +82,39 @@ public class ViewPrSelected {
             }).start();
         });
 
+        Region spacerTop = new Region();
+        spacerTop.setPrefHeight(20);
+
+        Region spacerBottom = new Region();
+        spacerBottom.setPrefHeight(50);
+
         HBox backButtonContainer = new HBox(backImageView);
         backButtonContainer.setAlignment(Pos.TOP_LEFT);
-        VBox.setMargin(backButtonContainer, new Insets(10, 0, 0, 10)); // Sposta più in alto
 
-        // Bottone "Conferma Acquisto"
+        VBox backButtonBox = new VBox(spacerTop, backButtonContainer);
+        backButtonBox.setAlignment(Pos.TOP_LEFT);
+        VBox.setMargin(backButtonContainer, new Insets(0, 0, 0, 10));
+
         selectButton = new Button("Conferma Acquisto");
         selectButton.getStyleClass().add("confirm-button");
         selectButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 20px;");
         selectButton.setOnAction(e -> controller.acquistaProdotto(stock));
 
-        // Creiamo un VBox separato per il pulsante "Conferma Acquisto"
         VBox buttonContainer = new VBox(15, selectButton);
         buttonContainer.setAlignment(Pos.CENTER);
         buttonContainer.setPadding(new Insets(15));
 
-        // Impostiamo una larghezza e altezza preferita per la VBox
         vboxStock.setPrefHeight(400);
         vboxStock.setPrefWidth(600);
 
-        // Aggiungiamo il contenuto della finestra
         vboxStock.getChildren().addAll(infoContainer);
 
-        // Aggiungiamo il contenitore dei pulsanti fuori dalla VBox
-        VBox root = new VBox(backButtonContainer, vboxStock, buttonContainer);
+        VBox root = new VBox(backButtonBox, vboxStock, spacerBottom, buttonContainer);
         root.setAlignment(Pos.CENTER);
 
         return root;
     }
 
-    
     public void mostraFinestraCaricamento() {
         Stage loadingStage = new Stage();
         loadingStage.initStyle(StageStyle.UNDECORATED);
