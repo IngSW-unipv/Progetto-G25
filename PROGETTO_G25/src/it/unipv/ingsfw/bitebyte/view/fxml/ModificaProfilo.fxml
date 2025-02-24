@@ -29,12 +29,12 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Button layoutX="435.0" layoutY="25.0" mnemonicParsing="false" style="-fx-background-color: #66cdaa;" text="Torna al profilo">
+      <Button fx:id="tornaProfilo" layoutX="435.0" layoutY="25.0" mnemonicParsing="false" onAction="#cambiaScena" style="-fx-background-color: #66cdaa;" text="Torna al profilo">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button layoutX="434.0" layoutY="342.0" mnemonicParsing="false" style="-fx-background-color: #66cdaa;" text="Salva modifiche">
+      <Button fx:id="salvaModifica" layoutX="434.0" layoutY="342.0" mnemonicParsing="false" onAction="#modificaDati" style="-fx-background-color: #66cdaa;" text="Salva modifiche">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -44,10 +44,10 @@
             <Font name="System Bold Italic" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="txtNome" layoutX="172.0" layoutY="89.0" onMouseExited="#controllaNomeOCognome" promptText="nome" />
-      <TextField fx:id="txtUsername" layoutX="170.0" layoutY="214.0" promptText="username" onMouseExited="#controllaUsername"/>
-      <TextField fx:id="txtCognome" layoutX="171.0" layoutY="150.0" onMouseExited="#controllaNomeOCognome" promptText="cognome" />
-      <PasswordField fx:id="txtPassword" layoutX="170.0" layoutY="281.0" onKeyReleased="#controllaPassword" promptText="password" />
+      <TextField fx:id="nomeTXT" layoutX="172.0" layoutY="89.0" onMouseExited="#controllaNomeOCognome" promptText="nome" />
+      <TextField fx:id="usernameTXT" layoutX="170.0" layoutY="214.0" onMouseExited="#controllaUsername" promptText="username" />
+      <TextField fx:id="cognomeTXT" layoutX="171.0" layoutY="150.0" onMouseExited="#controllaNomeOCognome" promptText="cognome" />
+      <PasswordField fx:id="passTXT" layoutX="170.0" layoutY="281.0" onKeyReleased="#controllaPassword" promptText="password" />
       <Label fx:id="nomeL" layoutX="172.0" layoutY="121.0" prefHeight="17.0" prefWidth="149.0">
          <font>
             <Font name="System Bold" size="12.0" />

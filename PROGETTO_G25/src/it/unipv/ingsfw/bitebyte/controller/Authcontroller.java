@@ -55,14 +55,17 @@ public class Authcontroller implements Initializable {
 	@FXML
 	private Label erroreRegPassword;
 
+	//Pulsanti login-view
 	@FXML
-	private Button pulsanteAccedi;
+	private Button login;
 	@FXML
-	private Button pulsanteRegistrati;
+	private Button bottoneregistrati;
+	
+	//Pulsanti registration-view
 	@FXML
-	private Button pulsanteVaiARegistrazione;
+	private Button tornaLogin;
 	@FXML
-	private Button pulsanteVaiALogin;
+	private Button registrato;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -78,10 +81,12 @@ public class Authcontroller implements Initializable {
 		if (clickedButton.getId().equals("pulsanteVaiALogin")) {
 			System.out.println("sono in switch scene");
 			switchScene(stage, "login-view.fxml", "Login");
-		} else if (clickedButton.getId().equals("pulsanteRegistrati")) {
+		} else if (clickedButton.getId().equals("bottoneregistrati")) {
 			switchScene(stage, "registration-view.fxml", "Registrazione");
-		} else if (clickedButton.getId().equals("pulsanteVaiARegistrazione")) {
-			switchScene(stage, "registration-view.fxml", "Registrazione");
+		} else if (clickedButton.getId().equals("tornaLogin")) {
+			switchScene(stage, "login-view.fxml", "Login");
+		} else if (clickedButton.getId().equals("registrato")) {
+			switchScene(stage, "login-view.fxml", "Login");
 		}
 	}
 
@@ -94,7 +99,7 @@ public class Authcontroller implements Initializable {
 		if (clienteDAO.verificaLogin(nomeUtente, password)) {
 			Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
 			showAlert("Successo", "Acesso eseguito correttamente");
-			Stage stage = (Stage) pulsanteAccedi.getScene().getWindow();
+			Stage stage = (Stage) login.getScene().getWindow();
 			switchScene(stage, "ProfiloCliente.fxml", "Profilo");
 		} else {
 			showAlert("Errore", "Credenziali errate");
@@ -212,7 +217,7 @@ public class Authcontroller implements Initializable {
 		Cliente nuovoCliente = new Cliente(cf, nome, cognome, email, password, dataNascita, nomeUtente);
 		clienteDAO.registraCliente(nuovoCliente);
 		showAlert("Successo", "REGISTRAZIONE COMPLETATA!");
-		Stage stage = (Stage) pulsanteRegistrati.getScene().getWindow();
+		Stage stage = (Stage) registrato.getScene().getWindow();
 		switchScene(stage, "login-view.fxml", "Login");
 
 	}
@@ -220,7 +225,7 @@ public class Authcontroller implements Initializable {
 	private void switchScene(Stage stage, String fxml, String title) {
 		try {
 			System.out.println("sono in switch scene");
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxml));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/it/unipv/ingsfw/bitebyte/view/fxml/" + fxml));
 			Parent root = loader.load();
 			stage.setTitle(title);
 			stage.setScene(new Scene(root));

@@ -23,7 +23,7 @@ public class BancomatDAO implements IBancomatDAO {
 	@Override
 	public boolean creaBancomat(Bancomat bancomat, Cliente cliente) {
 		connection = DBConnection.startConnection(connection, schema);
-		String query = "INSERT INTO bancomat (Num_carta, Data_Scad, CVV, Titolare, Circuito, Cf) VALUES (?, ?, ?, ?)";
+		String query = "INSERT INTO bancomat (Num_carta, Data_Scad, CVV, Titolare, Circuito, Cf) VALUES (?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement ps = connection.prepareStatement(query)) {
 			ps.setString(1, bancomat.getNumCarta());
 			ps.setString(2, bancomat.getDataScadenza().toString());
