@@ -89,6 +89,7 @@ public class ViewPrSelected {
         
         selectButton = new Button("Conferma Acquisto");
         selectButton.getStyleClass().add("confirm-button");
+        selectButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 20px;");
         selectButton.setOnAction(e -> controller.acquistaProdotto(stock));
         
         vboxStock.getChildren().addAll(backButtonContainer, infoContainer, selectButton);

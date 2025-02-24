@@ -1,5 +1,7 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
+import java.math.BigDecimal;
+
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
@@ -74,7 +76,17 @@ public class AcquistoController {
     }
 
     public void acquistaProdotto(Stock stock) {
-        System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
-        // Qui puoi aggiungere la logica per gestire l'acquisto
+        Cliente clienteLoggato = ottieniClienteLoggato();
+        if (clienteLoggato == null) {
+            System.out.println("Errore: Nessun cliente loggato.");
+            return;
+        }
+        BigDecimal prezzoProdotto = stock.getProdotto().getPrezzo(); // Ottieni il prezzo del prodotto (BigDecimal)
+        if (clienteService.saldoSufficiente(clienteLoggato, prezzoProdotto)) {
+            System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
+            // Logica per completare l'acquisto
+        } else {
+            System.out.println("Saldo insufficiente per acquistare: " + stock.getProdotto().getNome());
+        }
     }
 }
