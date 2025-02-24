@@ -117,6 +117,16 @@ public class GestionePController {
         });
         view.show();
     }
+    
+    public void concludiOrdine() {
+        Carrello carrello = Carrello.getInstance();
+        // Delegato al servizio per la gestione dell'ordine
+        gestioneInventarioService.concludiOrdine(carrello);
+        carrello.svuota();
+        caricaProdotti();
+        aggiornaVistaCarrello();
+        System.out.println("Ordine concluso con successo!");
+    }
 
     public void apriCarrello() {
         Carrello carrello = Carrello.getInstance();
@@ -131,28 +141,6 @@ public class GestionePController {
         storicoView.mostra(spedizioni);
     }
     
-    public void concludiOrdine() {
-        Carrello carrello = Carrello.getInstance();
-        String idSpedizione = gestioneInventarioService.generaIdSpedizione();
-        
-        Map<Integer, Integer> quantitaTotalePerProdotto = new HashMap<>();
-        Map<Integer, BigDecimal> prezzoTotalePerProdotto = new HashMap<>();
-        for (ItemCarrello item : carrello.getItems()) {
-            int idProdotto = item.getFornitura().getProdotto().getIdProdotto();
-            int quantita = item.getQuantita();
-            BigDecimal prezzo = item.getPrezzoTotale();
-            
-            quantitaTotalePerProdotto.put(idProdotto, quantitaTotalePerProdotto.getOrDefault(idProdotto, 0) + quantita);
-            prezzoTotalePerProdotto.put(idProdotto, prezzoTotalePerProdotto.getOrDefault(idProdotto, BigDecimal.ZERO).add(prezzo));
-        }
-        // Delegato al servizio per la gestione dell'ordine
-        gestioneInventarioService.concludiOrdine(carrello, idSpedizione, quantitaTotalePerProdotto, prezzoTotalePerProdotto);
-        carrello.svuota();
-        caricaProdotti();
-        aggiornaVistaCarrello();
-        System.out.println("Ordine concluso con successo!");
-    }
-
     public void aggiornaVistaCarrello() {
         Carrello carrello = Carrello.getInstance();
         if (carrelloView == null) {
@@ -164,14 +152,6 @@ public class GestionePController {
     }
     
     private void mostraErrore(String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Errore");
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
-        
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/css/StileModificaPrezzo.css").toExternalForm());
-        dialogPane.getStyleClass().add("custom-alert");
-        alert.showAndWait();
+        prodottiView.mostraErrore(messaggio);
     }
 }

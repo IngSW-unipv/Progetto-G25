@@ -184,4 +184,17 @@ public class ProdottiView {
         button.setOnAction(eventHandler);
         return button;
     }
+    
+    public void mostraErrore(String messaggio) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Errore");
+        alert.setHeaderText(null);
+        alert.setContentText(messaggio);
+        
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/StileModificaPrezzo.css").toExternalForm());
+        dialogPane.getStyleClass().add("custom-alert");
+        alert.showAndWait();
+    }
+    
 }

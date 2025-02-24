@@ -2,6 +2,7 @@ package it.unipv.ingsfw.bitebyte.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -9,6 +10,7 @@ import java.util.Random;
 import it.unipv.ingsfw.bitebyte.models.Carrello;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Fornitura;
+import it.unipv.ingsfw.bitebyte.models.ItemCarrello;
 import it.unipv.ingsfw.bitebyte.models.Prodotto;
 import it.unipv.ingsfw.bitebyte.models.Spedizione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
@@ -88,11 +90,9 @@ public class GestioneInventarioService {
         // Aggiungi al carrello
         Carrello carrello = Carrello.getInstance();
         carrello.aggiungiItem(fornitura, quantita, finalPrice);
-        // Aggiorna lo stock
+        // Aggiorna la nuova quantità disponibile per controlli su ordinazioni successive
         stock.setQuantitaDisp(disponibile + quantita);
-        stockService.updateStock(stock);
     }
-
 
     public BigDecimal calcolaPrezzoScontato(Fornitura fornitura, int quantita, Stock stock) {
         String strategyKey = (quantita == stock.getQMaxInseribile()) ? "maxquantity.strategy" : "quantity.strategy";
@@ -114,10 +114,17 @@ public class GestioneInventarioService {
     
   
     // Nuovo metodo per concludere l'ordine e salvare la spedizione
-    public void concludiOrdine(Carrello carrello, String idSpedizione, 
-                               Map<Integer, Integer> quantitaTotalePerProdotto,
-                               Map<Integer, BigDecimal> prezzoTotalePerProdotto) {
-
+    public void concludiOrdine(Carrello carrello) {
+        Map<Integer, Integer> quantitaTotalePerProdotto = new HashMap<>();
+        Map<Integer, BigDecimal> prezzoTotalePerProdotto = new HashMap<>();
+        for (ItemCarrello item : carrello.getItems()) {
+            int idProdotto = item.getFornitura().getProdotto().getIdProdotto();
+            int quantita = item.getQuantita();
+            BigDecimal prezzo = item.getPrezzoTotale();
+            
+            quantitaTotalePerProdotto.put(idProdotto, quantitaTotalePerProdotto.getOrDefault(idProdotto, 0) + quantita);
+            prezzoTotalePerProdotto.put(idProdotto, prezzoTotalePerProdotto.getOrDefault(idProdotto, BigDecimal.ZERO).add(prezzo));
+        }
         // Distribuisci le quantità tra gli inventari
         for (Map.Entry<Integer, Integer> entry : quantitaTotalePerProdotto.entrySet()) {
             int idProdotto = entry.getKey();
@@ -140,12 +147,13 @@ public class GestioneInventarioService {
         }
 
         // Salva la spedizione
-        salvaSpedizione(idSpedizione, quantitaTotalePerProdotto, prezzoTotalePerProdotto);
+        salvaSpedizione(quantitaTotalePerProdotto, prezzoTotalePerProdotto);
     }
-
+    
     // Metodo per salvare la spedizione
-    private void salvaSpedizione(String idSpedizione, Map<Integer, Integer> quantitaTotalePerProdotto, Map<Integer, BigDecimal> prezzoTotalePerProdotto) {
-        for (Integer idProdotto : quantitaTotalePerProdotto.keySet()) {
+    private void salvaSpedizione(Map<Integer, Integer> quantitaTotalePerProdotto, Map<Integer, BigDecimal> prezzoTotalePerProdotto) {
+    	String idSpedizione = generaIdSpedizione();
+    	for (Integer idProdotto : quantitaTotalePerProdotto.keySet()) {
             int quantita = quantitaTotalePerProdotto.get(idProdotto);
             BigDecimal prezzoTotale = prezzoTotalePerProdotto.get(idProdotto);
             spedizioneService.salvaSpedizione(idSpedizione, idProdotto, quantita, prezzoTotale);
@@ -161,7 +169,4 @@ public class GestioneInventarioService {
         }
         return sb.toString();
     }
-    
-    
-
 }

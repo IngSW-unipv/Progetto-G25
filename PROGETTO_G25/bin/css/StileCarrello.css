@@ -1,0 +1,100 @@
+/* Stile principale della finestra */
+.root-layout {
+    -fx-background-color: #dc143c;
+    -fx-padding: 20px;
+}
+.scroll-pane {
+	-fx-background-color: #dc143c;
+}
+/* Riquadro per ogni prodotto */
+.prodotto-box {
+    -fx-background-color: #EEB729;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-spacing: 20px;
+}
+
+/* Stile per il nome del prodotto */
+.name-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Stile per il fornitore */
+.supplier-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Stile per la quantità */
+.quantity-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555555;
+}
+
+/* Stile per il totale */
+.total-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #008000;
+}
+
+
+/* Stile per il bottone conferma ordine */
+.conferma-ordine-button {
+    -fx-background-color: #66cdaa;
+    -fx-border-color: black;
+    -fx-border-radius: 3px;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 5px 10px;
+}
+
+/* Stile per il bottone torna ai prodotti */
+.torna-ai-prodotti-button {
+    -fx-background-color: #66cdaa;
+    -fx-border-color: black;
+    -fx-border-radius: 3px;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 5px 10px;
+}
+
+.conferma-ordine-button:hover {
+    -fx-background-color: #2e8b57;
+}
+
+.torna-ai-prodotti-button:hover {
+    -fx-background-color: #2e8b57;
+}
+
+/* Bottone per rimuovere il prodotto */
+.remove-button {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-padding: 0;
+}
+
+.remove-button:hover {
+    -fx-background-color: #9b111E;
+}
+
+
+/* Layout per i bottoni in basso */
+.button-box {
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+}
+
+/* Icona dell'immagine del prodotto */
+.image-view {
+    -fx-fit-width: 100px;
+    -fx-fit-height: 100px;
+    -fx-preserve-ratio: true;
+}
