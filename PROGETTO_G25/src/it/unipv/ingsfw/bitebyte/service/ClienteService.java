@@ -3,19 +3,22 @@ package it.unipv.ingsfw.bitebyte.service;
 import java.math.BigDecimal;
 
 import it.unipv.ingsfw.bitebyte.dao.ClienteDAO;
+import it.unipv.ingsfw.bitebyte.dao.PortafoglioDAO;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 
 public class ClienteService {
 
     private ClienteDAO clienteDAO;
+    private PortafoglioDAO portafoglioDAO;
 
     public ClienteService() {
         this.clienteDAO = new ClienteDAO();
+        this.portafoglioDAO = new PortafoglioDAO();
     }
 
     public double getSaldo(Cliente cliente) {
         // Recupera il saldo utilizzando il codice fiscale
-        return clienteDAO.getSaldo(cliente.getCf());
+        return portafoglioDAO.getSaldo(cliente.getCf());  // Usa l'istanza portafoglioDAO
     }
     
     public boolean saldoSufficiente(Cliente cliente, BigDecimal prezzoProdotto) {

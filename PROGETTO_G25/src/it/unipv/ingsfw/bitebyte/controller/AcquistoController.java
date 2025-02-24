@@ -6,6 +6,7 @@ import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import it.unipv.ingsfw.bitebyte.service.ClienteService;
+import it.unipv.ingsfw.bitebyte.service.PortafoglioService; // Importa il servizio per gestire il saldo
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -16,12 +17,14 @@ public class AcquistoController {
     private ViewPrSelected view;
     private Stock stockSelezionato;
     private Stage previousStage;
-    private ClienteService clienteService; // Imposto il servizio per evitare di crearlo ogni volta
+    private ClienteService clienteService;
+    private PortafoglioService portafoglioService; // Aggiungi PortafoglioService
 
     public AcquistoController(Stage previousStage) {
         this.view = new ViewPrSelected();
         this.previousStage = previousStage;
-        this.clienteService = new ClienteService(); // Creiamo una sola istanza per tutto il controller
+        this.clienteService = new ClienteService();
+        this.portafoglioService = new PortafoglioService(); // Crea l'istanza di PortafoglioService
     }
 
     public void setStockSelezionato(Stock stock) {
@@ -81,10 +84,21 @@ public class AcquistoController {
             System.out.println("Errore: Nessun cliente loggato.");
             return;
         }
+
         BigDecimal prezzoProdotto = stock.getProdotto().getPrezzo(); // Ottieni il prezzo del prodotto (BigDecimal)
+        
         if (clienteService.saldoSufficiente(clienteLoggato, prezzoProdotto)) {
             System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
-            // Logica per completare l'acquisto
+            
+            // Logica per scalare il saldo
+            double saldoAttuale = clienteService.getSaldo(clienteLoggato);  // Ottieni il saldo attuale
+            double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue(); // Calcola il nuovo saldo
+            
+            // Usa PortafoglioService per aggiornare il saldo
+            portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo); // Metodo corretto per aggiornare il saldo
+            
+            System.out.println("Il nuovo saldo è: " + nuovoSaldo);
+            // Logica per completare l'acquisto, ad esempio ridurre il numero di unità del prodotto
         } else {
             System.out.println("Saldo insufficiente per acquistare: " + stock.getProdotto().getNome());
         }
