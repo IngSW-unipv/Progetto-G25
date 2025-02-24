@@ -92,7 +92,6 @@ public class Authcontroller implements Initializable {
 	public void accedi() {
 		String nomeUtente = usernameLogin.getText();
 		String password = passwordLogin.getText();
-		Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
 
 		if (clienteDAO.verificaLogin(nomeUtente, password)) {
 			Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
