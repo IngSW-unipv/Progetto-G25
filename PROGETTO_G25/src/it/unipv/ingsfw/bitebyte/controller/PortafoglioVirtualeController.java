@@ -2,6 +2,7 @@ package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.PortafoglioVirtuale;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
+import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,10 +15,17 @@ import javafx.stage.Stage;
 
 public class PortafoglioVirtualeController {
 
+	// Bottoni TipologiaPagamento
     @FXML
     private Button sceglibancomat;
     @FXML
     private Button sceglipaypal;
+    
+    // Bottoni PortafoglioVirtuale
+    @FXML
+    private Button tornaProfilo;
+    @FXML
+    private Button tornaTipologia;
 
     
     
@@ -66,6 +74,12 @@ public class PortafoglioVirtualeController {
 			switchScene(stage, "Bancomat.fxml", "Bancomat");
 		} else if (clickedButton.getId().equals("sceglipaypal")) {
 			showAlert("PayPal", "ti sei connesso al tuo account PayPal");
+			switchScene(stage, "PortafoglioVirtuale.fxml", "PortafoglioVirtuale");
+			Sessione.getInstance().getPortafoglioCliente().setTipologiaPagamento(TipologiaPagamento.PAYPAL);
+		}else if (clickedButton.getId().equals("tornaProfilo")) {
+			switchScene(stage, "ProfiloCliente.fxml", "Profilo Cliente");
+		}else if (clickedButton.getId().equals("tornaTipologia")) {
+			switchScene(stage, "TipologiaPagamento.fxml", "Tipologia Pagamento");
 		}
 	}
 	

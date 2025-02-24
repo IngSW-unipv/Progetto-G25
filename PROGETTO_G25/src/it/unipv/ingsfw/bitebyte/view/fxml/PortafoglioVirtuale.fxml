@@ -8,16 +8,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dc143c;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipv.ingsfw.bitebyte.controller.PortafoglioVirtualeController">
    <children>
       <TextField layoutX="222.0" layoutY="198.0" />
-      <Button layoutX="42.0" layoutY="295.0" mnemonicParsing="false" style="-fx-background-color: #66cdaa;" text="Modifica tipologia pagamento">
+      <Button fx:id="tornaTipologia" layoutX="42.0" layoutY="295.0" mnemonicParsing="false" style="-fx-background-color: #66cdaa;" text="Modifica tipologia pagamento" onAction="#cambiaScena">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="421.0" layoutY="334.0" mnemonicParsing="false" style="-fx-background-color: #66cdaa;" text="Torna a profilo cliente">
+      <Button fx:id="tornaProfilo" layoutX="421.0" layoutY="334.0" mnemonicParsing="false" style="-fx-background-color: #66cdaa;" text="Torna a profilo cliente" onAction="#cambiaScena">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>

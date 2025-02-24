@@ -14,7 +14,7 @@
             <Image url="@../../../../../../../resources/icona-bancomat-removebg-preview.png" />
          </image>
       </ImageView>
-      <Label layoutX="38.0" layoutY="24.0" text="Tipologia Pagamento">
+      <Label layoutX="347.0" layoutY="27.0" text="Tipologia Pagamento">
          <font>
             <Font name="System Bold" size="21.0" />
          </font></Label>
@@ -23,17 +23,12 @@
             <Image url="@../../../../../../../resources/Paypal_logo.png" />
          </image>
       </ImageView>
-      <Button layoutX="479.0" layoutY="335.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="69.0" style="-fx-background-color: #dc143c;" text="Salva" textFill="WHITE">
+      <Button fx:id="sceglipaypal" layoutX="204.0" layoutY="245.0" mnemonicParsing="false" onAction="#cambiaScena" prefHeight="31.0" prefWidth="91.0" style="-fx-background-color: #dc143c;" text="PayPal" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="sceglipaypal" layoutX="204.0" layoutY="245.0" mnemonicParsing="false" onAction="#cambiaScena" prefHeight="31.0" prefWidth="69.0" style="-fx-background-color: #dc143c;" text="PayPal" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Button>
-      <Button fx:id="sceglibancomat" layoutX="204.0" layoutY="126.0" mnemonicParsing="false" onAction="#cambiaScena" prefHeight="31.0" prefWidth="69.0" style="-fx-background-color: #dc143c;" text="Bancomat" textFill="WHITE">
+      <Button fx:id="sceglibancomat" layoutX="204.0" layoutY="126.0" mnemonicParsing="false" onAction="#cambiaScena" prefHeight="31.0" prefWidth="91.0" style="-fx-background-color: #dc143c;" text="Bancomat" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

@@ -8,6 +8,7 @@ import it.unipv.ingsfw.bitebyte.dao.BancomatDAO;
 import it.unipv.ingsfw.bitebyte.models.Bancomat;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
+import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -45,6 +46,7 @@ public class BancomatController {
 			showAlert("Successo", "DATI BANCOMAT CARICATI!");
 			Stage stage = (Stage) pulsanteSalva.getScene().getWindow();
 			switchScene(stage, "PortafoglioVirtuale.fxml", "Portafoglio Virtuale");
+			Sessione.getInstance().getPortafoglioCliente().setTipologiaPagamento(TipologiaPagamento.BANCOMAT);
 		}
 
 		private void showAlert(String title, String message) {
@@ -57,7 +59,7 @@ public class BancomatController {
 		private void switchScene(Stage stage, String fxml, String title) {
 			try {
 				System.out.println("sono in switch scene");
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxml));
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/it/unipv/ingsfw/bitebyte/view/fxml/" + fxml));
 				Parent root = loader.load();
 				stage.setTitle(title);
 				stage.setScene(new Scene(root));

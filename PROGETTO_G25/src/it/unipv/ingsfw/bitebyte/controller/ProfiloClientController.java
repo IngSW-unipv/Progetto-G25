@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import it.unipv.ingsfw.bitebyte.models.Cliente;
+import it.unipv.ingsfw.bitebyte.models.PortafoglioVirtuale;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.services.ClientService;
 import javafx.event.ActionEvent;
@@ -236,7 +237,12 @@ public class ProfiloClientController {
 		// Verifica quale bottone è stato premuto e cambia scena di conseguenza
 		if (clickedButton.getId().equals("idport")) {
 			System.out.println("sono in switch scene");
-			switchScene(stage, "PortafoglioVirtuale.fxml", "Portafoglio Virtuale");
+			if (Sessione.getInstance().getPortafoglioCliente() == null || 
+				    Sessione.getInstance().getPortafoglioCliente().getTipologiaPagamento() == null) {
+				switchScene(stage, "TipologiaPagamento.fxml", "Tipologia Pagamento");;
+			} else {
+				switchScene(stage, "PortafoglioVirtuale.fxml", "Portafoglio Virtuale");;
+			}
 		} else if (clickedButton.getId().equals("idmodifica")) {
 			System.out.println("sono in switch scene");
 			switchScene(stage, "ModificaProfilo.fxml", "Modifica Profilo");
@@ -247,7 +253,11 @@ public class ProfiloClientController {
 		}else if (clickedButton.getId().equals("tornaProfilo")) {
 			System.out.println("sono in switch scene");
 			switchScene(stage, "ProfiloCliente.fxml", "Profilo Cliente");
+		}else if (clickedButton.getId().equals("idmodifica")) {
+		    System.out.println("Apertura schermata Modifica Profilo");
+		    switchScene(stage, "ModificaProfilo.fxml", "Modifica Profilo");
 		}
+
 	}
 	
 	
@@ -263,8 +273,6 @@ public class ProfiloClientController {
 			e.printStackTrace(); // Questo mostrerà eventuali errori
 		}
 	}
-    
-        
 
     public void logout() {
         Sessione.getInstance().logout();
