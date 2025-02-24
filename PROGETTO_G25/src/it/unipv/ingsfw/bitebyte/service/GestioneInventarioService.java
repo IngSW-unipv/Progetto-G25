@@ -76,23 +76,29 @@ public class GestioneInventarioService {
     }
     
     public void handleRestock(Stock stock, Fornitura fornitura, int quantita) {
-        int disponibile = stock.getQuantitaDisp();
+        Carrello carrello = Carrello.getInstance();
+        int quantitaNelCarrello = 0;
+        // Somma la quantità presente nel carrello per lo stesso prodotto
+        for (ItemCarrello item : carrello.getItems()) {
+            if (item.getFornitura().getProdotto().getIdProdotto() == stock.getProdotto().getIdProdotto()) {
+                quantitaNelCarrello += item.getQuantita();
+            }
+        }
         int maxInseribile = stock.getQMaxInseribile();
-
-        // Controllo validità quantità
+        int quantitaDisponibile = stock.getQuantitaDisp();  
+        // Controlli sulla quantità
         if (quantita <= 0) {
             throw new IllegalArgumentException("Inserisci una quantità valida.");
         }
-        if (quantita + disponibile > maxInseribile) {
-            throw new IllegalArgumentException("Quantità non disponibile! Puoi ordinare al massimo " + (maxInseribile - disponibile) + " unità.");
+        if (quantita + quantitaNelCarrello + quantitaDisponibile > maxInseribile) {
+            throw new IllegalArgumentException("Quantità non disponibile! Puoi ordinare al massimo " + (maxInseribile - quantitaNelCarrello - quantitaDisponibile) + " unità.");
         }
+        // Calcolo del prezzo finale con eventuali sconti
         BigDecimal finalPrice = calcolaPrezzoScontato(fornitura, quantita, stock);
-        // Aggiungi al carrello
-        Carrello carrello = Carrello.getInstance();
+        // Aggiungi l'elemento al carrello
         carrello.aggiungiItem(fornitura, quantita, finalPrice);
-        // Aggiorna la nuova quantità disponibile per controlli su ordinazioni successive
-        stock.setQuantitaDisp(disponibile + quantita);
     }
+
 
     public BigDecimal calcolaPrezzoScontato(Fornitura fornitura, int quantita, Stock stock) {
         String strategyKey = (quantita == stock.getQMaxInseribile()) ? "maxquantity.strategy" : "quantity.strategy";
@@ -145,28 +151,9 @@ public class GestioneInventarioService {
                 }
             }
         }
-
         // Salva la spedizione
-        salvaSpedizione(quantitaTotalePerProdotto, prezzoTotalePerProdotto);
+        spedizioneService.salvaSpedizione(quantitaTotalePerProdotto, prezzoTotalePerProdotto);
     }
     
-    // Metodo per salvare la spedizione
-    private void salvaSpedizione(Map<Integer, Integer> quantitaTotalePerProdotto, Map<Integer, BigDecimal> prezzoTotalePerProdotto) {
-    	String idSpedizione = generaIdSpedizione();
-    	for (Integer idProdotto : quantitaTotalePerProdotto.keySet()) {
-            int quantita = quantitaTotalePerProdotto.get(idProdotto);
-            BigDecimal prezzoTotale = prezzoTotalePerProdotto.get(idProdotto);
-            spedizioneService.salvaSpedizione(idSpedizione, idProdotto, quantita, prezzoTotale);
-        }
-    }
     
-    public String generaIdSpedizione() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random rand = new Random();
-        StringBuilder sb = new StringBuilder(5);
-        for (int i = 0; i < 5; i++) {
-            sb.append(chars.charAt(rand.nextInt(chars.length())));
-        }
-        return sb.toString();
-    }
 }

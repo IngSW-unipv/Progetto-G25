@@ -1,4 +1,5 @@
 package it.unipv.ingsfw.bitebyte.controller;
+
 import it.unipv.ingsfw.bitebyte.service.GestioneInventarioService;
 import it.unipv.ingsfw.bitebyte.service.DistributoreService;
 import it.unipv.ingsfw.bitebyte.service.StockService;
@@ -20,6 +21,7 @@ import it.unipv.ingsfw.bitebyte.view.StoricoSpedizioniView;
 import it.unipv.ingsfw.bitebyte.view.ProdottiView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
+import javafx.stage.Stage;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,10 +30,10 @@ import java.util.List;
 import java.util.Map;
 
 public class GestionePController {
-   
+
     private int idInventario;
     private GestioneInventarioService gestioneInventarioService;
-    
+
     private ProdottiView prodottiView;
     private CarrelloView carrelloView;
 
@@ -39,7 +41,13 @@ public class GestionePController {
         this.gestioneInventarioService = new GestioneInventarioService(
             new StockService(), new FornituraService(), new ProdottoService(), new DistributoreService(), new SpedizioneService()
         );
-        this.prodottiView = new ProdottiView(this); 
+        this.prodottiView = new ProdottiView(); 
+        this.prodottiView.setOnSelezionaDistributore(this::setIdInventario); // Imposta listener per il distributore
+        this.prodottiView.setOnRestock(this::handleRestock); // Imposta listener per il rifornimento
+        this.prodottiView.setOnSostituzione(this::handleSostituzione); // Imposta listener per la sostituzione
+        this.prodottiView.setOnCambioPrezzo(this::handleCambioPrezzo); // Imposta listener per il cambio prezzo
+        this.prodottiView.setOnApriCarrello(this::apriCarrello); // Imposta listener per aprire il carrello
+        this.prodottiView.setOnApriStoricoSpedizioni(this::apriStoricoSpedizioni); // Imposta listener per aprire storico spedizioni
         caricaDistributori();  
     }
 
@@ -47,12 +55,12 @@ public class GestionePController {
         this.idInventario = idInventario;
         caricaProdotti();
     }
-    
+
     public void caricaDistributori() {
         List<Distributore> distributori = gestioneInventarioService.getDistributori(); 
         prodottiView.setDistributori(distributori); 
     }
-    
+
     public void caricaProdotti() {
         ArrayList<Stock> stocks = gestioneInventarioService.getProdottiByInventario(idInventario);
         prodottiView.aggiornaProdotti(stocks);
@@ -67,13 +75,12 @@ public class GestionePController {
             mostraErrore("Slot prodotto già pieno");
             return;
         }
-       // Ottieni la lista di forniture per il prodotto
+        int quantitaOriginale = stock.getQuantitaDisp();
         ArrayList<Fornitura> forniture = gestioneInventarioService.getFornitoriByStock(stock);
         RifornimentoView rifornimentoView = new RifornimentoView(forniture, stock, new RifornimentoView.RifornimentoListener() {
             @Override
             public void onFornitoreSelezionato(Fornitura fornitura, int quantita) {
                 try {
-                    // Chiamata al servizio per gestire il rifornimento
                     gestioneInventarioService.handleRestock(stock, fornitura, quantita);
                     aggiornaVistaCarrello();  
                     apriCarrello();  
@@ -86,30 +93,23 @@ public class GestionePController {
         });
         rifornimentoView.mostra();
     }
-    
+
     public void handleSostituzione(Stock stock) {
-        // Ottieni i prodotti sostitutivi per il prodotto attuale
         ArrayList<Prodotto> prodottiSostitutivi = gestioneInventarioService.getProdottiByCategoria(stock, stock.getProdotto().getCategoria());
-        // Mostra la vista per la sostituzione
         new SostituzioneView(prodottiSostitutivi, prodottoSostituito -> {
-            // Invoca il servizio per gestire la sostituzione
             gestioneInventarioService.handleSostituzione(stock, prodottoSostituito);
-            // Ricarica i prodotti e aggiorna la vista
             prodottiView.aggiornaProdotti(gestioneInventarioService.getStockByInventario(stock.getIdInventario()));
         });
     }
-    
+
     public void handleCambioPrezzo(Stock stock) {
-        // Mostra la vista per modificare il prezzo
         ModificaPrezzoView view = new ModificaPrezzoView(stock, (prodotto, nuovoPrezzo) -> {
             try {
-                // Chiamata al servizio per gestire il cambio del prezzo
                 boolean aggiornato = gestioneInventarioService.handleCambioPrezzo(stock, nuovoPrezzo);
                 if (!aggiornato) {
                     mostraErrore("Errore durante l'aggiornamento del prezzo!");
                     return;
                 }
-                // Aggiorna i prodotti dopo aver cambiato il prezzo
                 prodottiView.aggiornaProdotti(gestioneInventarioService.getStockByInventario(stock.getIdInventario()));
             } catch (IllegalArgumentException e) {
                 mostraErrore(e.getMessage());
@@ -117,10 +117,9 @@ public class GestionePController {
         });
         view.show();
     }
-    
+
     public void concludiOrdine() {
         Carrello carrello = Carrello.getInstance();
-        // Delegato al servizio per la gestione dell'ordine
         gestioneInventarioService.concludiOrdine(carrello);
         carrello.svuota();
         caricaProdotti();
@@ -129,28 +128,51 @@ public class GestionePController {
     }
 
     public void apriCarrello() {
+        if (carrelloView != null) {
+            Stage stage = (Stage) carrelloView.getRootLayout().getScene().getWindow();
+            if (stage != null) {
+                stage.close();  
+            }
+        }
         Carrello carrello = Carrello.getInstance();
-        carrelloView = new CarrelloView(carrello, this);
-        carrelloView.aggiornaVistaCarrello();
+        carrelloView = new CarrelloView(carrello);
+        // Aggiungi il listener per la rimozione del prodotto
+        carrelloView.setOnRimuoviProdotto(item -> {
+            carrello.rimuoviItem(item);
+            aggiornaVistaCarrello();
+        });
+        // Aggiungi il listener per tornare ai prodotti (chiudendo il carrello)
+        carrelloView.setOnTornaAiProdotti(() -> {
+            Stage stage = (Stage) carrelloView.getRootLayout().getScene().getWindow();
+            if (stage != null) {
+                stage.close();
+            }
+        });
+        // Aggiungi il listener per concludere l'ordine
+        carrelloView.setOnConcludiOrdine(() -> {
+            concludiOrdine();
+        });
         carrelloView.mostra();
     }
-    
+
+
+
     public void apriStoricoSpedizioni() {
         ArrayList<Spedizione> spedizioni = gestioneInventarioService.getAllSpedizioni();
         StoricoSpedizioniView storicoView = new StoricoSpedizioniView();
         storicoView.mostra(spedizioni);
     }
-    
+
     public void aggiornaVistaCarrello() {
         Carrello carrello = Carrello.getInstance();
         if (carrelloView == null) {
-            carrelloView = new CarrelloView(carrello, this);
+            carrelloView = new CarrelloView(carrello);
             carrelloView.mostra();  
         } else {
             carrelloView.aggiornaVistaCarrello();  
         }
     }
-    
+
     private void mostraErrore(String messaggio) {
         prodottiView.mostraErrore(messaggio);
     }

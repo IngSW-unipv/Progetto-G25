@@ -1,7 +1,5 @@
 package it.unipv.ingsfw.bitebyte.view;
 
-import it.unipv.ingsfw.bitebyte.controller.GestionePController;
-import it.unipv.ingsfw.bitebyte.dao.DistributoreDAO;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import javafx.geometry.Insets;
@@ -16,28 +14,35 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ProdottiView {
 
     private VBox rootLayout;
     private FlowPane prodottiContainer;
     private ScrollPane scrollPane;
-    private GestionePController controller;
     private ComboBox<Distributore> distributoreDropdown;
     private Button carrelloButton;
 
-    public ProdottiView(GestionePController controller) {
-        this.controller = controller;
+    private Runnable onApriCarrello;
+    private Runnable onApriStoricoSpedizioni;
+    private Consumer<Integer> onSelezionaDistributore;
+    private Consumer<Stock> onRestock;
+    private Consumer<Stock> onSostituzione;
+    private Consumer<Stock> onCambioPrezzo;
 
+    public ProdottiView() {
         rootLayout = new VBox(10);
         rootLayout.setPadding(new Insets(10));
-        //Barra del titolo
+
+        // Barra del titolo
         HBox topBar = creaTopBar();
 
         prodottiContainer = new FlowPane();
         scrollPane = new ScrollPane(prodottiContainer);
         initialize();
-        //Barra inferiore 
+
+        // Barra inferiore
         HBox bottomBar = creaBottomBar();
 
         rootLayout.getChildren().addAll(topBar, scrollPane, bottomBar);
@@ -73,15 +78,19 @@ public class ProdottiView {
         bottomBar.setAlignment(Pos.CENTER);
         bottomBar.setPadding(new Insets(10));
         bottomBar.getStyleClass().add("bottom-bar");
-        
+
         carrelloButton = new Button("🛒 Carrello");
         carrelloButton.getStyleClass().add("carrello-button");
-        carrelloButton.setOnAction(e -> controller.apriCarrello());
-     
+        carrelloButton.setOnAction(e -> {
+            if (onApriCarrello != null) onApriCarrello.run();
+        });
+
         Button storicoSpedizioniButton = new Button("Storico Spedizioni");
         storicoSpedizioniButton.getStyleClass().add("storico-spedizioni-button");
-        storicoSpedizioniButton.setOnAction(e -> controller.apriStoricoSpedizioni());
-        
+        storicoSpedizioniButton.setOnAction(e -> {
+            if (onApriStoricoSpedizioni != null) onApriStoricoSpedizioni.run();
+        });
+
         distributoreDropdown = new ComboBox<>();
         distributoreDropdown.setPrefHeight(90);
         distributoreDropdown.setPromptText("Seleziona Distributore");
@@ -89,10 +98,11 @@ public class ProdottiView {
 
         distributoreDropdown.setOnAction(e -> {
             Distributore distributoreSelezionato = distributoreDropdown.getValue();
-            if (distributoreSelezionato != null) {
-                controller.setIdInventario(distributoreSelezionato.getIdInventario());
+            if (distributoreSelezionato != null && onSelezionaDistributore != null) {
+                onSelezionaDistributore.accept(distributoreSelezionato.getIdInventario());
             }
         });
+
         bottomBar.getChildren().addAll(carrelloButton, distributoreDropdown, storicoSpedizioniButton);
         return bottomBar;
     }
@@ -144,18 +154,26 @@ public class ProdottiView {
         quantityLabel.getStyleClass().add("product-quantity");
         Label statusLabel = new Label();
         statusLabel.getStyleClass().add("product-status");
-        
+
         if (stock.getQuantitaDisp() > 0) {
             statusLabel.setText("Stato: Disponibile");
             statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-        } else if (stock.getQuantitaDisp() == 0) {
+        } else {
             statusLabel.setText("Stato: Esaurito");
             statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         }
 
-        Button restockButton = creaBottoneConIcona("resources/icona spedizione.png", e -> controller.handleRestock(stock));
-        Button replaceButton = creaBottoneConIcona("resources/icona-switch (1).png", e -> controller.handleSostituzione(stock));
-        Button priceChangeButton = creaBottoneConIcona("resources/icona-modificaprezzo.png", e -> controller.handleCambioPrezzo(stock));
+        Button restockButton = creaBottoneConIcona("resources/icona spedizione.png", e -> {
+            if (onRestock != null) onRestock.accept(stock);
+        });
+
+        Button replaceButton = creaBottoneConIcona("resources/icona-switch (1).png", e -> {
+            if (onSostituzione != null) onSostituzione.accept(stock);
+        });
+
+        Button priceChangeButton = creaBottoneConIcona("resources/icona-modificaprezzo.png", e -> {
+            if (onCambioPrezzo != null) onCambioPrezzo.accept(stock);
+        });
 
         HBox buttonContainer = new HBox(10);
         buttonContainer.setAlignment(Pos.CENTER);
@@ -178,6 +196,7 @@ public class ProdottiView {
         } else {
             System.err.println("❌ Icona non trovata -> " + imageFile.getAbsolutePath());
         }
+
         Button button = new Button();
         button.setGraphic(icon);
         button.getStyleClass().add("restock-button");
@@ -190,11 +209,16 @@ public class ProdottiView {
         alert.setTitle("Errore");
         alert.setHeaderText(null);
         alert.setContentText(messaggio);
-        
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("/css/StileModificaPrezzo.css").toExternalForm());
-        dialogPane.getStyleClass().add("custom-alert");
         alert.showAndWait();
     }
-    
+
+    public void setOnApriCarrello(Runnable listener) { this.onApriCarrello = listener; }
+    public void setOnApriStoricoSpedizioni(Runnable listener) { this.onApriStoricoSpedizioni = listener; }
+    public void setOnSelezionaDistributore(Consumer<Integer> listener) { this.onSelezionaDistributore = listener; }
+    public void setOnRestock(Consumer<Stock> listener) { this.onRestock = listener; }
+    public void setOnSostituzione(Consumer<Stock> listener) { this.onSostituzione = listener; }
+    public void setOnCambioPrezzo(Consumer<Stock> listener) { this.onCambioPrezzo = listener; }
+
 }
