@@ -20,7 +20,12 @@ public class TestController extends Application {
         // Imposta la scena e la finestra
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("Test Collegamento Distributore");
+        stage.setTitle("BiteByte - Collegamento Distributore");
+        stage.setResizable(false);  // Impedisce il ridimensionamento della finestra
+        stage.setMinWidth(600);
+        stage.setMinHeight(450);
+        stage.setMaxWidth(600);
+        stage.setMaxHeight(450);
         stage.show();
     }
 

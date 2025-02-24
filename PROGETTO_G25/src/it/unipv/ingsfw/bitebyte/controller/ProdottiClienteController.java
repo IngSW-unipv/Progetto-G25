@@ -1,3 +1,11 @@
+/**
+ *Classe controller che gestisce l'interfaccia grafica per la visualizzazione dei prodotti
+ * disponibili in un distributore per il cliente.
+ 
+ * @author Anna
+ * 
+ */
+
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.facade.RicercaFacade;
@@ -8,22 +16,21 @@ import it.unipv.ingsfw.bitebyte.view.ViewManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
 import java.util.List;
 
 public class ProdottiClienteController {
 
 	//Attributi 
-    private Distributore distributoreCorrente;   //distributore selezionato dal cliente
+    private Distributore distributoreCorrente;                 //distributore selezionato dal cliente
     private RicercaFacade ricercaFacade = new RicercaFacade(); // Uso RicercaFacade
     private boolean modalitaVisualizzazione = false;
-    private int currentSugar = 0;   //Contatore che indica il livello di zucchero selezionato (da 0 a 5).
-    private int idInventario;       //Identificatore dell'inventario del distributore corrente.
+    private int currentSugar = 0;                              //Contatore che indica il livello di zucchero selezionato (da 0 a 5).
+    private int idInventario;                                  //Identificatore dell'inventario del distributore corrente.
     
+    //elementi grafici
     
     @FXML private FlowPane prodottiContainer;         //Contenitore per i prodotti.
     @FXML private ScrollPane scrollPane;              //Permette lo scrolling verticale dei prodotti.
@@ -42,6 +49,10 @@ public class ProdottiClienteController {
 
     
     // Inizializzazione
+    /**
+     * Metodo di inizializzazione chiamato automaticamente da JavaFX.
+     * Configura l'interfaccia grafica e imposta i listener per la ricerca e i controlli.
+     */
 
     public void initialize() {
         prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));   /*Questo codice imposta la larghezza preferita del contenitore dei prodotti (prodottiContainer) 
@@ -68,7 +79,11 @@ public class ProdottiClienteController {
     
     //METODI SETTER PER CONFIGURARE IL CONTESTO
     
-    //metodo per impostare il distributore corrente
+    /**
+     * Imposta il distributore corrente.
+     * 
+     * @param distributore il distributore selezionato
+     */
     public void setDistributoreCorrente(Distributore distributore) {
         this.distributoreCorrente = distributore;
         if (distributore != null) {
@@ -76,7 +91,14 @@ public class ProdottiClienteController {
         }
     }
     
-    // Questo metodo imposta l'ID dell'inventario e aggiorna la visibilità dei controlli dello zucchero.
+    
+    /**
+     * Imposta l'ID dell'inventario del distributore corrente e aggiorna la visibilità
+     * dei controlli dello zucchero.
+     * 
+     * @param idInventario l'identificatore dell'inventario
+     */
+    
     public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
         if (idInventario == 1 || idInventario == 3 || idInventario == 5) {
@@ -100,40 +122,44 @@ public class ProdottiClienteController {
     
     //METODI PER LA LOGICA PRINCIPALE
     
-    // Questo metodo cerca e carica i prodotti in base a una query di ricerca.
+    /**
+     * Cerca e carica i prodotti in base a una query di ricerca.
+     * 
+     * @param query la query di ricerca
+     */
     public void caricaProdotti(String query) {
         List<Stock> stocks = ricercaFacade.cercaProdotti(query, idInventario);
-        prodottiContainer.getChildren().clear();  // Evita di accumulare prodotti duplicati ad ogni nuova ricerca.
+        prodottiContainer.getChildren().clear();
 
         if (stocks.isEmpty() && !query.trim().isEmpty()) {
-            Label info = new Label("Prodotto non disponibile in questo distributore.");
-            Button btnVisualizza = new Button("Visualizza distributori vicini");
-            btnVisualizza.setOnAction(e -> mostraDistributoriAlternativiByName(query));
-            prodottiContainer.getChildren().addAll(info, btnVisualizza);
+            prodottiContainer.getChildren().add(ProductView.createNoProductView(query, this::mostraDistributoriAlternativiByName));
         } else {
             aggiornaProdotti(stocks);
         }
     }
 
+    /**
+     * Aggiorna la visualizzazione dei prodotti nella UI.
+     * 
+     * @param stocks la lista di prodotti disponibili
+     */
 
     private void aggiornaProdotti(List<Stock> stocks) {
         prodottiContainer.getChildren().clear();
         if (stocks.isEmpty()) {
-            Label noResultsLabel = new Label("Nessun prodotto trovato.");
-            noResultsLabel.getStyleClass().add("product-name");
-            prodottiContainer.getChildren().add(noResultsLabel);
+            prodottiContainer.getChildren().add(ProductView.createNoProductView("Nessun prodotto trovato.", null));
         } else {
             for (Stock stock : stocks) {
-                BorderPane productBox = ProductView.createProductView(
-                        stock,
-                        modalitaVisualizzazione,
-                        this::handleSelect,
-                        s -> mostraDistributoriAlternativiByName(s.getProdotto().getNome())
-                );
-                prodottiContainer.getChildren().add(productBox);
+                prodottiContainer.getChildren().add(ProductView.createProductView(
+                    stock,
+                    modalitaVisualizzazione,
+                    this::handleSelect,
+                    s -> mostraDistributoriAlternativiByName(s.getProdotto().getNome())
+                ));
             }
         }
     }
+
     
     
     //Viene creato  nella classe ProductView tramite il metodo ProductView.createProductView(...).
@@ -178,6 +204,12 @@ public class ProdottiClienteController {
     
    
     //METODI PER LA GESTIONE DELLE ALTERNATIVE
+    
+    /**
+     * Mostra i distributori alternativi che offrono il prodotto richiesto.
+     * 
+     * @param nomeProdotto il nome del prodotto cercato
+     */
    
     public void mostraDistributoriAlternativiByName(String nomeProdotto) {
         if (distributoreCorrente == null) {

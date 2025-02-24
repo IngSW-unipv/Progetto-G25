@@ -31,11 +31,41 @@ public class ProductView {
         productPane.getStyleClass().add("product-box");
         productPane.setPadding(new Insets(10));
 
-        // Creazione e configurazione dell'immagine del prodotto
+        VBox centerBox = createProductInfo(stock);
+        productPane.setCenter(centerBox);
+
+        if (!modalitaVisualizzazione) {
+            HBox buttonContainer = createActionButton(stock, onSelect, onShowAlternatives);
+            productPane.setBottom(buttonContainer);
+        }
+
+        return productPane;
+    }
+
+    /**
+     * Crea il layout centrale con l'immagine, nome, prezzo, quantità e stato del prodotto.
+     */
+    private static VBox createProductInfo(Stock stock) {
+        ImageView imageView = createProductImage(stock);
+        Label nameLabel = createLabel(stock.getProdotto().getNome(), "product-name");
+        Label priceLabel = createLabel(String.format("€ %.2f", stock.getProdotto().getPrezzo()), "product-price");
+        Label quantityLabel = createLabel("Disponibili: " + stock.getQuantitaDisp(), "product-quantity");
+        Label statusLabel = createStatusLabel(stock);
+
+        VBox centerBox = new VBox(5, imageView, nameLabel, priceLabel, quantityLabel, statusLabel);
+        centerBox.setAlignment(Pos.CENTER);
+        return centerBox;
+    }
+
+    /**
+     * Crea e restituisce l'immagine del prodotto.
+     */
+    private static ImageView createProductImage(Stock stock) {
         ImageView imageView = new ImageView();
         imageView.setFitWidth(120);
         imageView.setFitHeight(120);
         imageView.setPreserveRatio(true);
+
         File productImageFile = new File("resources/immaginiDB/" + stock.getProdotto().getIdProdotto() + ".jpg");
         if (productImageFile.exists()) {
             imageView.setImage(new Image(productImageFile.toURI().toString()));
@@ -43,18 +73,25 @@ public class ProductView {
             imageView.setImage(new Image(ProductView.class.getResourceAsStream("/resources/immaginiDB/default.jpg")));
         }
 
-        // Creazione delle etichette per nome, prezzo, quantità e stato
-        Label nameLabel = new Label(stock.getProdotto().getNome());
-        nameLabel.getStyleClass().add("product-name");
+        return imageView;
+    }
 
-        Label priceLabel = new Label(String.format("€ %.2f", stock.getProdotto().getPrezzo()));
-        priceLabel.getStyleClass().add("product-price");
+    /**
+     * Crea e restituisce una label con uno stile specifico.
+     */
+    private static Label createLabel(String text, String styleClass) {
+        Label label = new Label(text);
+        label.getStyleClass().add(styleClass);
+        return label;
+    }
 
-        Label quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
-        quantityLabel.getStyleClass().add("product-quantity");
-
+    /**
+     * Crea e restituisce una label con lo stato del prodotto (Disponibile, Non disponibile, Esaurito).
+     */
+    private static Label createStatusLabel(Stock stock) {
         Label statusLabel = new Label();
         statusLabel.getStyleClass().add("product-status");
+
         if (stock.getQuantitaDisp() > 0) {
             if ("Disponibile".equals(stock.getStato())) {
                 statusLabel.setText("Stato: Disponibile");
@@ -68,31 +105,52 @@ public class ProductView {
             statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         }
 
-        // Raggruppa l'immagine e le etichette in una VBox centrata
-        VBox centerBox = new VBox(5, imageView, nameLabel, priceLabel, quantityLabel, statusLabel);
-        centerBox.setAlignment(Pos.CENTER);
-        productPane.setCenter(centerBox);
-
-        // Se non siamo in modalità visualizzazione, aggiungi il bottone nella parte inferiore
-        if (!modalitaVisualizzazione) {
-            Button actionButton;
-            if (stock.getQuantitaDisp() == 0) {
-                actionButton = new Button("Visualizza distributori vicini");
-                actionButton.setOnAction(e -> onShowAlternatives.accept(stock));
-            } else {
-                actionButton = new Button("Seleziona");
-                actionButton.setOnAction(e -> onSelect.accept(stock));
-            }
-            actionButton.getStyleClass().add("select-button");
-
-            // Inserisci il bottone in un HBox centrato con margini fissi
-            HBox buttonContainer = new HBox(actionButton);
-            buttonContainer.setAlignment(Pos.CENTER);
-            buttonContainer.setPadding(new Insets(10, 0, 10, 0));
-            productPane.setBottom(buttonContainer);
-        }
-
-        return productPane;
+        return statusLabel;
     }
+
+    /**
+     * Crea il bottone di selezione o il bottone per mostrare distributori alternativi.
+     */
+    private static HBox createActionButton(Stock stock, Consumer<Stock> onSelect, Consumer<Stock> onShowAlternatives) {
+        Button actionButton;
+        if (stock.getQuantitaDisp() == 0) {
+            actionButton = new Button("Visualizza distributori vicini");
+            actionButton.setOnAction(e -> onShowAlternatives.accept(stock));
+        } else {
+            actionButton = new Button("Seleziona");
+            actionButton.setOnAction(e -> onSelect.accept(stock));
+        }
+        actionButton.getStyleClass().add("select-button");
+
+        HBox buttonContainer = new HBox(actionButton);
+        buttonContainer.setAlignment(Pos.CENTER);
+        buttonContainer.setPadding(new Insets(10, 0, 10, 0));
+
+        return buttonContainer;
+    }
+    
+    /**
+     * Crea una vista che informa l'utente che il prodotto cercato non è disponibile
+     * nel distributore corrente e offre la possibilità di visualizzare distributori alternativi.
+     *
+     * @param query la query di ricerca utilizzata per il prodotto non disponibile
+     * @param onShowAlternatives una callback che gestisce l'azione per mostrare i distributori alternativi
+     *                           che offrono il prodotto cercato
+     * @return un VBox contenente il messaggio di prodotto non disponibile e un pulsante
+     *         per visualizzare distributori alternativi
+     */
+    public static VBox createNoProductView(String query, Consumer<String> onShowAlternatives) {
+        Label info = new Label("Prodotto non disponibile in questo distributore.");
+        info.getStyleClass().add("product-name");
+
+        Button btnVisualizza = new Button("Visualizza distributori vicini");
+        btnVisualizza.setOnAction(e -> onShowAlternatives.accept(query));
+
+        VBox vbox = new VBox(10, info, btnVisualizza);
+        vbox.setAlignment(Pos.CENTER);
+        return vbox;
+    }
+
 }
+
 
