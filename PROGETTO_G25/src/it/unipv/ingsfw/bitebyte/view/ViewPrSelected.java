@@ -66,7 +66,7 @@ public class ViewPrSelected {
         infoContainer.setAlignment(Pos.CENTER_LEFT);
         infoContainer.setPadding(new Insets(10));
 
-        ImageView backImageView = new ImageView(new Image(getClass().getResource("/immagini/back_arrow.png").toString()));
+        ImageView backImageView = new ImageView(new Image(getClass().getResource("/immagini/back_arrow2.png").toString()));
         backImageView.setFitWidth(40);
         backImageView.setFitHeight(40);
         backImageView.setPreserveRatio(true);
@@ -83,17 +83,13 @@ public class ViewPrSelected {
         });
 
         Region spacerTop = new Region();
-        spacerTop.setPrefHeight(20);
-
-        Region spacerBottom = new Region();
-        spacerBottom.setPrefHeight(50);
+        spacerTop.setPrefHeight(50);
 
         HBox backButtonContainer = new HBox(backImageView);
         backButtonContainer.setAlignment(Pos.TOP_LEFT);
 
         VBox backButtonBox = new VBox(spacerTop, backButtonContainer);
         backButtonBox.setAlignment(Pos.TOP_LEFT);
-        VBox.setMargin(backButtonContainer, new Insets(0, 0, 0, 10));
 
         selectButton = new Button("Conferma Acquisto");
         selectButton.getStyleClass().add("confirm-button");
@@ -109,7 +105,7 @@ public class ViewPrSelected {
 
         vboxStock.getChildren().addAll(infoContainer);
 
-        VBox root = new VBox(backButtonBox, vboxStock, spacerBottom, buttonContainer);
+        VBox root = new VBox(backButtonBox, vboxStock, buttonContainer);
         root.setAlignment(Pos.CENTER);
 
         return root;
