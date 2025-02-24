@@ -67,8 +67,8 @@ public class ViewPrSelected {
         infoContainer.setPadding(new Insets(10));
 
         ImageView backImageView = new ImageView(new Image(getClass().getResource("/immagini/back_arrow2.png").toString()));
-        backImageView.setFitWidth(40);
-        backImageView.setFitHeight(40);
+        backImageView.setFitWidth(50);
+        backImageView.setFitHeight(50);
         backImageView.setPreserveRatio(true);
         backImageView.setOnMouseClicked(e -> {
             mostraFinestraCaricamento();
