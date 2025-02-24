@@ -13,10 +13,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 
 import java.io.File;
 
@@ -31,11 +31,47 @@ public class ViewPrSelected {
     private Button selectButton;
 
     public VBox creaInterfaccia(Stock stock, AcquistoController controller, Stage newStage, Stage previousStage, Cliente clienteLoggato, double saldo) {
-        VBox vboxStock = new VBox(10);
+        // VBox per le informazioni del prodotto e cliente
+        VBox vboxStock = new VBox(15);
         vboxStock.getStyleClass().add("product-box");
         vboxStock.setPadding(new Insets(15));
-        
-        // Pulsante Indietro in alto a sinistra
+
+        // Immagine Prodotto a sinistra
+        imageView = new ImageView();
+        imageView.setFitWidth(150);
+        imageView.setFitHeight(150);
+        imageView.setPreserveRatio(true);
+
+        nameLabel = new Label(stock.getProdotto().getNome());
+        nameLabel.setStyle("-fx-font-size: 20px;");
+
+        priceLabel = new Label(String.format("€ %.2f", stock.getProdotto().getPrezzo()));
+        priceLabel.setStyle("-fx-font-size: 20px;");
+
+        quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
+        quantityLabel.setStyle("-fx-font-size: 20px;");
+
+        // VBox per le informazioni del prodotto
+        VBox vboxInfoProdotto = new VBox(10, imageView, nameLabel, priceLabel, quantityLabel);
+        vboxInfoProdotto.setAlignment(Pos.CENTER_LEFT);
+
+        // Informazioni Utente a destra
+        saldoLabel = new Label("Saldo disponibile: €" + String.format("%.2f", saldo));
+        saldoLabel.setStyle("-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;");
+
+        Label userLabel = new Label("Utente: " + (clienteLoggato != null ? clienteLoggato.getNome() + " " + clienteLoggato.getCognome() : "Nessun cliente loggato"));
+        userLabel.setStyle("-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;");
+
+        VBox vboxInfoUtente = new VBox(10, userLabel, saldoLabel);
+        vboxInfoUtente.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(vboxInfoUtente, javafx.scene.layout.Priority.ALWAYS); // Spinge le info a destra
+
+        // Creiamo l'area centrale con il prodotto e l'utente
+        HBox infoContainer = new HBox(25, vboxInfoProdotto, vboxInfoUtente);
+        infoContainer.setAlignment(Pos.CENTER_LEFT);
+        infoContainer.setPadding(new Insets(10));
+
+        // Bottone Indietro (spostato più in alto)
         ImageView backImageView = new ImageView(new Image(getClass().getResource("/immagini/back_arrow.png").toString()));
         backImageView.setFitWidth(40);
         backImageView.setFitHeight(40);
@@ -54,57 +90,41 @@ public class ViewPrSelected {
 
         HBox backButtonContainer = new HBox(backImageView);
         backButtonContainer.setAlignment(Pos.TOP_LEFT);
-        backButtonContainer.setPadding(new Insets(10));
-        
-        // Immagine Prodotto a sinistra
-        imageView = new ImageView();
-        imageView.setFitWidth(150);
-        imageView.setFitHeight(150);
-        imageView.setPreserveRatio(true);
-        
-        nameLabel = new Label(stock.getProdotto().getNome());
-        nameLabel.setStyle("-fx-font-size: 20px;");
-        
-        priceLabel = new Label(String.format("€ %.2f", stock.getProdotto().getPrezzo()));
-        priceLabel.setStyle("-fx-font-size: 20px;");
-        
-        quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
-        quantityLabel.setStyle("-fx-font-size: 20px;");
-        
-        VBox vboxInfoProdotto = new VBox(10, imageView, nameLabel, priceLabel, quantityLabel);
-        vboxInfoProdotto.setAlignment(Pos.CENTER_LEFT);
-        
-        // Informazioni Utente a destra
-        saldoLabel = new Label("Saldo disponibile: €" + String.format("%.2f", saldo));
-        saldoLabel.setStyle("-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;");
+        VBox.setMargin(backButtonContainer, new Insets(10, 0, 0, 10)); // Sposta più in alto
 
-        Label userLabel = new Label("Utente: " + (clienteLoggato != null ? clienteLoggato.getNome() + " " + clienteLoggato.getCognome() : "Nessun cliente loggato"));
-        userLabel.setStyle("-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;");
-        
-        VBox vboxInfoUtente = new VBox(10, userLabel, saldoLabel);
-        vboxInfoUtente.setAlignment(Pos.CENTER_RIGHT);
-        
-        HBox infoContainer = new HBox(20, vboxInfoProdotto, vboxInfoUtente);
-        infoContainer.setAlignment(Pos.CENTER);
-        
+        // Bottone "Conferma Acquisto"
         selectButton = new Button("Conferma Acquisto");
         selectButton.getStyleClass().add("confirm-button");
         selectButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 20px;");
         selectButton.setOnAction(e -> controller.acquistaProdotto(stock));
-        
-        vboxStock.getChildren().addAll(backButtonContainer, infoContainer, selectButton);
-        vboxStock.setAlignment(Pos.TOP_CENTER);
-        
-        return vboxStock;
+
+        // Creiamo un VBox separato per il pulsante "Conferma Acquisto"
+        VBox buttonContainer = new VBox(15, selectButton);
+        buttonContainer.setAlignment(Pos.CENTER);
+        buttonContainer.setPadding(new Insets(15));
+
+        // Impostiamo una larghezza e altezza preferita per la VBox
+        vboxStock.setPrefHeight(400);
+        vboxStock.setPrefWidth(600);
+
+        // Aggiungiamo il contenuto della finestra
+        vboxStock.getChildren().addAll(infoContainer);
+
+        // Aggiungiamo il contenitore dei pulsanti fuori dalla VBox
+        VBox root = new VBox(backButtonContainer, vboxStock, buttonContainer);
+        root.setAlignment(Pos.CENTER);
+
+        return root;
     }
 
+    
     public void mostraFinestraCaricamento() {
         Stage loadingStage = new Stage();
         loadingStage.initStyle(StageStyle.UNDECORATED);
         loadingStage.initModality(Modality.APPLICATION_MODAL);
-        
+
         Image gifImage = new Image(getClass().getResource("/gif/Loading_icon.gif").toString());
-        ImageView loadingGif = new ImageView(gifImage);
+        loadingGif = new ImageView(gifImage);
         loadingGif.setFitWidth(100);
         loadingGif.setFitHeight(100);
 
