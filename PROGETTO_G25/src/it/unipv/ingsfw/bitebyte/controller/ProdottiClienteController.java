@@ -86,19 +86,28 @@ public class ProdottiClienteController {
      */
     public void setDistributoreCorrente(Distributore distributore) {
         this.distributoreCorrente = distributore;
+        
         if (distributore != null) {
-            setIdInventario(distributore.getIdInventario());
+            // SALVIAMO comunque l'idInventario, perché serve a "cercaProdotti(...)"
+            this.idInventario = distributore.getIdInventario();
+
+            // IN BASE AL TIPO, DECIDIAMO SE MOSTRARE LO ZUCCHERO
+            if ("Bevande Calde".equalsIgnoreCase(distributore.getTipo())) {
+                sugarControls.setVisible(true);
+            } else {
+                sugarControls.setVisible(false);
+            }
+
+            // INFINE CARICHIAMO I PRODOTTI
+            caricaProdotti("");
         }
     }
+
+  
     
+ //versione non estendibile
     
-    /**
-     * Imposta l'ID dell'inventario del distributore corrente e aggiorna la visibilità
-     * dei controlli dello zucchero.
-     * 
-     * @param idInventario l'identificatore dell'inventario
-     */
-    
+  /*
     public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
         if (idInventario == 1 || idInventario == 3 || idInventario == 5) {
@@ -108,7 +117,7 @@ public class ProdottiClienteController {
         }
         caricaProdotti("");
     }
-  
+  */
     
     public void setModalitaVisualizzazione(boolean visualizza) {
         this.modalitaVisualizzazione = visualizza;

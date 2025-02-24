@@ -25,14 +25,14 @@ public class RicercaFacade {
         return new FilterByNome(query).applyFilter(stocks);
     }
 
-    // Metodo corretto per applicare filtri ai prodotti
+    // Metodo  per applicare filtri ai prodotti
     public List<Stock> applicaFiltri(int idInventario, String query, String categoria, boolean disponibilita, boolean sortAsc, boolean sortDesc) {
         List<Stock> stocks = stockService.getStockByInventario(idInventario);
         IFilterStrategy filtro = FilterFactory.createFilter(query, categoria, disponibilita, sortAsc, sortDesc);
         return filtro.applyFilter(stocks);
     }
 
-    // Metodo corretto per cercare distributori alternativi con il prodotto specificato
+    // Metodo  per cercare distributori alternativi con il prodotto specificato
     public List<Distributore> cercaDistributoriConProdotto(int idDistributoreCorrente, String nomeProdotto) {
         return distributoreService.getDistributoriConProdottoDisponibileByName(idDistributoreCorrente, nomeProdotto);
     }

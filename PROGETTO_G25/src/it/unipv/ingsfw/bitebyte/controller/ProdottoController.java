@@ -83,7 +83,7 @@ public class ProdottoController {
                         .showStageWithController("/prodottiCliente.fxml", 800, 600, "BiteByte - Prodotti Cliente");
                 
                 // Passa i dati necessari al nuovo controller
-                prodController.setIdInventario(distributore.getIdInventario());
+              //  prodController.setIdInventario(distributore.getIdInventario());
                 prodController.setDistributoreCorrente(distributore);
                 
                 // Chiudi la finestra corrente
