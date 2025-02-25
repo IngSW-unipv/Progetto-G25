@@ -7,19 +7,19 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="338.0" prefWidth="400" style="-fx-background-color: #dc143c;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipv.ingsfw.bitebyte.controller.ProdottoController">
+<AnchorPane prefHeight="450.0" prefWidth="600.0" maxHeight="450.0" maxWidth="600.0" minHeight="450.0" minWidth="600.0" style="-fx-background-color: #dc143c;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipv.ingsfw.bitebyte.controller.ProdottoController">
 
     <!-- Testo "Collegati" -->
-    <Label layoutX="186.0" layoutY="135.0" prefHeight="25.0" prefWidth="238.0" style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold;" text="Collegati a un punto vendita " wrapText="true" />
+    <Label layoutX="287.0" layoutY="136.0" prefHeight="30.0" prefWidth="250.0" style="-fx-font-size: 18px; -fx-text-fill: white; -fx-font-weight: bold;" text="Collegati a un punto vendita" wrapText="true" />
 
     <!-- Campo di testo per inserire il codice -->
-    <TextField fx:id="codiceDistributoreField" layoutX="193.0" layoutY="179.0" prefWidth="200" promptText="Inserisci codice distributore" />
+    <TextField fx:id="codiceDistributoreField" layoutX="307.0" layoutY="195.0" prefWidth="200.0" promptText="Inserisci codice distributore" />
 
     <!-- Pulsante Collegati -->
-    <Button fx:id="collegatiButton" layoutX="242.0" layoutY="222.0" onAction="#onCollegatiClicked" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: white; -fx-text-fill: #E52D27; -fx-font-size: 14px; -fx-font-weight: bold;" text="COLLEGATI" />
+    <Button fx:id="collegatiButton" layoutX="345.0" layoutY="246.0" onAction="#onCollegatiClicked" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: white; -fx-text-fill: #E52D27; -fx-font-size: 14px; -fx-font-weight: bold;" text="COLLEGATI" />
 
     <!-- Immagine di sfondo -->
-    <ImageView fitHeight="338.0" fitWidth="175.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0">
+    <ImageView fitHeight="450.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0">
         <image>
             <Image url="file:resources/collegamentoDistributore/distributore.jpeg" />
         </image>

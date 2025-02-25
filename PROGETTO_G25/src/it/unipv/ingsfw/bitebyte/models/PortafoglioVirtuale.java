@@ -1,5 +1,4 @@
 package it.unipv.ingsfw.bitebyte.models;
-
 import java.math.BigDecimal;
 
 /**

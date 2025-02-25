@@ -33,6 +33,8 @@ public class Cliente extends Utente {
 		this.username = username;
 
 	}
+	
+	
 
 	public Cliente(String cf, String nome, String cognome, String username, String password) {
 		super(cf, nome, cognome, password);

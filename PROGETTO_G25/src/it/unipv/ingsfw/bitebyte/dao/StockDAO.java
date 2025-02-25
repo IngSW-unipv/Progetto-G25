@@ -36,7 +36,7 @@ public class StockDAO implements IStockDAO {
 	                    rs.getInt("ID_Prodotto"),
 	                    rs.getString("Nome_p"),
 	                    rs.getBigDecimal("Prezzo"),
-	                    Categoria.valueOf(rs.getString("Categoria_P").replace(" ", "_").toUpperCase())
+	                    Categoria.fromDatabaseValue(rs.getString("Categoria_P"))
 	                );
 
 	                Stock stock = new Stock(
@@ -80,10 +80,11 @@ public class StockDAO implements IStockDAO {
 	    @Override
 	    public void updateStock(Stock stock) {
 	        connection = DBConnection.startConnection(connection, schema);
-	        String query = "UPDATE stock_dettagli SET Q_disp = ?  WHERE ID_Inventario = ?";
+	        String query = "UPDATE stock_dettagli SET Q_disp = ?  WHERE ID_Inventario = ? AND ID_Prodotto = ?";
 	        try (PreparedStatement stmt = connection.prepareStatement(query)) {
 	            stmt.setInt(1, stock.getQuantitaDisp());           
 	            stmt.setInt(2, stock.getIdInventario());
+	            stmt.setInt(3, stock.getProdotto().getIdProdotto());
 	            stmt.executeUpdate();
 	        } catch (SQLException e) {
 	            e.printStackTrace();

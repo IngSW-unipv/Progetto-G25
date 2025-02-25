@@ -1,77 +1,71 @@
+/**La classe DistributoriAlternativiController gestisce la logica per la visualizzazione dei distributori alternativi
+ *  che offrono un determinato prodotto. In particolare, popola una tabella (TableView) con righe di tipo DistributoreBin 
+ *  (un oggetto che racchiude le informazioni visuali per un distributore) e gestisce le azioni associate 
+ *  (ad esempio, aprire Google Maps o visualizzare i prodotti di un distributore).
+ */
+
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
-import it.unipv.ingsfw.bitebyte.utils.CalcolaDistanza;
+import it.unipv.ingsfw.bitebyte.services.DistributoreCompletoService;
 import it.unipv.ingsfw.bitebyte.view.DistributoreBin;
+import it.unipv.ingsfw.bitebyte.view.DistributoreBinFactory;
+import it.unipv.ingsfw.bitebyte.view.ViewManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
-
-import java.awt.Desktop;
-import java.io.IOException;
+import java.awt.Desktop;  //Permette di aprire URL e applicazioni esterne tramite il metodo Desktop.getDesktop().browse(...)
 import java.net.URI;
 import java.util.List;
 
+//controller per gestire la logica della visualizzazione dei distributori alternativi che hanno un determinato prodotto disponibile.
 public class DistributoriAlternativiController {
 
-    @FXML
-    private TableView<DistributoreBin> distributoriTable;
-    @FXML
-    private TableColumn<DistributoreBin, String> nomeColumn;
-    @FXML
-    private TableColumn<DistributoreBin, String> indirizzoColumn;
-    @FXML
-    private TableColumn<DistributoreBin, Double> distanzaColumn;
-    @FXML
-    private TableColumn<DistributoreBin, Button> azioneColumn;
-    @FXML
-    private TableColumn<DistributoreBin, Button> visualizzaProdottoColumn; // Nuova colonna
+    @FXML private TableView<DistributoreBin> distributoriTable;                     //La tabella che mostrerà la lista dei distributori alternativi, dove ogni riga è un oggetto di tipo DistributoreBin.
+    @FXML private TableColumn<DistributoreBin, String> nomeColumn;                  //Le colonne della tabella
+    @FXML private TableColumn<DistributoreBin, String> indirizzoColumn;
+    @FXML private TableColumn<DistributoreBin, Double> distanzaColumn;
+    @FXML private TableColumn<DistributoreBin, Button> azioneColumn;
+    @FXML private TableColumn<DistributoreBin, Button> visualizzaProdottoColumn;
     
-    
-    // Il distributore corrente serve per calcolare la distanza
-    private Distributore distributoreCorrente;
+    //attributi
+    private Distributore distributoreCorrente;  //Rappresenta il distributore "corrente" (quello con cui si sta confrontando) e viene utilizzato per escluderlo dalla lista degli alternativi.
     private String searchQuery = "";
+    private DistributoreCompletoService distributoreService = new DistributoreCompletoService();
+
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
     }
 
-    public void setDistributori(List<Distributore> distributori, Distributore distributoreCorrente) {
-        this.distributoreCorrente = distributoreCorrente;
+    //Questo metodo viene chiamato per popolare la tabella con i distributori alternativi.
+    public void setDistributori(int distributoreCorrenteId, String nomeProdotto) {
+        this.distributoreCorrente = distributoreService.getDistributoreById(distributoreCorrenteId);
+        List<Distributore> distributori = distributoreService.getDistributoriConProdottoDisponibileByName(distributoreCorrenteId, nomeProdotto);
         ObservableList<DistributoreBin> data = FXCollections.observableArrayList();
         for (Distributore d : distributori) {
-            double distanza = CalcolaDistanza.calcolaDistanza(distributoreCorrente, d);
-            
-            // Crea il pulsante "Vai" per aprire Google Maps
-            Button btnVai = new Button("Vai");
-            btnVai.setOnAction((ActionEvent event) -> {
-                apriGoogleMaps(d.getLat(), d.getLon());
-            });
-            
-         // Crea il pulsante "Visualizza prodotto" per aprire l'inventario del distributore
-            Button btnVisualizzaProdotto = new Button("Visualizza prodotto");
-            btnVisualizzaProdotto.setOnAction((ActionEvent event) -> {
-            	 apriInventarioDistributore(d, this.searchQuery);
-            });
-            
-            data.add(new DistributoreBin(
-                    String.valueOf(d.getIdDistr()),          // Nome/ID del distributore
-                    d.getVia() + " " + d.getNCivico(),           // Indirizzo
-                    distanza,                                    // Distanza
-                    btnVai,                                      // Pulsante "Vai"
-                    btnVisualizzaProdotto                        // Pulsante "Visualizza prodotto"
-                ));
-            }
+            DistributoreBin bin = DistributoreBinFactory.createDistributoreBin(
+                d,
+                distributoreCorrente,
+                this.searchQuery,
+                this::handleVai,
+                this::handleVisualizzaProdotto
+            );
+            data.add(bin);
+        }
         distributoriTable.setItems(data);
     }
 
     
+    private void handleVai(Distributore d) {
+        apriGoogleMaps(d.getLat(), d.getLon());
+    }
+
+    private void handleVisualizzaProdotto(Distributore d) {
+        apriInventarioDistributore(d, this.searchQuery);
+    }
+
     private void apriGoogleMaps(double lat, double lon) {
         try {
             String url = "https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lon;
@@ -80,30 +74,18 @@ public class DistributoriAlternativiController {
             e.printStackTrace();
         }
     }
-    
- // Metodo per aprire l'inventario del distributore (schermata ProdottiCliente)
-    
+
     private void apriInventarioDistributore(Distributore distributore, String searchQuery) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/prodottiCliente.fxml"));
-            Parent root = loader.load();
-            ProdottiClienteController controller = loader.getController();
-            controller.setDistributoreCorrente(distributore);
-            controller.setSearchQuery(searchQuery);
-            controller.setModalitaVisualizzazione(true);
-            
-            Stage stage = new Stage();
-            // Imposta una Scene con dimensioni maggiori (ad es. 800x600)
-            Scene scene = new Scene(root, 800, 600);
-            stage.setScene(scene);
-            stage.setTitle("Prodotti del Distributore " + distributore.getIdDistr());
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Usa il ViewManager per aprire la schermata ProdottiCliente
+        ProdottiClienteController prodController = ViewManager.getInstance()
+                .showStageWithController("/prodottiCliente.fxml", 800, 600, "Prodotti del Distributore " + distributore.getIdDistr());
+        prodController.setDistributoreCorrente(distributore);
+        prodController.setSearchQuery(searchQuery);
+        prodController.setModalitaVisualizzazione(true);
     }
 
-    
+    //inizializzazione della tabella
+    //Configura le colonne della tabella collegandole ai campi dell’oggetto DistributoreBin.
     @FXML
     public void initialize() {
         nomeColumn.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -113,3 +95,4 @@ public class DistributoriAlternativiController {
         visualizzaProdottoColumn.setCellValueFactory(new PropertyValueFactory<>("visualizzaProdotto"));
     }
 }
+
