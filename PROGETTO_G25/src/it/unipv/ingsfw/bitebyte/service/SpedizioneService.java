@@ -45,7 +45,7 @@ public class SpedizioneService {
         for (Integer idProdotto : quantitaTotalePerProdotto.keySet()) {
             int quantita = quantitaTotalePerProdotto.get(idProdotto);
             BigDecimal prezzoTotale = prezzoTotalePerProdotto.get(idProdotto);
-            salvaSpedizioneSuDB(idSpedizione, idProdotto, quantita, prezzoTotale);
+            salvaSpedizioneSuDb(idSpedizione, idProdotto, quantita, prezzoTotale);
         }
     }
 
@@ -57,8 +57,8 @@ public class SpedizioneService {
      * @param quantitatotperprod La quantità del prodotto.
      * @param prezzototperprod Il prezzo totale del prodotto.
      */
-    private void salvaSpedizioneSuDB(String idSpedizione, int idProdotto, int quantitatotperprod, BigDecimal prezzototperprod) {
-        spedizioneDAO.salvaSpedizione(idSpedizione, idProdotto, quantitatotperprod, prezzototperprod);
+    private void salvaSpedizioneSuDb(String idSpedizione, int idProdotto, int quantitaTotPerProd, BigDecimal prezzoTotPerProd) {
+        spedizioneDAO.salvaSpedizione(idSpedizione, idProdotto, quantitaTotPerProd, prezzoTotPerProd);
     }
 
     /**

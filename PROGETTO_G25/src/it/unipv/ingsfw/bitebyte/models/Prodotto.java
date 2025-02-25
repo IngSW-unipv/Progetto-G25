@@ -13,8 +13,6 @@ import it.unipv.ingsfw.bitebyte.types.Categoria;
  */
 public class Prodotto {
     
-    // ATTRIBUTI
-
     private int idProdotto;
     private String nome;
     private BigDecimal prezzo;
@@ -106,10 +104,6 @@ public class Prodotto {
      */
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
-    }
-    
-    public String getPercorsoImmagine() {
-        return "/resources/immaginiDB/" + idProdotto + ".jpg"; 
     }
     
     @Override

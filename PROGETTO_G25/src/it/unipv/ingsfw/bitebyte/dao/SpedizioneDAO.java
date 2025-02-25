@@ -37,7 +37,7 @@ public class SpedizioneDAO implements ISpedizioneDAO {
      * @param quantita La quantità di prodotto da spedire.
      * @param prezzotot Il prezzo totale della spedizione.
      */
-    public void salvaSpedizione(String idSpedizione, int idProdotto, int quantita, BigDecimal prezzotot) {
+    public void salvaSpedizione(String idSpedizione, int idProdotto, int quantita, BigDecimal prezzoTot) {
 
         // Verifica se la spedizione esiste
         if (!esisteSpedizione(idSpedizione)) {
@@ -54,7 +54,7 @@ public class SpedizioneDAO implements ISpedizioneDAO {
             stmt.setString(1, idSpedizione);
             stmt.setInt(2, idProdotto);
             stmt.setInt(3, quantita);
-            stmt.setBigDecimal(4, prezzotot);
+            stmt.setBigDecimal(4, prezzoTot);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
