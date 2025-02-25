@@ -31,6 +31,8 @@ public class Cliente extends Utente{
 		this.username = username;
 		
 	}
+	
+	
 
 //GETTERS AND SETTERS
 	public String getUsername() {

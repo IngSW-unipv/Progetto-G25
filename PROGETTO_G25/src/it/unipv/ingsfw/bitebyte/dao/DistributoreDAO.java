@@ -4,7 +4,6 @@ package it.unipv.ingsfw.bitebyte.dao;
 
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
-import it.unipv.ingsfw.bitebyte.models.Stock;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

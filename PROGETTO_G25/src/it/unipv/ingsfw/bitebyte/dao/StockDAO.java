@@ -36,7 +36,7 @@ public class StockDAO implements IStockDAO {
 	                    rs.getInt("ID_Prodotto"),
 	                    rs.getString("Nome_p"),
 	                    rs.getBigDecimal("Prezzo"),
-	                    Categoria.valueOf(rs.getString("Categoria_P").replace(" ", "_").toUpperCase())
+	                    Categoria.fromDatabaseValue(rs.getString("Categoria_P"))
 	                );
 
 	                Stock stock = new Stock(

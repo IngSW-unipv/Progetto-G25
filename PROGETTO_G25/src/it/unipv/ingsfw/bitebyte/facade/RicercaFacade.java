@@ -2,8 +2,8 @@ package it.unipv.ingsfw.bitebyte.facade;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import it.unipv.ingsfw.bitebyte.service.DistributoreCompletoService;
-import it.unipv.ingsfw.bitebyte.service.StockService;
+import it.unipv.ingsfw.bitebyte.services.DistributoreCompletoService;
+import it.unipv.ingsfw.bitebyte.services.StockService;
 import it.unipv.ingsfw.bitebyte.filtri.FilterByNome;
 import it.unipv.ingsfw.bitebyte.filtri.FilterFactory;
 import it.unipv.ingsfw.bitebyte.filtri.IFilterStrategy;

@@ -11,7 +11,7 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
-import it.unipv.ingsfw.bitebyte.service.DistributoreCompletoService;
+import it.unipv.ingsfw.bitebyte.services.DistributoreCompletoService;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
 
 

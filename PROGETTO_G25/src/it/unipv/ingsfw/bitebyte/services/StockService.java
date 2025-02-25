@@ -1,4 +1,4 @@
-package it.unipv.ingsfw.bitebyte.service;
+package it.unipv.ingsfw.bitebyte.services;
 
 import it.unipv.ingsfw.bitebyte.dao.StockDAO;
 import it.unipv.ingsfw.bitebyte.models.Stock;
