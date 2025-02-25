@@ -3,7 +3,7 @@ package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import it.unipv.ingsfw.bitebyte.services.DistributoreService;
+import it.unipv.ingsfw.bitebyte.services.DistributoreCompletoService;
 import it.unipv.ingsfw.bitebyte.services.StockService;
 import it.unipv.ingsfw.bitebyte.view.ViewComponentProductBox;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
@@ -27,7 +27,7 @@ public class ProdottiClienteController {
 
     private Distributore distributoreCorrente;
     private StockService stockService = new StockService();
-    private DistributoreService distributoreService = new DistributoreService();
+    private DistributoreCompletoService distributoreService = new DistributoreCompletoService();
     private boolean modalitaVisualizzazione = false;
     private int idInventario;
     private int currentSugar = 0;
@@ -110,7 +110,7 @@ public class ProdottiClienteController {
     }
 
     public void caricaProdotti(String query) {
-        List<Stock> stocks = stockService.getStocksByInventario(idInventario);
+        List<Stock> stocks = stockService.getStockByInventario(idInventario);
         // Applica qui i filtri sul nome o altri se necessari
         List<Stock> stocksFiltrati = stocks.stream()
                 .filter(s -> s.getProdotto().getNome().toLowerCase().contains(query.toLowerCase()))
@@ -172,7 +172,7 @@ public class ProdottiClienteController {
 
     @FXML
     public void applyFilters() {
-        List<Stock> stocks = stockService.getStocksByInventario(idInventario);
+        List<Stock> stocks = stockService.getStockByInventario(idInventario);
         String searchQuery = searchField.getText();
         if(!searchQuery.isEmpty()){
             stocks = stocks.stream()
