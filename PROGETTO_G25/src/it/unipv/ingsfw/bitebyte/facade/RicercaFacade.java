@@ -2,7 +2,7 @@ package it.unipv.ingsfw.bitebyte.facade;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import it.unipv.ingsfw.bitebyte.service.DistributoreService;
+import it.unipv.ingsfw.bitebyte.service.DistributoreCompletoService;
 import it.unipv.ingsfw.bitebyte.service.StockService;
 import it.unipv.ingsfw.bitebyte.filtri.FilterByNome;
 import it.unipv.ingsfw.bitebyte.filtri.FilterFactory;
@@ -12,11 +12,11 @@ import java.util.List;
 
 public class RicercaFacade {
     private StockService stockService;
-    private DistributoreService distributoreService;
+    private DistributoreCompletoService distributoreService;
 
     public RicercaFacade() {
         this.stockService = new StockService();
-        this.distributoreService = new DistributoreService();
+        this.distributoreService = new DistributoreCompletoService();
     }
 
     // Metodo per cercare i prodotti tramite nome

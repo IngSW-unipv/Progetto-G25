@@ -14,18 +14,39 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DistributoreService {
+public class DistributoreCompletoService {
     
     private DistributoreDAO distributoreDAO = new DistributoreDAO();
     private StockDAO stockDAO = new StockDAO();
     
+ 
+    /**
+     * Recupera il distributore per ID e associa la lista degli stock.
+     * @param idDistributore L'ID del distributore da recuperare.
+     * @return Un oggetto Distributore completo, con la lista degli stock associata.
+     */
     public Distributore getDistributoreById(int idDistributore) {
-        return distributoreDAO.getDistributoreById(idDistributore);
+        Distributore distributore = distributoreDAO.getDistributoreById(idDistributore);
+        if (distributore != null) {
+            List<Stock> stockList = stockDAO.getStockByInventario(distributore.getIdInventario());
+            distributore.setStockList(stockList);
+        }
+        return distributore;
     }
-    
+
+    /**
+     * Recupera tutti i distributori e per ognuno associa la lista degli stock.
+     * @return Una lista di distributori completi.
+     */
     public List<Distributore> getAllDistributori() {
-        return distributoreDAO.getAllDistributori();
+        List<Distributore> distributori = distributoreDAO.getAllDistributori();
+        for (Distributore d : distributori) {
+            List<Stock> stockList = stockDAO.getStockByInventario(d.getIdInventario());
+            d.setStockList(stockList);
+        }
+        return distributori;
     }
+
     
     /**
      * Restituisce i distributori (della stessa tipologia) che possiedono almeno uno stock
@@ -66,23 +87,37 @@ public class DistributoreService {
         return distributoriDisponibili;
     }
     
-    
-   
     public List<Stock> getStockByDistributore(int idDistributore) {
         Distributore distributore = getDistributoreById(idDistributore);
         return stockDAO.getStockByInventario(distributore.getIdInventario());
     }
     
     
+    /**
+     * Aggiorna il distributore e, successivamente, aggiorna ciascuno degli stock associati.
+     * Questo metodo incapsula la logica di business, separandola dall'accesso diretto ai dati.
+     * 
+     * @param distributore il distributore da aggiornare
+     */
+    public void updateDistributore(Distributore distributore) {
+        // Aggiorna i dati del distributore tramite il DAO
+        distributoreDAO.updateDistributore(distributore);
+        
+        // Dopo aver aggiornato il distributore, aggiorna ciascun stock associato
+        if (distributore.getStockList() != null) {
+            for (Stock stock : distributore.getStockList()) {
+                stockDAO.updateStock(stock);
+            }
+        }
+    }
     
+
     
     public void addDistributore(Distributore distributore) {
         distributoreDAO.addDistributore(distributore);
     }
     
-    public void updateDistributore(Distributore distributore) {
-        distributoreDAO.updateDistributore(distributore);
-    }
+  
     
     public void deleteDistributore(int idDistributore) {
         distributoreDAO.deleteDistributore(idDistributore);

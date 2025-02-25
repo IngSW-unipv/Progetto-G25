@@ -2,14 +2,15 @@ package it.unipv.ingsfw.bitebyte.service;
 
 import it.unipv.ingsfw.bitebyte.dao.StockDAO;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import java.util.List;
+import java.util.ArrayList;
+
 
 public class StockService {
     
     private StockDAO stockDAO = new StockDAO();
     
-    public List<Stock> getStockByInventario(int inventarioId) {
-        return stockDAO.getStockByInventario(inventarioId);
+    public ArrayList<Stock> getStockByInventario(int idInventario) {
+        return stockDAO.getStockByInventario(idInventario);
     }
     
     public void addStock(Stock stock) {
@@ -20,7 +21,7 @@ public class StockService {
         stockDAO.updateStock(stock);
     }
     
-    public void deleteStock(int inventarioId) {
-        stockDAO.deleteStock(inventarioId);
+    public void deleteStock(int idInventario) {
+        stockDAO.deleteStock(idInventario);
     }
 }

@@ -11,7 +11,7 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
-import it.unipv.ingsfw.bitebyte.service.DistributoreService;
+import it.unipv.ingsfw.bitebyte.service.DistributoreCompletoService;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
 
 
@@ -31,7 +31,7 @@ public class ProdottoController {
     @FXML
     private Button collegatiButton;
     
-    private DistributoreService distributoreService;
+    private DistributoreCompletoService distributoreService;
     
     /**
     * Costruttore della classe ProdottoController.
@@ -39,7 +39,7 @@ public class ProdottoController {
     */
 
     public ProdottoController() {
-        distributoreService = new DistributoreService(); // Inizializzazione del servizio
+        distributoreService = new DistributoreCompletoService(); // Inizializzazione del servizio
     }
 
     /**

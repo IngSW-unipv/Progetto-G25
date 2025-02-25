@@ -7,7 +7,7 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
-import it.unipv.ingsfw.bitebyte.service.DistributoreService;
+import it.unipv.ingsfw.bitebyte.service.DistributoreCompletoService;
 import it.unipv.ingsfw.bitebyte.view.DistributoreBin;
 import it.unipv.ingsfw.bitebyte.view.DistributoreBinFactory;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
@@ -33,7 +33,7 @@ public class DistributoriAlternativiController {
     //attributi
     private Distributore distributoreCorrente;  //Rappresenta il distributore "corrente" (quello con cui si sta confrontando) e viene utilizzato per escluderlo dalla lista degli alternativi.
     private String searchQuery = "";
-    private DistributoreService distributoreService = new DistributoreService();
+    private DistributoreCompletoService distributoreService = new DistributoreCompletoService();
 
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;

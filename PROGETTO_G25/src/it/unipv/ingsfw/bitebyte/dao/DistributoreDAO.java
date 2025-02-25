@@ -15,12 +15,11 @@ public class DistributoreDAO implements IDistributoreDAO {
     
     private Connection connection;
     private String schema;
-    private StockDAO stockDAO;
-
+    
     public DistributoreDAO() {
         super();
         this.schema = "progettog25";  // Cambia se necessario
-        this.stockDAO = new StockDAO();  // Istanza di StockDAO
+       
     }
 
     @Override
@@ -44,10 +43,7 @@ public class DistributoreDAO implements IDistributoreDAO {
                         rs.getDouble("LAT"),
                         rs.getDouble("LON")
                 );
-
-                // Recupera e associa gli stock tramite l'ID_Inventario
-                List<Stock> stockList = stockDAO.getStockByInventario(distributore.getIdInventario());
-                distributore.setStockList(stockList);
+                
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,7 +53,6 @@ public class DistributoreDAO implements IDistributoreDAO {
         return distributore;
     }
 
-    
     @Override
     public List<Distributore> getAllDistributori() {
         connection = DBConnection.startConnection(connection, schema);
@@ -78,8 +73,7 @@ public class DistributoreDAO implements IDistributoreDAO {
                         rs.getDouble("LAT"),
                         rs.getDouble("LON")
                 );
-                List<Stock> stockList = stockDAO.getStockByInventario(distributore.getIdInventario());
-                distributore.setStockList(stockList);
+                
                 distributori.add(distributore);
             }
         } catch (SQLException e) {
@@ -118,29 +112,26 @@ public class DistributoreDAO implements IDistributoreDAO {
     @Override
     public void updateDistributore(Distributore distributore) {
         connection = DBConnection.startConnection(connection, schema);
-        String query = "UPDATE distributore SET ID_Distributore = ?, Tipo_D = ?, Citta = ?, Via = ?, N_civico = ?, ID_Inventario = ?, LAT = ?, LON = ? WHERE ID_Distributore = ?";
+        String query = "UPDATE distributore SET Tipo_D = ?, Citta = ?, Via = ?, N_civico = ?, ID_Inventario = ?, LAT = ?, LON = ? WHERE ID_Distributore = ?";
         
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-        	stmt.setInt(1, distributore.getIdDistr());
-        	stmt.setString(2, distributore.getTipo().toString());
-            stmt.setString(3, distributore.getCitta());
-            stmt.setString(4, distributore.getVia());
-            stmt.setString(5, distributore.getNCivico());
-            stmt.setInt(6, distributore.getIdInventario());
-            stmt.setDouble(7, distributore.getLat());
-            stmt.setDouble(8, distributore.getLon());
+            stmt.setString(1, distributore.getTipo());
+            stmt.setString(2, distributore.getCitta());
+            stmt.setString(3, distributore.getVia());
+            stmt.setString(4, distributore.getNCivico());
+            stmt.setInt(5, distributore.getIdInventario());
+            stmt.setDouble(6, distributore.getLat());
+            stmt.setDouble(7, distributore.getLon());
+            stmt.setInt(8, distributore.getIdDistr());
+            
             stmt.executeUpdate();
-
-            // Dopo aver aggiornato, aggiorna ogni singolo stock
-            for (Stock stock : distributore.getStockList()) {
-                stockDAO.updateStock(stock); // Utilizza il metodo per aggiornare lo stock
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             DBConnection.closeConnection(connection);
         }
     }
+
 
 
     @Override
