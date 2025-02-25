@@ -15,13 +15,7 @@ public class PayPalPaymentAdapter implements IPaymentAdapter {
 
 	@Override
 	public boolean ricarica(double amount) {
-		if (amount >= 5 && amount <= 50) {
 			return payPalService.processaPagamento(amount);
-		}
-
-		System.out.println("Importo non valido per la ricarica tramite PayPal.");
-		return false;
-
 	}
 
 	@Override

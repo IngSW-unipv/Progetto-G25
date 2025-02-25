@@ -5,9 +5,11 @@ import it.unipv.ingsfw.bitebyte.models.PortafoglioVirtuale;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.pagamenti.BancomatPaymentAdapter;
 import it.unipv.ingsfw.bitebyte.pagamenti.IPaymentAdapter;
+import it.unipv.ingsfw.bitebyte.pagamenti.PayPalPaymentAdapter;
 import it.unipv.ingsfw.bitebyte.pagamenti.PaymentAdapterFactory;
 import it.unipv.ingsfw.bitebyte.services.PortafoglioService;
 import it.unipv.ingsfw.bitebyte.test.BancomatService;
+import it.unipv.ingsfw.bitebyte.test.PayPalService;
 import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -104,8 +106,10 @@ public class PortafoglioVirtualeController {
 	
 	@FXML
 	public void ricarica(ActionEvent event) {
-		BancomatPaymentAdapter bpa = new BancomatPaymentAdapter(new BancomatService());
-		Sessione.getInstance().getPortafoglioCliente().ricarica(5, bpa);
+		//BancomatPaymentAdapter bpa = new BancomatPaymentAdapter(new BancomatService());
+		//PayPalPaymentAdapter ppa = new PayPalPaymentAdapter(new PayPalService());
+		IPaymentAdapter adattatore = PaymentAdapterFactory.getPaymentAdapter(Sessione.getInstance().getPortafoglioCliente().getTipologiaPagamento());
+		Sessione.getInstance().getPortafoglioCliente().ricarica(5, adattatore);
 		PortafoglioService.aggiornaPortafoglio(Sessione.getInstance().getPortafoglioCliente(),Sessione.getInstance().getClienteConnesso()); 
 		//PaymentAdapterFactory.getPaymentAdapter(Sessione.getInstance().getPortafoglioCliente().getTipologiaPagamento())
 	}

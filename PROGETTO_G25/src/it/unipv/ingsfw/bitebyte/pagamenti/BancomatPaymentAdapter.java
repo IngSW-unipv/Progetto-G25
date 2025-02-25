@@ -15,12 +15,7 @@ public class BancomatPaymentAdapter implements IPaymentAdapter {
 
 	@Override
 	public boolean ricarica(double amount) {
-		if (amount >= 5 && amount <= 50) {
 			return bancomatService.effettuaPagamento(amount);
-		}
-
-		System.out.println("Importo non valido per la ricarica tramite Bancomat.");
-		return false;
 	}
 
 	@Override

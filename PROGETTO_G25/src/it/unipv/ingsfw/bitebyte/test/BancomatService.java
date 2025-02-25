@@ -10,8 +10,8 @@ public class BancomatService {
 		return true;
 	}
 
-	public double getSaldo() {
+/*	public double getSaldo() {
 		return saldo;
-	}
+	}*/
 
 }
