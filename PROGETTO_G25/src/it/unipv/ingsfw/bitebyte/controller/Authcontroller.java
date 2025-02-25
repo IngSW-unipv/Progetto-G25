@@ -2,7 +2,7 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.dao.ClienteDAO;
-
+import it.unipv.ingsfw.bitebyte.dao.PortafoglioVirtualeDAO;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 
@@ -24,8 +24,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Authcontroller implements Initializable {
-
-	private ClienteDAO clienteDAO = new ClienteDAO();
 
 	@FXML
 	private TextField usernameLogin;
@@ -94,10 +92,12 @@ public class Authcontroller implements Initializable {
 	public void accedi() {
 		String nomeUtente = usernameLogin.getText();
 		String password = passwordLogin.getText();
-		Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
-
+		ClienteDAO clienteDAO = new ClienteDAO();
+		PortafoglioVirtualeDAO portafoglioDAO = new PortafoglioVirtualeDAO();
+		
 		if (clienteDAO.verificaLogin(nomeUtente, password)) {
 			Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
+			Sessione.getInstance().setPortafoglioCliente(portafoglioDAO.leggiPortafoglio(Sessione.getInstance().getClienteConnesso().getCf()));
 			showAlert("Successo", "Acesso eseguito correttamente");
 			Stage stage = (Stage) login.getScene().getWindow();
 			switchScene(stage, "ProfiloCliente.fxml", "Profilo");
@@ -192,6 +192,7 @@ public class Authcontroller implements Initializable {
 		String nome = nomeReg.getText();
 		String cognome = cognomeReg.getText();
 		LocalDate dataNascita = dataNReg.getValue();
+		ClienteDAO clienteDAO = new ClienteDAO();
 
 		if (cf.isEmpty() || nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || password.isEmpty()
 				|| confirmPassword.isEmpty() || dataNascita == null) {

@@ -1,29 +1,25 @@
 package it.unipv.ingsfw.bitebyte.models;
 
+
 import it.unipv.ingsfw.bitebyte.pagamenti.IPaymentAdapter;
 import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 
 // Alice
 public class PortafoglioVirtuale {
 
-	private final String idPort;
+	private String idPort;
 	private double saldo;
-	private Bancomat cartaCliente;
+	//private Bancomat cartaCliente;
 	private TipologiaPagamento tipologiaPagamento;
 
-	// costruttore
-	public PortafoglioVirtuale(String idPort) {
-		this.idPort = idPort;
-		this.saldo = 0.0;
-		this.cartaCliente = null;
-		this.tipologiaPagamento = null;
-	}
-
+	//costruttore
 	public PortafoglioVirtuale(String idPort, double saldo, TipologiaPagamento tipologiaPagamento) {
 		 this.idPort = idPort;
 		 this.saldo = saldo;
 		 this.tipologiaPagamento = tipologiaPagamento;
 	}
+
+
 
 	// Getters and Setters
 	public double getSaldo() {
@@ -38,13 +34,13 @@ public class PortafoglioVirtuale {
 		return idPort;
 	}
 
-	public Bancomat getCartaCliente() {
+/*	public Bancomat getCartaCliente() {
 		return cartaCliente;
 	}
 
 	public void setCartaCliente(Bancomat cartaCliente) {
 		this.cartaCliente = cartaCliente;
-	}
+	}*/
 
 	public TipologiaPagamento getTipologiaPagamento() {
 		return tipologiaPagamento;
@@ -76,5 +72,11 @@ public class PortafoglioVirtuale {
 			System.out.println("Ricarica fallita.");
 		}
 	}
+	
+	// per generare l'id portafoglio
+    public String generaIdCasuale() {
+        int numero = (int)(Math.random()*9999)+1000;
+        return String.valueOf(numero);
+    }
 
 }

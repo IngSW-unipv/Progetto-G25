@@ -237,8 +237,9 @@ public class ProfiloClientController {
 		// Verifica quale bottone è stato premuto e cambia scena di conseguenza
 		if (clickedButton.getId().equals("idport")) {
 			System.out.println("sono in switch scene");
-			if (Sessione.getInstance().getPortafoglioCliente() == null || 
-				    Sessione.getInstance().getPortafoglioCliente().getTipologiaPagamento() == null) {
+			if (Sessione.getInstance().getPortafoglioCliente() == null) {
+				 
+				//    Sessione.getInstance().getPortafoglioCliente().getTipologiaPagamento() == null) 
 				switchScene(stage, "TipologiaPagamento.fxml", "Tipologia Pagamento");;
 			} else {
 				switchScene(stage, "PortafoglioVirtuale.fxml", "Portafoglio Virtuale");;

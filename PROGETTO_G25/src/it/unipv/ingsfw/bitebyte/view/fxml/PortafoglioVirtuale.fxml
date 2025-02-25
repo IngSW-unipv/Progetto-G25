@@ -10,13 +10,8 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dc143c;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipv.ingsfw.bitebyte.controller.PortafoglioVirtualeController">
    <children>
-      <TextField layoutX="222.0" layoutY="198.0" />
-      <Button fx:id="tornaTipologia" layoutX="42.0" layoutY="295.0" mnemonicParsing="false" style="-fx-background-color: #66cdaa;" text="Modifica tipologia pagamento" onAction="#cambiaScena">
-         <font>
-            <Font name="System Bold" size="13.0" />
-         </font>
-      </Button>
-      <Button fx:id="tornaProfilo" layoutX="421.0" layoutY="334.0" mnemonicParsing="false" style="-fx-background-color: #66cdaa;" text="Torna a profilo cliente" onAction="#cambiaScena">
+      <TextField fx:id="saldoTXT" layoutX="222.0" layoutY="198.0" />
+      <Button fx:id="tornaProfilo" layoutX="421.0" layoutY="334.0" mnemonicParsing="false" onAction="#cambiaScena" style="-fx-background-color: #66cdaa;" text="Torna a profilo cliente">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
@@ -46,7 +41,8 @@
             <Image url="@../../../../../../../resources/logo-portafoglio-removebg-preview.png" />
          </image>
       </ImageView>
-      <TextField layoutX="223.0" layoutY="151.0" />
-      <TextField layoutX="222.0" layoutY="244.0" />
+      <TextField fx:id="idTXT" layoutX="223.0" layoutY="151.0" />
+      <TextField fx:id="tipoTXT" layoutX="222.0" layoutY="244.0" />
+      <Button fx:id="ricarica" layoutX="46.0" layoutY="335.0" mnemonicParsing="false" text="Ricarica" onAction="#ricarica"/>
    </children>
 </Pane>

@@ -33,6 +33,7 @@ public class BancomatController {
 	    @FXML
 	    private Button pulsanteSalva;
 
+	    
 		public void registraCarta() {
 			String numCarta = numcarta.getText();
 			String tit = titolare.getText();
@@ -46,7 +47,6 @@ public class BancomatController {
 			showAlert("Successo", "DATI BANCOMAT CARICATI!");
 			Stage stage = (Stage) pulsanteSalva.getScene().getWindow();
 			switchScene(stage, "PortafoglioVirtuale.fxml", "Portafoglio Virtuale");
-			Sessione.getInstance().getPortafoglioCliente().setTipologiaPagamento(TipologiaPagamento.BANCOMAT);
 		}
 
 		private void showAlert(String title, String message) {

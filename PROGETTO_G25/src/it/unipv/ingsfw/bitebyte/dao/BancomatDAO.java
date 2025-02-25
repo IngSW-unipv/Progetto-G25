@@ -32,6 +32,7 @@ public class BancomatDAO implements IBancomatDAO {
 			ps.setString(5, bancomat.getCircuito());
 			ps.setString(6, cliente.getCf());
 
+			// aggiornaTipologiaPagamento(cliente.getCf(), TipologiaPagamento.BANCOMAT);
 			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
