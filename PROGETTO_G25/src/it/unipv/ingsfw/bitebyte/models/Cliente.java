@@ -41,6 +41,10 @@ public class Cliente extends Utente {
 		this.username = username;
 	}
 
+/*	public Cliente(String nome, String cognome, String password, String nomeUtente) {
+		super(nome, cognome, password, nomeUtente);
+	}*/
+
 	// GETTERS AND SETTERS
 	public String getUsername() {
 		return username;

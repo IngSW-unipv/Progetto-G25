@@ -1,115 +1,129 @@
-/**
- *Classe controller che gestisce l'interfaccia grafica per la visualizzazione dei prodotti
- * disponibili in un distributore per il cliente.
- 
- * @author Anna
- * 
- */
-
 package it.unipv.ingsfw.bitebyte.controller;
 
-import it.unipv.ingsfw.bitebyte.facade.RicercaFacade;
+import it.unipv.ingsfw.bitebyte.dao.DistributoreDAO;
+import it.unipv.ingsfw.bitebyte.dao.StockDAO;
+import it.unipv.ingsfw.bitebyte.filtri.*;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import it.unipv.ingsfw.bitebyte.view.ProductView;
-import it.unipv.ingsfw.bitebyte.view.ViewManager;
+import it.unipv.ingsfw.bitebyte.types.Categoria;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ProdottiClienteController {
 
-	//Attributi 
-    private Distributore distributoreCorrente;                 //distributore selezionato dal cliente
-    private RicercaFacade ricercaFacade = new RicercaFacade(); // Uso RicercaFacade
-    private boolean modalitaVisualizzazione = false;
-    private int currentSugar = 0;                              //Contatore che indica il livello di zucchero selezionato (da 0 a 5).
-    private int idInventario;                                  //Identificatore dell'inventario del distributore corrente.
+	 private Distributore distributoreCorrente; // Distributore corrente
+	 private StockDAO stockDAO = new StockDAO();
+	 private DistributoreDAO distributoreDAO = new DistributoreDAO();
+	 private boolean modalitaVisualizzazione = false;
+	 
+    @FXML
+    private FlowPane prodottiContainer;
+
+    @FXML
+    private ScrollPane scrollPane;
+
+    @FXML
+    private TextField searchField;
+
+    @FXML
+    private Button filterButton;
+
+    @FXML
+    private VBox filterPanel;
+
+    @FXML
+    private ComboBox<String> categoryFilter;
+
+    @FXML
+    private CheckBox availabilityFilter;
+
+    @FXML
+    private ToggleGroup priceToggleGroup;
+
+    @FXML
+    private RadioButton priceAsc;
+
+    @FXML
+    private RadioButton priceDesc;
+
+    @FXML
+    private HBox sugarControls;
+    @FXML
+    private Button btnSugarMinus;
+    @FXML
+    private Button btnSugarPlus;
+    @FXML
+    private Label sugarLevel;
     
-    //elementi grafici
-    
-    @FXML private FlowPane prodottiContainer;         //Contenitore per i prodotti.
-    @FXML private ScrollPane scrollPane;              //Permette lo scrolling verticale dei prodotti.
-    @FXML private TextField searchField;              //Campo per la ricerca dei prodotti.
-    @FXML private Button filterButton;                //Bottone che mostra/nasconde il pannello dei filtri.
-    @FXML private VBox filterPanel;                   // Pannello che contiene i filtri.
-    @FXML private ComboBox<String> categoryFilter;    //Filtro per la categoria dei prodotti.
-    @FXML private CheckBox availabilityFilter;        //Filtro per visualizzare solo i prodotti disponibili.
-    @FXML private ToggleGroup priceToggleGroup;       //Raggruppamento dei radio button per ordinare il prezzo.
-    @FXML private RadioButton priceAsc;               //Ordina i prodotti per prezzo crescente.
-    @FXML private RadioButton priceDesc;              //Ordina i prodotti per prezzo decrescente
-    @FXML private HBox sugarControls;                 //Controlli per la gestione del livello di zucchero
-    @FXML private Button btnSugarMinus;               //Pulsanti per modificare il livello di zucchero.
-    @FXML private Button btnSugarPlus;
-    @FXML private Label sugarLevel;                   //Mostra il livello attuale di zuccher
+    private int currentSugar = 0;
+
+    private int idInventario;
 
     
-    // Inizializzazione
-    /**
-     * Metodo di inizializzazione chiamato automaticamente da JavaFX.
-     * Configura l'interfaccia grafica e imposta i listener per la ricerca e i controlli.
-     */
-
+ // In ProdottiClienteController
+    public void setDistributoreCorrente(Distributore distributore) {
+        this.distributoreCorrente = distributore;
+        if (distributore != null) {
+            setIdInventario(distributore.getIdInventario()); // Imposta l'ID inventario automaticamente
+        }
+    }
+    // Inizializzazione della scena
     public void initialize() {
-        prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));   /*Questo codice imposta la larghezza preferita del contenitore dei prodotti (prodottiContainer) 
-                                                                                                 in modo che sia sempre 20 pixel più stretta rispetto alla larghezza dello scrollPane.
-                                                                                                */
+    	
+    	
+        prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
         prodottiContainer.setPrefWrapLength(600);
-        scrollPane.widthProperty().addListener((obs, oldVal, newVal) ->
-                prodottiContainer.setPrefWrapLength(newVal.doubleValue() - 20));
 
+        scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            prodottiContainer.setPrefWrapLength(newVal.doubleValue() - 20);
+        });
+
+        // Listener per il campo di ricerca
         searchField.textProperty().addListener((obs, oldVal, newVal) -> caricaProdotti(newVal));
-        searchField.setFocusTraversable(false);  // Impedisce che il campo di testo searchField riceva automaticamente il focus quando la finestra viene aperta. così non ci sarà il cursore sulla barra di ricerca
-        filterPanel.setVisible(false);           //pannello dei filtri non visibile inizialemnte
+        searchField.setFocusTraversable(false);
+        filterPanel.setVisible(false); // Nasconde inizialmente i filtri
         
-        //imposto le opzioni disponibili pe ril filtro delle categorie di prodotto nel box categoryFilter
         categoryFilter.setItems(javafx.collections.FXCollections.observableArrayList(
-                "Bevanda Calda", "Bevanda Fredda", "Snack Salato", "Snack Dolce"
+            "Bevanda Calda", "Bevanda Fredda", "Snack Salato", "Snack Dolce"
         ));
 
-        sugarControls.setVisible(false);    //I controlli dello zucchero vengono mostrati solo per i distributori di beveande calde
+        sugarControls.setVisible(false); // I controlli dello zucchero sono nascosti
         sugarLevel.setText(String.valueOf(currentSugar));
         btnSugarMinus.setOnAction(e -> handleSugarMinus());
         btnSugarPlus.setOnAction(e -> handleSugarPlus());
     }
-    
-    //METODI SETTER PER CONFIGURARE IL CONTESTO
-    
-    /**
-     * Imposta il distributore corrente.
-     * 
-     * @param distributore il distributore selezionato
-     */
-    public void setDistributoreCorrente(Distributore distributore) {
-        this.distributoreCorrente = distributore;
-        
-        if (distributore != null) {
-            // SALVIAMO comunque l'idInventario, perché serve a "cercaProdotti(...)"
-            this.idInventario = distributore.getIdInventario();
 
-            // IN BASE AL TIPO, DECIDIAMO SE MOSTRARE LO ZUCCHERO
-            if ("Bevande Calde".equalsIgnoreCase(distributore.getTipo())) {
-                sugarControls.setVisible(true);
-            } else {
-                sugarControls.setVisible(false);
-            }
-
-            // INFINE CARICHIAMO I PRODOTTI
-            caricaProdotti("");
+    private void handleSugarMinus() {
+        if(currentSugar > 0) {
+            currentSugar--;
+            sugarLevel.setText(String.valueOf(currentSugar));
         }
     }
 
-  
+    private void handleSugarPlus() {
+        if(currentSugar < 5) { 
+            currentSugar++;
+            sugarLevel.setText(String.valueOf(currentSugar));
+        }
+    }
     
- //versione non estendibile
-    
-  /*
+
+
     public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
         if (idInventario == 1 || idInventario == 3 || idInventario == 5) {
@@ -119,85 +133,174 @@ public class ProdottiClienteController {
         }
         caricaProdotti("");
     }
-  */
-    
-    public void setModalitaVisualizzazione(boolean visualizza) {
-        this.modalitaVisualizzazione = visualizza;
-        caricaProdotti(searchField.getText());
-    }
 
-    public void setSearchQuery(String query) {
-        searchField.setText(query);
-        caricaProdotti(query);
-    }
-    
-    //METODI PER LA LOGICA PRINCIPALE
-    
-    /**
-     * Cerca e carica i prodotti in base a una query di ricerca.
-     * 
-     * @param query la query di ricerca
-     */
     public void caricaProdotti(String query) {
-        List<Stock> stocks = ricercaFacade.cercaProdotti(query, idInventario);
+        List<Stock> stocks = stockDAO.getStockByInventario(idInventario);
+        List<Stock> stocksFiltrati = new FilterByNome(query).applyFilter(stocks);
         prodottiContainer.getChildren().clear();
 
-        if (stocks.isEmpty() && !query.trim().isEmpty()) {
-            prodottiContainer.getChildren().add(ProductView.createNoProductView(query, this::mostraDistributoriAlternativiByName));
+        if (stocksFiltrati.isEmpty() && !query.trim().isEmpty()) {
+            // Nessun prodotto trovato nel distributore corrente:
+            Label info = new Label("Prodotto non disponibile in questo distributore.");
+            Button btnVisualizza = new Button("Visualizza distributori vicini");
+            btnVisualizza.setOnAction(e -> mostraDistributoriAlternativiByName(query));
+            prodottiContainer.getChildren().addAll(info, btnVisualizza);
         } else {
-            aggiornaProdotti(stocks);
+            aggiornaProdotti(stocksFiltrati);
         }
     }
 
-    /**
-     * Aggiorna la visualizzazione dei prodotti nella UI.
-     * 
-     * @param stocks la lista di prodotti disponibili
-     */
+    
+    
 
     private void aggiornaProdotti(List<Stock> stocks) {
         prodottiContainer.getChildren().clear();
+
         if (stocks.isEmpty()) {
-            prodottiContainer.getChildren().add(ProductView.createNoProductView("Nessun prodotto trovato.", null));
+            Label noResultsLabel = new Label("Nessun prodotto trovato.");
+            noResultsLabel.getStyleClass().add("product-name");
+            prodottiContainer.getChildren().add(noResultsLabel);
         } else {
             for (Stock stock : stocks) {
-                prodottiContainer.getChildren().add(ProductView.createProductView(
-                    stock,
-                    modalitaVisualizzazione,
-                    this::handleSelect,
-                    s -> mostraDistributoriAlternativiByName(s.getProdotto().getNome())
-                ));
+                VBox productBox = createProductBox(stock);
+                prodottiContainer.getChildren().add(productBox);
             }
         }
     }
+    
 
     
-    
-    //Questo metodo implementa la logica che deve essere eseguita quando un prodotto viene selezionato.
-    /** @author Davide **/
-    
-    public void handleSelect(Stock stock) {
-        System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
+    private VBox createProductBox(Stock stock) {
+        VBox box = new VBox(5);
+        box.getStyleClass().add("product-box");
 
-        // Ottieni lo Stage attuale
-        Stage stageAttuale = (Stage) prodottiContainer.getScene().getWindow();
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(120);
+        imageView.setPreserveRatio(true);
 
-        // Crea una nuova finestra per la schermata di dettaglio
-        Stage newStage = new Stage();
+        File productImageFile = new File("resources/immaginiDB/" + stock.getProdotto().getIdProdotto() + ".jpg");
+        if (productImageFile.exists()) {
+            imageView.setImage(new Image(productImageFile.toURI().toString()));
+        } else {
+            imageView.setImage(new Image(getClass().getResourceAsStream("/resources/immaginiDB/default.jpg")));
+        }
 
-        // Crea il controller dell'acquisto e gli passa il prodotto selezionato
-        AcquistoController acquistoController = new AcquistoController(stageAttuale, newStage);
-        acquistoController.setStockSelezionato(stock);
+        Label nameLabel = new Label(stock.getProdotto().getNome());
+        nameLabel.getStyleClass().add("product-name");
 
-        // Mostra la schermata con il prodotto selezionato
-        acquistoController.mostraInterfaccia(stock, newStage);
+        Label priceLabel = new Label(String.format("€ %.2f", stock.getProdotto().getPrezzo()));
+        priceLabel.getStyleClass().add("product-price");
 
-        // Nasconde la finestra attuale per simulare il cambio schermata
-        stageAttuale.hide();
+        Label quantityLabel = new Label("Disponibili: " + stock.getQuantitaDisp());
+        quantityLabel.getStyleClass().add("product-quantity");
+
+        Label statusLabel = new Label("Stato: " + stock.getStato());
+        statusLabel.getStyleClass().add("product-status");
+        if (stock.getQuantitaDisp() > 0) {
+            if (stock.getStato().equals("Disponibile")) {
+                statusLabel.setText("Stato: Disponibile");
+                statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+            } else if (stock.getStato().equals("Non disponibile")) {
+                statusLabel.setText("Stato: Non disponibile");
+                statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            }
+        } else { 
+            statusLabel.setText("Stato: Esaurito");
+            statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+        }
+
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+        // Aggiungi gli elementi nella sequenza: immagine, nome, prezzo, quantità, stato
+        box.getChildren().addAll(imageView, nameLabel, priceLabel, quantityLabel, statusLabel);
+
+        // Se non siamo in modalità visualizzazione, aggiungi il bottone sotto lo stato
+        if (!modalitaVisualizzazione) {
+            Button purchaseButton = createProductButton(stock);  // Nuovo nome del metodo
+            purchaseButton.setOnAction(e -> { 
+            	try {
+                // Carica la schermata di acquisto
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/acquisto-view.fxml"));
+                AcquistoController acquistoController = new AcquistoController(); // Crea il controller
+                loader.setController(acquistoController); // Imposta il controller
+                VBox vbox = loader.load(); // Carica il file FXML
+
+                // Passa lo stock al controller
+                acquistoController.setSelectedStock(stock);
+
+                // Crea una scena per la schermata di acquisto
+                Scene acquistoScene = new Scene(vbox);
+                Stage primaryStage = (Stage) purchaseButton.getScene().getWindow(); // Usa la finestra corrente
+                primaryStage.setScene(acquistoScene); // Imposta la scena
+                primaryStage.setTitle("Acquisto Prodotto");
+                primaryStage.show(); // Mostra la finestra
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            });
+        
+        box.getChildren().add(purchaseButton);    
+        box.getChildren().add(spacer);
+        
+        }
+        return box;
     }
     
-    //METODI DI GESTIONE DEGLI EVENTI
+    private Button createProductButton(Stock stock) {
+        Button button = new Button("Aggiungi al carrello");
+        button.getStyleClass().add("product-button");
+        button.setPrefWidth(200);
+        // Aggiungi altre configurazioni del bottone, se necessario
+        return button;
+    }
+    /*
+    public Button createSelectButton(Stock stock) {
+        Button button = new Button("Seleziona");
+        button.getStyleClass().add("select-button");
+        button.setOnAction(e -> handleSelect(stock));
+        return button;
+    }
+
+ 
+    public void handleSelect(Stock stock) {
+        System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
+        if (stock.getQuantitaDisp() == 0) {
+            // Passa il nome del prodotto anziché l'ID
+            mostraDistributoriAlternativiByName(stock.getProdotto().getNome());
+        }
+    }
     
+   */
+    
+    /*
+    public Button createSelectButton(Stock stock) {
+        Button button;
+        
+        if (stock.getQuantitaDisp() == 0) {
+            // Se il prodotto è esaurito, crea il pulsante "Visualizza distributori vicini"
+            button = new Button("Visualizza distributori vicini");
+            button.getStyleClass().add("select-button");
+            button.setOnAction(e -> mostraDistributoriAlternativiByName(stock.getProdotto().getNome()));
+        } else {
+            // Se il prodotto è disponibile, crea il pulsante "Seleziona"
+            button = new Button("Seleziona");
+            button.getStyleClass().add("select-button");
+            button.setOnAction(e -> handleSelect(stock));
+        }
+
+        return button;
+    }
+    */
+
+    public void handleSelect(Stock stock) {
+        System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
+        // Aggiungi logica per il prodotto disponibile (es. aggiungere al carrello o altro)
+    }
+
+
     @FXML
     public void handleFilter(ActionEvent event) {
         filterPanel.setVisible(!filterPanel.isVisible());
@@ -205,47 +308,47 @@ public class ProdottiClienteController {
 
     @FXML
     public void applyFilters() {
-        String searchQuery = searchField.getText();
-        String selectedCategory = categoryFilter.getValue();
-        boolean availability = availabilityFilter.isSelected();
-        boolean sortAsc = priceAsc.isSelected();
-        boolean sortDesc = priceDesc.isSelected();
+        List<Stock> stocks = stockDAO.getStockByInventario(idInventario);
 
-        List<Stock> stocks = ricercaFacade.applicaFiltri(idInventario, searchQuery, selectedCategory, availability, sortAsc, sortDesc);
+        String searchQuery = searchField.getText();
+        if (!searchQuery.isEmpty()) {
+            stocks = new FilterByNome(searchQuery).applyFilter(stocks);
+        }
+
+        String selectedCategory = categoryFilter.getValue();
+        if (selectedCategory != null && !selectedCategory.isEmpty()) {
+            try {
+                Categoria categoriaEnum = Categoria.valueOf(selectedCategory.toUpperCase().replace(" ", "_"));
+                stocks = new FilterByCategoria(categoriaEnum).applyFilter(stocks);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Errore: Categoria non valida -> " + selectedCategory);
+            }
+        }
+
+        if (availabilityFilter.isSelected()) {
+            stocks = stocks.stream().filter(stock -> stock.getQuantitaDisp() > 0).collect(Collectors.toList());
+        }
+
+        if (priceAsc.isSelected()) {
+            stocks.sort((s1, s2) -> s1.getProdotto().getPrezzo().compareTo(s2.getProdotto().getPrezzo()));
+        } else if (priceDesc.isSelected()) {
+            stocks.sort((s1, s2) -> s2.getProdotto().getPrezzo().compareTo(s1.getProdotto().getPrezzo()));
+        }
+
         aggiornaProdotti(stocks);
     }
 
     
-    //METODI DI SUPPORTO
-    private void handleSugarMinus() {
-        if (currentSugar > 0) {
-            currentSugar--;
-            sugarLevel.setText(String.valueOf(currentSugar));
-        }
-    }
-
-    private void handleSugarPlus() {
-        if (currentSugar < 5) {
-            currentSugar++;
-            sugarLevel.setText(String.valueOf(currentSugar));
-        }
-    }
-    
-   
-    //METODI PER LA GESTIONE DELLE ALTERNATIVE
-    
-    /**
-     * Mostra i distributori alternativi che offrono il prodotto richiesto.
-     * 
-     * @param nomeProdotto il nome del prodotto cercato
-     */
-   
     public void mostraDistributoriAlternativiByName(String nomeProdotto) {
-        if (distributoreCorrente == null) {
+        if(distributoreCorrente == null) {
             System.err.println("distributoreCorrente è null! Assicurati di impostarlo correttamente.");
             return;
         }
-        List<Distributore> distributori = ricercaFacade.cercaDistributoriConProdotto(distributoreCorrente.getIdDistr(), nomeProdotto);
+        
+        // Utilizza il nuovo metodo DAO che sfrutta il composite filter
+        List<Distributore> distributori = distributoreDAO.getDistributoriConProdottoDisponibileByName(
+                distributoreCorrente.getIdDistr(), nomeProdotto);
+
         if (distributori.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Prodotto non disponibile");
@@ -253,16 +356,91 @@ public class ProdottiClienteController {
             alert.setContentText("Non ci sono distributori alternativi disponibili per questo prodotto.");
             alert.showAndWait();
         } else {
-        	DistributoriAlternativiController controller = ViewManager.getInstance()
-        	        .showStageWithController("/distributoriAlternativi.fxml", 800, 600, "Distributori Alternativi");
-        	controller.setSearchQuery(nomeProdotto);
-        	controller.setDistributori(distributoreCorrente.getIdDistr(), nomeProdotto);
-
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/distributoriAlternativi.fxml"));
+                Parent root = loader.load();
+                DistributoriAlternativiController controller = loader.getController();
+                controller.setSearchQuery(nomeProdotto);
+                controller.setDistributori(distributori, distributoreCorrente);
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Distributori Alternativi");
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        
+        }
+    }
+        
+        //parte nuova
+    public void setModalitaVisualizzazione(boolean visualizza) {
+        this.modalitaVisualizzazione = visualizza;
+        // Ricarica i prodotti in base al testo attuale del campo di ricerca
+        caricaProdotti(searchField.getText());
+    }
+        
+        // Imposta il campo di ricerca e ricarica i prodotti filtrati
+        public void setSearchQuery(String query) {
+            searchField.setText(query);
+            caricaProdotti(query);
+        }
+        
+        // Modifica il metodo createSelectButton per gestire la modalità visualizzazione
+        public Button createSelectButton(Stock stock) {
+            if (modalitaVisualizzazione) {
+                // In modalità visualizzazione, il bottone di selezione non deve essere attivo
+                Button button = new Button("Visualizza");
+                button.getStyleClass().add("select-button");
+                button.setDisable(true);
+                return button;
+            } else {
+                if (stock.getQuantitaDisp() == 0) {
+                    Button button = new Button("Visualizza distributori vicini");
+                    button.getStyleClass().add("select-button");
+                    button.setOnAction(e -> mostraDistributoriAlternativiByName(stock.getProdotto().getNome()));
+                    return button;
+                } else {
+                    Button button = new Button("Seleziona");
+                    button.getStyleClass().add("select-button");
+                    button.setOnAction(e -> handleSelect(stock));
+                    return button;
+                }
+            }
         }
     }
 
-   
-}
+    
+    /*
+    public void mostraDistributoriAlternativiByName(String nomeProdotto) {
+        if(distributoreCorrente == null) {
+            System.err.println("distributoreCorrente è null! Assicurati di impostarlo correttamente.");
+            return;
+        }
+        
+        DistributoreDAO distributoreDAO = new DistributoreDAO();
+        List<Distributore> distributori = distributoreDAO.getDistributoriConProdottoDisponibileByName(
+                distributoreCorrente.getIdDistr(), nomeProdotto);
 
-
-   
+        if (distributori.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Prodotto non disponibile");
+            alert.setHeaderText(null);
+            alert.setContentText("Non ci sono distributori alternativi disponibili per questo prodotto.");
+            alert.showAndWait();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/distributoriAlternativi.fxml"));
+                Parent root = loader.load();
+                DistributoriAlternativiController controller = loader.getController();
+                controller.setDistributori(distributori, distributoreCorrente);
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Distributori Alternativi");
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+*/
