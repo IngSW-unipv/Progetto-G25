@@ -1,15 +1,19 @@
 package it.unipv.ingsfw.bitebyte.services;
 
+import java.math.BigDecimal;
+
 import it.unipv.ingsfw.bitebyte.dao.ClienteDAO;
+import it.unipv.ingsfw.bitebyte.dao.PortafoglioVirtualeDAO;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 
 public class ClientService {
 
 	private ClienteDAO clienteDAO;
 
-	public ClientService() {
+	//Alice
+	/*public ClientService() {
 		this.clienteDAO = new ClienteDAO();
-	}
+	}*/
 
 	// Validazione completa del cliente
 	public boolean isClienteValido(Cliente cliente) {
@@ -51,9 +55,26 @@ public class ClientService {
 		return clienteDAO.modificaProfilo(cliente); // Salva nel database
 	}
 
-	/*
-	 * // Recupera un cliente tramite CF public Cliente getClienteByCf(String cf) {
-	 * return clienteDAO.trovaPerCf(cf); }
-	 */
-	// Altri metodi di servizio possono essere aggiunti qui
+
+	// Davide
+    private PortafoglioVirtualeDAO portafoglioDAO;
+
+    public ClientService() {
+        this.clienteDAO = new ClienteDAO();
+        this.portafoglioDAO = new PortafoglioVirtualeDAO();
+    }
+
+    public double getSaldo(Cliente cliente) {
+        // Recupera il saldo utilizzando il codice fiscale
+        return portafoglioDAO.getSaldo(cliente.getCf());  // Usa l'istanza portafoglioDAO
+    }
+    
+    public boolean saldoSufficiente(Cliente cliente, BigDecimal prezzoProdotto) {
+        double saldoCliente = getSaldo(cliente); // saldo come double
+        BigDecimal saldoClienteBigDecimal = BigDecimal.valueOf(saldoCliente); // converto in BigDecimal
+
+        // Confronto i due valori
+        return saldoClienteBigDecimal.compareTo(prezzoProdotto) >= 0; // ritorna true se saldo è sufficiente
+    }
+
 }

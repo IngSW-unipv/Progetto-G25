@@ -9,7 +9,6 @@ public class PortafoglioVirtuale {
 
 	private String idPort;
 	private double saldo;
-	//private Bancomat cartaCliente;
 	private TipologiaPagamento tipologiaPagamento;
 
 	//costruttore
@@ -18,8 +17,6 @@ public class PortafoglioVirtuale {
 		 this.saldo = saldo;
 		 this.tipologiaPagamento = tipologiaPagamento;
 	}
-
-
 
 	// Getters and Setters
 	public double getSaldo() {
@@ -33,14 +30,6 @@ public class PortafoglioVirtuale {
 	public String getIdPort() {
 		return idPort;
 	}
-
-/*	public Bancomat getCartaCliente() {
-		return cartaCliente;
-	}
-
-	public void setCartaCliente(Bancomat cartaCliente) {
-		this.cartaCliente = cartaCliente;
-	}*/
 
 	public TipologiaPagamento getTipologiaPagamento() {
 		return tipologiaPagamento;
