@@ -36,6 +36,8 @@ public class ProfiloClienteController {
     @FXML
     private Button btnConnetti;
     
+    @FXML
+    private Button btnStoricoOrdini;
     /**
      * Metodo per inizializzare la view con i dati del cliente.
      */
@@ -48,6 +50,7 @@ public class ProfiloClienteController {
             return;
         }
         btnConnetti.setOnAction(event -> connettiDistributore(event)); // Set the button action
+        btnStoricoOrdini.setOnAction(event -> visualizzaStoricoOrdini(event));
     }
 
     /**
@@ -182,6 +185,14 @@ public class ProfiloClienteController {
         Stage stage = (Stage) btnConnetti.getScene().getWindow();
         switchScene(stage, "collegamentoDistributore.fxml", "Profilo");
     }
+    
+    @FXML
+    public void visualizzaStoricoOrdini(ActionEvent event) {
+        Button clickedButton = (Button) event.getSource();
+        Stage stage = (Stage) btnStoricoOrdini.getScene().getWindow();
+        switchScene(stage, "StoricoOrdini.fxml", "Storico ordini");
+    }
+
 
     private void switchScene(Stage stage, String fxml, String title) {
         try {

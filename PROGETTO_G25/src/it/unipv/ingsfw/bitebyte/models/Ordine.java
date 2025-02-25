@@ -21,7 +21,12 @@ public class Ordine {
         this.statoOrd = statoOrd;
         this.totale = totale;
         this.cliente = cliente;
-        this.prodotto = prodotto;  // Aggiungi l'inizializzazione del prodotto
+        this.prodotto = prodotto;
+    }
+
+    // COSTRUTTORE SENZA PARAMETRI
+    public Ordine() {
+        // Costruttore senza parametri per consentire la creazione dell'oggetto vuoto
     }
 
     // GETTERS AND SETTERS
@@ -65,11 +70,11 @@ public class Ordine {
         this.cliente = cliente;
     }
 
-    public Prodotto getProdotto() {  // Metodo getter per il prodotto
+    public Prodotto getProdotto() {
         return prodotto;
     }
 
-    public void setProdotto(Prodotto prodotto) {  // Metodo setter per il prodotto
+    public void setProdotto(Prodotto prodotto) {
         this.prodotto = prodotto;
     }
 

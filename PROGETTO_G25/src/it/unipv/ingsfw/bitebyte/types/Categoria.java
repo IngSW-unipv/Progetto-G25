@@ -8,5 +8,20 @@ package it.unipv.ingsfw.bitebyte.types;
  */
 public enum Categoria {
   
-    BEVANDA_CALDA, BEVANDA_FREDDA, SNACK_SALATO, SNACK_DOLCE
+    BEVANDA_CALDA, BEVANDA_FREDDA, SNACK_SALATO, SNACK_DOLCE;
+	
+    public static Categoria fromDatabaseValue(String dbValue) {
+        switch (dbValue.toLowerCase()) {
+            case "bevanda calda":
+                return BEVANDA_CALDA;
+            case "bevanda fredda":
+                return BEVANDA_FREDDA;
+            case "snack dolce":
+                return SNACK_DOLCE;
+            case "snack salato":
+                return SNACK_SALATO;
+            default:
+                throw new IllegalArgumentException("Unknown category: " + dbValue);
+        }
+    }
 }

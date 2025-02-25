@@ -6,7 +6,12 @@
 <?import javafx.scene.layout.HBox?>
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="it.unipv.ingsfw.bitebyte.controller.AcquistoController" spacing="10" alignment="CENTER" padding="20" stylesheets="@/CSS/styles2.css">
+      fx:controller="it.unipv.ingsfw.bitebyte.controller.AcquistoController" spacing="10" alignment="CENTER">
+    
+    <!-- Impostazione corretta del padding -->
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
     
     <Label text="Dettagli Prodotto" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
     
@@ -14,5 +19,3 @@
     
     <Button text="Conferma Acquisto" />
 </VBox>
-
-

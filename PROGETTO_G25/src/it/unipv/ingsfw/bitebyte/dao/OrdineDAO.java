@@ -1,8 +1,14 @@
 package it.unipv.ingsfw.bitebyte.dao;
 
+import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Ordine;
+import it.unipv.ingsfw.bitebyte.models.Prodotto;
+import it.unipv.ingsfw.bitebyte.types.Categoria;
 
+import java.math.BigDecimal;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrdineDAO {
 
@@ -70,6 +76,84 @@ public class OrdineDAO {
             } catch (SQLException e) {
                 System.err.println("Errore durante la chiusura della connessione o dello statement: " + e.getMessage());
             }
+        }
+    }
+    
+    public List<Ordine> getOrdiniByCliente(Cliente cliente) {
+        List<Ordine> ordini = new ArrayList<>();
+        if (cliente == null) {
+            System.out.println("Errore: cliente nullo!");
+            return ordini;
+        }
+
+        connection = DBConnection.startConnection(connection, schema);
+
+        String query = "SELECT o.ID_Ordine, o.data_ord, o.Totale, o.Stato, o.ID_Prodotto, " +
+                       "p.Nome_p, p.Prezzo, p.Categoria_P " +
+                       "FROM " + schema + ".Ordine o " +
+                       "JOIN " + schema + ".Prodotto p ON o.ID_Prodotto = p.ID_Prodotto " +
+                       "WHERE o.Cf = ?";
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = connection.prepareStatement(query);
+            stmt.setString(1, cliente.getCf());
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Crea l'oggetto Ordine
+                Ordine ordine = new Ordine();
+                ordine.setIdOrdine(rs.getString("ID_Ordine"));
+                ordine.setDataOrd(rs.getTimestamp("data_ord").toLocalDateTime());
+                ordine.setTotale(rs.getBigDecimal("Totale"));
+                //ordine.setStatoOrd(ordine.getStatoOrd().name((rs.getString("Stato"))));
+
+                // Crea l'oggetto Prodotto
+                int idProdotto = rs.getInt("ID_Prodotto");
+                String nome = rs.getString("Nome_p");
+                BigDecimal prezzo = rs.getBigDecimal("Prezzo");
+                String categoriaString = rs.getString("Categoria_P");
+                Categoria categoria = Categoria.fromDatabaseValue(categoriaString);
+
+                Prodotto prodotto = new Prodotto(idProdotto, nome, prezzo, categoria);
+
+                // Associa il prodotto all'ordine
+                ordine.setProdotto(prodotto);
+
+                // Associa il cliente all'ordine
+                ordine.setCliente(cliente);
+
+                ordini.add(ordine);
+            }
+        } catch (SQLException e) {
+            System.err.println("Errore durante il recupero degli ordini: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                DBConnection.closeConnection(connection);
+            } catch (SQLException e) {
+                System.err.println("Errore durante la chiusura della connessione o dello statement: " + e.getMessage());
+            }
+        }
+
+        return ordini;
+    }
+    public Categoria convertStringToCategoria(String categoriaDb) {
+        switch (categoriaDb.toLowerCase()) {
+            case "bevanda calda":
+                return Categoria.BEVANDA_CALDA;
+            case "bevanda fredda":
+                return Categoria.BEVANDA_FREDDA;
+            case "snack dolce":
+                return Categoria.SNACK_DOLCE;
+            case "snack salato":
+                return Categoria.SNACK_SALATO;
+            default:
+                throw new IllegalArgumentException("Categoria non valida: " + categoriaDb);
         }
     }
 }
