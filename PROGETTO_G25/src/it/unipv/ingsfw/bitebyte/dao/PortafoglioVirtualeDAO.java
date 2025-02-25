@@ -5,13 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PortafoglioDAO {
+public class PortafoglioVirtualeDAO {
 
     private Connection connection;
     private String schema;
 
     // Costruttore per inizializzare il campo schema
-    public PortafoglioDAO() {
+    public PortafoglioVirtualeDAO() {
         super();
         this.schema = "progettog25"; // Nome del database schema
     }

@@ -3,7 +3,7 @@ package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Ordine;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
-import it.unipv.ingsfw.bitebyte.service.OrdineService;
+import it.unipv.ingsfw.bitebyte.services.OrdineService;
 import it.unipv.ingsfw.bitebyte.view.ViewStorico;
 
 import javafx.fxml.FXML;

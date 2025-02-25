@@ -3,8 +3,8 @@ package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import it.unipv.ingsfw.bitebyte.service.DistributoreService;
-import it.unipv.ingsfw.bitebyte.service.StockService;
+import it.unipv.ingsfw.bitebyte.services.DistributoreService;
+import it.unipv.ingsfw.bitebyte.services.StockService;
 import it.unipv.ingsfw.bitebyte.view.ViewComponentProductBox;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;

@@ -10,10 +10,10 @@ import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Ordine;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import it.unipv.ingsfw.bitebyte.service.ClienteService;
-import it.unipv.ingsfw.bitebyte.service.OrdineService;
-import it.unipv.ingsfw.bitebyte.service.PortafoglioService;
-import it.unipv.ingsfw.bitebyte.service.StockService;
+import it.unipv.ingsfw.bitebyte.services.ClientService;
+import it.unipv.ingsfw.bitebyte.services.OrdineService;
+import it.unipv.ingsfw.bitebyte.services.PortafoglioService;
+import it.unipv.ingsfw.bitebyte.services.StockService;
 import it.unipv.ingsfw.bitebyte.types.StatoOrd;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import it.unipv.ingsfw.bitebyte.utils.AlertUtils;
@@ -30,7 +30,7 @@ public class AcquistoController {
     private ViewPrSelected view;
     private Stock stockSelezionato;
     private Stage previousStage;
-    private ClienteService clienteService;
+    private ClientService clienteService;
     private PortafoglioService portafoglioService;
     private StockService stockService;
     private OrdineService ordineService; // Aggiunto per gestire gli ordini
@@ -41,7 +41,7 @@ public class AcquistoController {
         this.view = new ViewPrSelected();
         this.previousStage = previousStage;
         this.newStage = newStage;
-        this.clienteService = new ClienteService();
+        this.clienteService = new ClientService();
         this.portafoglioService = new PortafoglioService();
         this.stockService = new StockService();
         this.ordineService = new OrdineService();

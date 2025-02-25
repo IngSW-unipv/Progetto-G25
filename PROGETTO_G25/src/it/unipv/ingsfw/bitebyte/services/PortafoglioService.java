@@ -1,13 +1,13 @@
-package it.unipv.ingsfw.bitebyte.service;
+package it.unipv.ingsfw.bitebyte.services;
 
-import it.unipv.ingsfw.bitebyte.dao.PortafoglioDAO;
+import it.unipv.ingsfw.bitebyte.dao.PortafoglioVirtualeDAO;
 
 public class PortafoglioService {
 
-    private PortafoglioDAO portafoglioDAO;
+    private PortafoglioVirtualeDAO portafoglioDAO;
 
     public PortafoglioService() {
-        this.portafoglioDAO = new PortafoglioDAO();  // Istanza di PortafoglioDAO
+        this.portafoglioDAO = new PortafoglioVirtualeDAO();  // Istanza di PortafoglioDAO
     }
 
     public double getSaldo(String codiceFiscale) {

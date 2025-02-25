@@ -1,7 +1,7 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
-import it.unipv.ingsfw.bitebyte.service.DistributoreService;
+import it.unipv.ingsfw.bitebyte.services.DistributoreService;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

@@ -1,19 +1,19 @@
-package it.unipv.ingsfw.bitebyte.service;
+package it.unipv.ingsfw.bitebyte.services;
 
 import java.math.BigDecimal;
 
 import it.unipv.ingsfw.bitebyte.dao.ClienteDAO;
-import it.unipv.ingsfw.bitebyte.dao.PortafoglioDAO;
+import it.unipv.ingsfw.bitebyte.dao.PortafoglioVirtualeDAO;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 
-public class ClienteService {
+public class ClientService {
 
     private ClienteDAO clienteDAO;
-    private PortafoglioDAO portafoglioDAO;
+    private PortafoglioVirtualeDAO portafoglioDAO;
 
-    public ClienteService() {
+    public ClientService() {
         this.clienteDAO = new ClienteDAO();
-        this.portafoglioDAO = new PortafoglioDAO();
+        this.portafoglioDAO = new PortafoglioVirtualeDAO();
     }
 
     public double getSaldo(Cliente cliente) {

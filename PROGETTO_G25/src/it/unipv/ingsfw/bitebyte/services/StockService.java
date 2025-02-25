@@ -1,4 +1,4 @@
-package it.unipv.ingsfw.bitebyte.service;
+package it.unipv.ingsfw.bitebyte.services;
 
 import it.unipv.ingsfw.bitebyte.dao.StockDAO;
 import it.unipv.ingsfw.bitebyte.models.Stock;
@@ -8,10 +8,6 @@ public class StockService {
     private StockDAO stockDAO = new StockDAO();
 
     public List<Stock> getStockByInventario(int idInventario) {
-        return stockDAO.getStockByInventario(idInventario);
-    }
-    
-    public List<Stock> getStocksByInventario(int idInventario) {
         return stockDAO.getStockByInventario(idInventario);
     }
     

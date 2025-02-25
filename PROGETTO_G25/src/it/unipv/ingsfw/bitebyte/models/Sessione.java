@@ -5,6 +5,7 @@ public class Sessione {
 
 	private static Sessione instance; // classe Sessione è Singleton
 	private Cliente clienteConnesso;
+	private PortafoglioVirtuale portafoglioCliente;
 
 	// costruttore
 	private Sessione() {
@@ -30,10 +31,19 @@ public class Sessione {
 		this.clienteConnesso = clienteConnesso;
 	}
 
+	public PortafoglioVirtuale getPortafoglioCliente() {
+		return portafoglioCliente;
+	}
+
+	public void setPortafoglioCliente(PortafoglioVirtuale portafoglioCliente) {
+		this.portafoglioCliente = portafoglioCliente;
+	}
+
 	// Metodo per fare logout e resettare l'intera sessione
 	public void logout() {
 		// Resetta l'istanza del singleton, quindi anche clienteConnesso sarà null
 		instance = null;
 	}
+	
 
 }
