@@ -5,21 +5,23 @@ import it.unipv.ingsfw.bitebyte.types.StatoOrd;
 import java.math.BigDecimal;
 
 public class Ordine {
-    
-    // ATTRIBUTI 
+
+    // ATTRIBUTI
     private String idOrdine;
     private LocalDateTime dataOrd;
     private StatoOrd statoOrd;
-    private BigDecimal totale; 
+    private BigDecimal totale;
     private Cliente cliente;
+    private Prodotto prodotto;  // Aggiungi l'attributo prodotto
 
     // COSTRUTTORE PARAMETRIZZATO
-    public Ordine(String idOrdine, LocalDateTime dataOrd, StatoOrd statoOrd, BigDecimal totale, Cliente cliente) {
+    public Ordine(String idOrdine, LocalDateTime dataOrd, StatoOrd statoOrd, BigDecimal totale, Cliente cliente, Prodotto prodotto) {
         this.idOrdine = idOrdine;
         this.dataOrd = dataOrd;
         this.statoOrd = statoOrd;
         this.totale = totale;
         this.cliente = cliente;
+        this.prodotto = prodotto;  // Aggiungi l'inizializzazione del prodotto
     }
 
     // GETTERS AND SETTERS
@@ -61,6 +63,14 @@ public class Ordine {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public Prodotto getProdotto() {  // Metodo getter per il prodotto
+        return prodotto;
+    }
+
+    public void setProdotto(Prodotto prodotto) {  // Metodo setter per il prodotto
+        this.prodotto = prodotto;
     }
 
     // NUOVO METODO per ottenere il codice fiscale del cliente

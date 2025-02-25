@@ -1,14 +1,21 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import it.unipv.ingsfw.bitebyte.models.Cliente;
+import it.unipv.ingsfw.bitebyte.models.Ordine;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import it.unipv.ingsfw.bitebyte.service.ClienteService;
+import it.unipv.ingsfw.bitebyte.service.OrdineService;
 import it.unipv.ingsfw.bitebyte.service.PortafoglioService;
 import it.unipv.ingsfw.bitebyte.service.StockService;
+import it.unipv.ingsfw.bitebyte.types.StatoOrd;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
+import it.unipv.ingsfw.bitebyte.utils.AlertUtils;
+import it.unipv.ingsfw.bitebyte.utils.GenerazioneId;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -21,6 +28,7 @@ public class AcquistoController {
     private ClienteService clienteService;
     private PortafoglioService portafoglioService;
     private StockService stockService;
+    private OrdineService ordineService; // Aggiunto per gestire gli ordini
 
     public AcquistoController(Stage previousStage) {
         this.view = new ViewPrSelected();
@@ -28,10 +36,11 @@ public class AcquistoController {
         this.clienteService = new ClienteService();
         this.portafoglioService = new PortafoglioService();
         this.stockService = new StockService();
+        this.ordineService = new OrdineService();
     }
 
     public void setStockSelezionato(Stock stock) {
-        Cliente clienteLoggato = Sessione.getInstance().getClienteConnesso();
+        Cliente clienteLoggato = ottieniClienteLoggato();
         if (clienteLoggato != null) {
             System.out.println("Utente connesso: " + stock.getProdotto().getNome());
             this.stockSelezionato = stock;
@@ -81,7 +90,7 @@ public class AcquistoController {
         previousStage.show();
     }
 
-    public void acquistaProdotto(Stock stock) {
+    public void acquistaProdotto(Stock stock) {	//Gestisce l'acquisto di un prodotto, aggiornando il saldo, lo stock e registrando l'ordine.
         Cliente clienteLoggato = ottieniClienteLoggato();
         if (clienteLoggato == null) {
             System.out.println("Errore: Nessun cliente loggato.");
@@ -89,29 +98,42 @@ public class AcquistoController {
         }
 
         BigDecimal prezzoProdotto = stock.getProdotto().getPrezzo();
-        
-        if (clienteService.saldoSufficiente(clienteLoggato, prezzoProdotto)) {
-            int quantitaDisponibile = stock.getQuantitaDisp(); //Faccio il retrieving della quantità del prodotto ora
-            if (quantitaDisponibile > 0) {
-                System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
-                
-                double saldoAttuale = clienteService.getSaldo(clienteLoggato);
-                double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue();
-                
-                portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo);
-                
-                // Riduci la quantità del prodotto nello stock
-                int nuovaQuantita = quantitaDisponibile - 1; //Diminuisco la quantità di 1
-                stock.setQuantitaDisp(nuovaQuantita); // Aggiorno l'oggetto Stock
-                stockService.aggiornaQuantita(stock); // Passo l'oggetto aggiornato
-                
-                System.out.println("Il nuovo saldo è: " + nuovoSaldo);
-                System.out.println("Nuova quantità disponibile: " + nuovaQuantita);
-            } else {
-                System.out.println("Prodotto esaurito: " + stock.getProdotto().getNome());
-            }
-        } else {
+
+        if (!clienteService.saldoSufficiente(clienteLoggato, prezzoProdotto)) {
             System.out.println("Saldo insufficiente per acquistare: " + stock.getProdotto().getNome());
+            return;
+        }
+
+        int quantitaDisponibile = stock.getQuantitaDisp();
+        if (quantitaDisponibile <= 0) {
+            System.out.println("Prodotto esaurito: " + stock.getProdotto().getNome());
+            return;
+        }
+
+        // Aggiornamento saldo
+        double saldoAttuale = clienteService.getSaldo(clienteLoggato);
+        double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue();
+        portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo);
+
+        // Riduzione della quantità in stock
+        stock.setQuantitaDisp(quantitaDisponibile - 1);
+        stockService.aggiornaQuantita(stock);
+
+        System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
+        System.out.println("Il nuovo saldo è: " + nuovoSaldo);
+        System.out.println("Nuova quantità disponibile: " + stock.getQuantitaDisp());
+
+        // Creazione dell'ordine con il prodotto associato
+        Ordine nuovoOrdine = new Ordine(GenerazioneId.generaIdCasuale(), LocalDateTime.now(),StatoOrd.CONFERMATO,prezzoProdotto,clienteLoggato,stock.getProdotto()
+        );
+
+        boolean ordineCreato = ordineService.creaOrdine(nuovoOrdine);
+        if (ordineCreato) {
+            System.out.println("Ordine registrato con successo! ID: " + nuovoOrdine.getIdOrdine());
+            AlertUtils.mostraAlertConferma("Successo","Acquisto confermato","Acquisto confermato e prodotto erogato!!");
+            
+        } else {
+            System.out.println("Errore nella creazione dell'ordine.");
         }
     }
 }
