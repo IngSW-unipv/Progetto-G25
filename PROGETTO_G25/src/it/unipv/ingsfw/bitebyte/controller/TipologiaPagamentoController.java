@@ -3,7 +3,7 @@ package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 import it.unipv.ingsfw.bitebyte.models.PortafoglioVirtuale;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
-
+import it.unipv.ingsfw.bitebyte.services.PortafoglioService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,13 +29,15 @@ public class TipologiaPagamentoController {
 		// Verifica quale bottone è stato premuto e cambia scena di conseguenza
 		if (clickedButton.getId().equals("sceglibancomat")) {
 			System.out.println("sono in switch scene");
-			PortafoglioVirtuale nuovoPortafoglio = new PortafoglioVirtuale(Sessione.getInstance().getPortafoglioCliente().generaIdCasuale(), 0.00, TipologiaPagamento.BANCOMAT);
+			PortafoglioVirtuale nuovoPortafoglio = new PortafoglioVirtuale(PortafoglioService.generaIdCasuale(), 0.00, TipologiaPagamento.BANCOMAT);
 			Sessione.getInstance().setPortafoglioCliente(nuovoPortafoglio);
+			PortafoglioService.creaPortafoglio(nuovoPortafoglio, Sessione.getInstance().getClienteConnesso());
 			switchScene(stage, "Bancomat.fxml", "Bancomat");
 		} else if (clickedButton.getId().equals("sceglipaypal")) {
 			showAlert("PayPal", "ti sei connesso al tuo account PayPal");
-			PortafoglioVirtuale nuovoPortafoglio = new PortafoglioVirtuale(Sessione.getInstance().getPortafoglioCliente().generaIdCasuale(), 0.00, TipologiaPagamento.PAYPAL);
+			PortafoglioVirtuale nuovoPortafoglio = new PortafoglioVirtuale(PortafoglioService.generaIdCasuale(), 0.00, TipologiaPagamento.PAYPAL);
 			Sessione.getInstance().setPortafoglioCliente(nuovoPortafoglio);
+			PortafoglioService.creaPortafoglio(nuovoPortafoglio, Sessione.getInstance().getClienteConnesso());
 			switchScene(stage, "PortafoglioVirtuale.fxml", "PortafoglioVirtuale");	
 		}
     }
@@ -60,6 +62,7 @@ public class TipologiaPagamentoController {
 		}
 	}
 
+	
 	
     
     

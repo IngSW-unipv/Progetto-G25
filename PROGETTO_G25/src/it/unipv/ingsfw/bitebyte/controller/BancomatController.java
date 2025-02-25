@@ -8,6 +8,7 @@ import it.unipv.ingsfw.bitebyte.dao.BancomatDAO;
 import it.unipv.ingsfw.bitebyte.models.Bancomat;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
+import it.unipv.ingsfw.bitebyte.services.PortafoglioService;
 import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

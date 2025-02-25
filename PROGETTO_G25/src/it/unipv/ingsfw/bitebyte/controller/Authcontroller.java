@@ -97,7 +97,8 @@ public class Authcontroller implements Initializable {
 		
 		if (clienteDAO.verificaLogin(nomeUtente, password)) {
 			Sessione.getInstance().setClienteConnesso(clienteDAO.getCliente(nomeUtente, password));
-			Sessione.getInstance().setPortafoglioCliente(portafoglioDAO.leggiPortafoglio(Sessione.getInstance().getClienteConnesso().getCf()));
+			Sessione.getInstance().setPortafoglioCliente(
+					portafoglioDAO.leggiPortafoglio(Sessione.getInstance().getClienteConnesso().getCf()));
 			showAlert("Successo", "Acesso eseguito correttamente");
 			Stage stage = (Stage) login.getScene().getWindow();
 			switchScene(stage, "ProfiloCliente.fxml", "Profilo");

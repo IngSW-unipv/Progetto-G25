@@ -54,7 +54,7 @@ public class PortafoglioVirtuale {
 	 * Metodo per aggiornare direttamente il saldo.
 	 */
 	public void aggiornaSaldo(double amount) {
-		saldo += amount;
+		this.saldo += amount;
 		System.out.println("Saldo aggiornato: " + saldo + "€");
 	}
 
@@ -73,10 +73,4 @@ public class PortafoglioVirtuale {
 		}
 	}
 	
-	// per generare l'id portafoglio
-    public String generaIdCasuale() {
-        int numero = (int)(Math.random()*9999)+1000;
-        return String.valueOf(numero);
-    }
-
 }
