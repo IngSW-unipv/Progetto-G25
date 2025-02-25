@@ -31,17 +31,22 @@ public class ViewStorico {
                 Label ordineLabel = new Label("Ordine: " + ordine.getIdOrdine());
                 ordineLabel.setStyle("-fx-font-size: 16px;");
 
-                Label dataLabel = new Label("Data: " + ordine.getDataOrd());
+                Label dataLabel = new Label("Data: " + ordine.getDataOrd().toLocalDate());
                 dataLabel.setStyle("-fx-font-size: 16px;");
 
+                
+                System.out.println(ordine.getStatoOrd());
                 Label statoLabel = new Label("Stato: " + ordine.getStatoOrd());
                 statoLabel.setStyle("-fx-font-size: 16px;");
                 
                 Label nomeLabel = new Label("Nome: " + ordine.getProdotto().getNome());
                 nomeLabel.setStyle("-fx-font-size: 16px;");
+                
+                Label prezzoLabel = new Label("Prezzo: " + ordine.getTotale());
+                prezzoLabel.setStyle("-fx-font-size: 16px;");
 
                 // Aggiungi i label all'HBox
-                ordineContainer.getChildren().addAll(ordineLabel, dataLabel, statoLabel,nomeLabel);
+                ordineContainer.getChildren().addAll(ordineLabel, dataLabel, statoLabel,nomeLabel, prezzoLabel);
                 
                 // Aggiungi l'HBox alla VBox principale
                 vbox.getChildren().add(ordineContainer);
@@ -56,7 +61,8 @@ public class ViewStorico {
         ScrollPane scrollPane = new ScrollPane(vbox);
         scrollPane.setFitToWidth(true); // Assicurati che il contenuto si adatti alla larghezza della finestra
         scrollPane.setStyle("-fx-background-color: transparent;");
-        
+        scrollPane.setPrefWidth(600);  // Larghezza fissa
+        scrollPane.setPrefHeight(400); // Altezza fissa
         return scrollPane;
     }
 }

@@ -4,6 +4,7 @@ import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Ordine;
 import it.unipv.ingsfw.bitebyte.models.Prodotto;
 import it.unipv.ingsfw.bitebyte.types.Categoria;
+import it.unipv.ingsfw.bitebyte.types.StatoOrd;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -109,8 +110,10 @@ public class OrdineDAO {
                 ordine.setIdOrdine(rs.getString("ID_Ordine"));
                 ordine.setDataOrd(rs.getTimestamp("data_ord").toLocalDateTime());
                 ordine.setTotale(rs.getBigDecimal("Totale"));
-                //ordine.setStatoOrd(ordine.getStatoOrd().name((rs.getString("Stato"))));
-
+                String statoString = rs.getString("Stato").toUpperCase(); // Converto la stringa in maiuscolo per rispettare i vincoli dell'enum
+                ordine.setStatoOrd(StatoOrd.valueOf(statoString));
+                
+                
                 // Crea l'oggetto Prodotto
                 int idProdotto = rs.getInt("ID_Prodotto");
                 String nome = rs.getString("Nome_p");
@@ -122,7 +125,7 @@ public class OrdineDAO {
 
                 // Associa il prodotto all'ordine
                 ordine.setProdotto(prodotto);
-
+                
                 // Associa il cliente all'ordine
                 ordine.setCliente(cliente);
 
