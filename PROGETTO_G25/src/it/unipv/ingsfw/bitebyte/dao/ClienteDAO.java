@@ -132,12 +132,12 @@ public class ClienteDAO implements IClienteDAO {
 
 		try {
 			connection = DBConnection.startConnection(connection, schema);
-			String query = "UPDATE Cliente SET username = ?, nome = ?, cognome = ?, passw = ? WHERE cf = ? ";
+			String query = "UPDATE Cliente SET nome = ?, cognome = ?, username = ?, passw = ? WHERE cf = ? ";
 			PreparedStatement stmt = connection.prepareStatement(query);
 
-			stmt.setString(1, clienteModificato.getUsername());
-			stmt.setString(2, clienteModificato.getNome());
-			stmt.setString(3, clienteModificato.getCognome());
+			stmt.setString(1, clienteModificato.getNome());
+			stmt.setString(2, clienteModificato.getCognome());
+			stmt.setString(3, clienteModificato.getUsername());
 			stmt.setString(4, clienteModificato.getPassword());
 			stmt.setString(5, clienteModificato.getCf());
 

@@ -173,7 +173,7 @@ public class ProfiloClientController {
         }
     }
     
-    @FXML
+  /*  @FXML
     public void modificaDati(ActionEvent event) {
 		String nomeUtente = usernameTXT.getText();
 		String password = passTXT.getText();
@@ -184,7 +184,7 @@ public class ProfiloClientController {
 		showAlert("Successo", "DATI MODIFICATI!");
 		Stage stage = (Stage) salvaModifica.getScene().getWindow();
 		switchScene(stage, "ProfiloCliente.fxml", "Profilo Cliente");
-    }
+    }*/
     
 	private void showAlert(String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -252,10 +252,11 @@ public class ProfiloClientController {
 			System.out.println("sono in switch scene");
 			showAlert("Successo", "Effettuato Logout");
 			switchScene(stage, "login-view.fxml", "Login");
-		}else if (clickedButton.getId().equals("tornaProfilo")) {
+		}
+		/*else if (clickedButton.getId().equals("tornaProfilo")) {
 			System.out.println("sono in switch scene");
 			switchScene(stage, "ProfiloCliente.fxml", "Profilo Cliente");
-		}
+		}*/
 	}
 	
 	
