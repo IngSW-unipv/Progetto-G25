@@ -1,4 +1,4 @@
-package it.unipv.ingsfw.bitebyte.service;
+package it.unipv.ingsfw.bitebyte.services;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

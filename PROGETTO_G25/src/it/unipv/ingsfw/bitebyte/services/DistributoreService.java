@@ -2,7 +2,7 @@
  * Servizio per la gestione dei distributori.
  * Fornisce metodi per ottenere informazioni sui distributori.
  */
-package it.unipv.ingsfw.bitebyte.service;
+package it.unipv.ingsfw.bitebyte.services;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.dao.DistributoreDAO;

@@ -1,11 +1,5 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
-import it.unipv.ingsfw.bitebyte.service.GestioneInventarioService;
-import it.unipv.ingsfw.bitebyte.service.DistributoreService;
-import it.unipv.ingsfw.bitebyte.service.StockService;
-import it.unipv.ingsfw.bitebyte.service.FornituraService;
-import it.unipv.ingsfw.bitebyte.service.ProdottoService;
-import it.unipv.ingsfw.bitebyte.service.SpedizioneService;
 import it.unipv.ingsfw.bitebyte.models.Carrello;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Fornitura;
@@ -13,6 +7,12 @@ import it.unipv.ingsfw.bitebyte.models.ItemCarrello;
 import it.unipv.ingsfw.bitebyte.models.Prodotto;
 import it.unipv.ingsfw.bitebyte.models.Spedizione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
+import it.unipv.ingsfw.bitebyte.services.DistributoreService;
+import it.unipv.ingsfw.bitebyte.services.FornituraService;
+import it.unipv.ingsfw.bitebyte.services.GestioneInventarioService;
+import it.unipv.ingsfw.bitebyte.services.ProdottoService;
+import it.unipv.ingsfw.bitebyte.services.SpedizioneService;
+import it.unipv.ingsfw.bitebyte.services.StockService;
 import it.unipv.ingsfw.bitebyte.view.CarrelloView;
 import it.unipv.ingsfw.bitebyte.view.ModificaPrezzoView;
 import it.unipv.ingsfw.bitebyte.view.RifornimentoView;

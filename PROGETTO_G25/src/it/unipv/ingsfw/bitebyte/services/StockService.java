@@ -2,7 +2,7 @@
  * Classe di servizio per la gestione dello stock.
  * Fornisce metodi per ottenere, aggiornare e sostituire gli elementi dello stock.
  */
-package it.unipv.ingsfw.bitebyte.service;
+package it.unipv.ingsfw.bitebyte.services;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
