@@ -111,7 +111,7 @@ public class ViewPrSelected {
         return root;
     }
 
-    public void mostraFinestraCaricamento() {
+    public void mostraFinestraCaricamento(Stage newStage) {
         Stage loadingStage = new Stage();
         loadingStage.initStyle(StageStyle.UNDECORATED);
         loadingStage.initModality(Modality.APPLICATION_MODAL);
@@ -125,15 +125,24 @@ public class ViewPrSelected {
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout, 200, 200);
         loadingStage.setScene(scene);
+
+        // Mostra la finestra di caricamento
         loadingStage.show();
 
+        // Avvia un nuovo thread per simulare il processo di caricamento
         new Thread(() -> {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(2000); // Simula il caricamento
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Platform.runLater(loadingStage::close);
+
+            // Quando il caricamento è completato, chiudi la finestra e passa alla finestra successiva
+            Platform.runLater(() -> {
+                loadingStage.close();
+                // Chiama il metodo per navigare alla nuova pagina
+                AcquistoController.tornaIndietro(newStage);  // Passa newStage qui
+            });
         }).start();
     }
 

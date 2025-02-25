@@ -1,7 +1,9 @@
 package it.unipv.ingsfw.bitebyte.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import it.unipv.ingsfw.bitebyte.models.Cliente;
@@ -16,6 +18,9 @@ import it.unipv.ingsfw.bitebyte.types.StatoOrd;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import it.unipv.ingsfw.bitebyte.utils.AlertUtils;
 import it.unipv.ingsfw.bitebyte.utils.GenerazioneId;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -131,9 +136,32 @@ public class AcquistoController {
         if (ordineCreato) {
             System.out.println("Ordine registrato con successo! ID: " + nuovoOrdine.getIdOrdine());
             AlertUtils.mostraAlertConferma("Successo","Acquisto confermato","Acquisto confermato e prodotto erogato!!");
+            tornaAllaPaginaProfiloCliente();
             
         } else {
             System.out.println("Errore nella creazione dell'ordine.");
         }
     }
+    
+    @FXML
+    private void tornaAllaPaginaProfiloCliente() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ProfiloCliente.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root, 600, 400);
+            Stage newStage = new Stage();
+            newStage.setScene(scene);
+            newStage.setTitle("Profilo Cliente");
+            newStage.show();
+
+            if (previousStage != null) {
+                previousStage.close();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
 }
