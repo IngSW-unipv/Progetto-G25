@@ -25,7 +25,7 @@ public class DistributoreBinFactory {
 
         // Creazione del bottone "Vai"
         Button btnVai = new Button("Vai");
-        btnVai.getStyleClass().add("action-button"); // eventuale classe CSS
+        btnVai.getStyleClass().add("action-button"); // classe CSS
         btnVai.setOnAction(e -> onVai.accept(d));
 
         // Creazione del bottone "Visualizza prodotto"

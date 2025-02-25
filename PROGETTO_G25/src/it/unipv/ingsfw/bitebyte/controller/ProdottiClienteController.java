@@ -171,7 +171,7 @@ public class ProdottiClienteController {
 
     
     
-    //Viene creato  nella classe ProductView tramite il metodo ProductView.createProductView(...).
+    //Questo metodo implementa la logica che deve essere eseguita quando un prodotto viene selezionato.
     public void handleSelect(Stock stock) {
         System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
     }

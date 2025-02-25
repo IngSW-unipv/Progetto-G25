@@ -1,3 +1,9 @@
+/**La classe DistributoriAlternativiController gestisce la logica per la visualizzazione dei distributori alternativi
+ *  che offrono un determinato prodotto. In particolare, popola una tabella (TableView) con righe di tipo DistributoreBin 
+ *  (un oggetto che racchiude le informazioni visuali per un distributore) e gestisce le azioni associate 
+ *  (ad esempio, aprire Google Maps o visualizzare i prodotti di un distributore).
+ */
+
 package it.unipv.ingsfw.bitebyte.controller;
 
 import it.unipv.ingsfw.bitebyte.models.Distributore;
@@ -17,15 +23,15 @@ import java.util.List;
 //controller per gestire la logica della visualizzazione dei distributori alternativi che hanno un determinato prodotto disponibile.
 public class DistributoriAlternativiController {
 
-    @FXML private TableView<DistributoreBin> distributoriTable;
-    @FXML private TableColumn<DistributoreBin, String> nomeColumn;
+    @FXML private TableView<DistributoreBin> distributoriTable;                     //La tabella che mostrerà la lista dei distributori alternativi, dove ogni riga è un oggetto di tipo DistributoreBin.
+    @FXML private TableColumn<DistributoreBin, String> nomeColumn;                  //Le colonne della tabella
     @FXML private TableColumn<DistributoreBin, String> indirizzoColumn;
     @FXML private TableColumn<DistributoreBin, Double> distanzaColumn;
     @FXML private TableColumn<DistributoreBin, Button> azioneColumn;
     @FXML private TableColumn<DistributoreBin, Button> visualizzaProdottoColumn;
     
     //attributi
-    private Distributore distributoreCorrente;
+    private Distributore distributoreCorrente;  //Rappresenta il distributore "corrente" (quello con cui si sta confrontando) e viene utilizzato per escluderlo dalla lista degli alternativi.
     private String searchQuery = "";
     private DistributoreService distributoreService = new DistributoreService();
 
@@ -33,6 +39,7 @@ public class DistributoriAlternativiController {
         this.searchQuery = searchQuery;
     }
 
+    //Questo metodo viene chiamato per popolare la tabella con i distributori alternativi.
     public void setDistributori(int distributoreCorrenteId, String nomeProdotto) {
         this.distributoreCorrente = distributoreService.getDistributoreById(distributoreCorrenteId);
         List<Distributore> distributori = distributoreService.getDistributoriConProdottoDisponibileByName(distributoreCorrenteId, nomeProdotto);

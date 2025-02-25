@@ -70,7 +70,7 @@ public class ProductView {
         if (productImageFile.exists()) {
             imageView.setImage(new Image(productImageFile.toURI().toString()));
         } else {
-            imageView.setImage(new Image(ProductView.class.getResourceAsStream("/resources/immaginiDB/default.jpg")));
+        	imageView.setImage(null);
         }
 
         return imageView;

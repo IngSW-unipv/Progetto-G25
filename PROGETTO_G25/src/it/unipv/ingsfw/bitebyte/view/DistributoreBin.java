@@ -1,14 +1,15 @@
 package it.unipv.ingsfw.bitebyte.view;
 import javafx.scene.control.Button;
 
-// Definizione della classe wrapper interna (o crea una classe a parte)
+// Definizione della classe wrapper 
 public class DistributoreBin {
     private String nome;
     private String indirizzo;
     private double distanza;
     private Button azione;
     private Button visualizzaProdotto; // Pulsante "Visualizza prodotto"
-    
+   
+    //costruttore
     public DistributoreBin(String nome, String indirizzo, double distanza, Button azione, Button visualizzaProdotto) {
         this.nome = nome;
         this.indirizzo = indirizzo;
