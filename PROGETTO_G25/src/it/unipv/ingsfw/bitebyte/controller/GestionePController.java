@@ -29,6 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controller per la gestione delle operazioni sull'inventario che un amministratore può realizzare.
+ * Gestisce l'interazione con l'inventario, il rifornimento dei prodotti, la modifica dei prezzi,
+ * la sostituzione dei prodotti, la conclusione degli ordini e la gestione del carrello.
+ */
 public class GestionePController {
 
     private int idInventario;
@@ -37,6 +42,9 @@ public class GestionePController {
     private ProdottiView prodottiView;
     private CarrelloView carrelloView;
 
+    /**
+     * Costruisce una nuova istanza del controller GestionePController, inizializzando i servizi e le viste.
+     */
     public GestionePController() {
         this.gestioneInventarioService = new GestioneInventarioService(
             new StockService(), new FornituraService(), new ProdottoService(), new DistributoreService(), new SpedizioneService()
@@ -44,35 +52,61 @@ public class GestionePController {
         this.prodottiView = new ProdottiView(); 
         initialize();
     }
-    
+
+    /**
+     * Inizializza il controller impostando i listener per le varie azioni.
+     */
     private void initialize() {
-        this.prodottiView.setOnSelezionaDistributore(this::setIdInventario); // Imposta listener per il distributore
+        this.prodottiView.setOnSelezionaDistributore(this::setIdInventario); // Imposta listener per la selezione del distributore
         this.prodottiView.setOnRestock(this::handleRestock); // Imposta listener per il rifornimento
-        this.prodottiView.setOnSostituzione(this::handleSostituzione); // Imposta listener per la sostituzione
-        this.prodottiView.setOnCambioPrezzo(this::handleCambioPrezzo); // Imposta listener per il cambio prezzo
-        this.prodottiView.setOnApriCarrello(this::apriCarrello); // Imposta listener per aprire il carrello
-        this.prodottiView.setOnApriStoricoSpedizioni(this::apriStoricoSpedizioni); // Imposta listener per aprire storico spedizioni
+        this.prodottiView.setOnSostituzione(this::handleSostituzione); // Imposta listener per la sostituzione del prodotto
+        this.prodottiView.setOnCambioPrezzo(this::handleCambioPrezzo); // Imposta listener per il cambio del prezzo
+        this.prodottiView.setOnApriCarrello(this::apriCarrello); // Imposta listener per l'apertura del carrello
+        this.prodottiView.setOnApriStoricoSpedizioni(this::apriStoricoSpedizioni); // Imposta listener per l'apertura dello storico spedizioni
         caricaDistributori();  
     }
+
+    /**
+     * Imposta l'ID dell'inventario e carica i prodotti corrispondenti.
+     * 
+     * @param idInventario L'ID dell'inventario.
+     */
     public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
         caricaProdotti();
     }
 
+    /**
+     * Carica la lista dei distributori e aggiorna la vista.
+     */
     public void caricaDistributori() {
         List<Distributore> distributori = gestioneInventarioService.getDistributori(); 
         prodottiView.setDistributori(distributori); 
     }
 
+    /**
+     * Carica i prodotti associati all'inventario corrente e aggiorna la vista.
+     */
     public void caricaProdotti() {
         ArrayList<Stock> stocks = gestioneInventarioService.getProdottiByInventario(idInventario);
         prodottiView.aggiornaProdotti(stocks);
     }
 
+    /**
+     * Restituisce la vista associata ai prodotti.
+     * 
+     * @return L'oggetto ProdottiView.
+     */
     public ProdottiView getView() {
         return prodottiView;
     }
 
+    /**
+     * Gestisce il rifornimento di un prodotto nell'inventario
+     * mediante chiamata alla classe service.
+     * 
+     * @param stock L'oggetto stock per il quale viene effettuato il rifornimento.
+     */
     public void handleRestock(Stock stock) {
         if (stock.getQuantitaDisp() == stock.getQMaxInseribile()) {
             mostraErrore("Slot prodotto già pieno");
@@ -97,6 +131,12 @@ public class GestionePController {
         rifornimentoView.mostra();
     }
 
+    /**
+     * Gestisce la sostituzione di un prodotto nell'inventario
+     * mediante chiamata alla classe service.
+     * 
+     * @param stock L'oggetto stock che rappresenta il prodotto da sostituire.
+     */
     public void handleSostituzione(Stock stock) {
         ArrayList<Prodotto> prodottiSostitutivi = gestioneInventarioService.getProdottiByCategoria(stock, stock.getProdotto().getCategoria());
         new SostituzioneView(prodottiSostitutivi, prodottoSostituito -> {
@@ -105,6 +145,11 @@ public class GestionePController {
         });
     }
 
+    /**
+     * Gestisce la modifica del prezzo di un prodotto nell'inventario
+     * mediante chiamata alla classe service.
+     * @param stock L'oggetto stock per il quale viene applicato il cambio prezzo.
+     */
     public void handleCambioPrezzo(Stock stock) {
         ModificaPrezzoView view = new ModificaPrezzoView(stock, (prodotto, nuovoPrezzo) -> {
             try {
@@ -121,6 +166,10 @@ public class GestionePController {
         view.show();
     }
 
+    /**
+     * Conclude l'ordine corrente, finalizzando la spedizione e svuotando il carrello
+     * servendosi sempre della classe service.
+     */
     public void concludiOrdine() {
         Carrello carrello = Carrello.getInstance();
         gestioneInventarioService.concludiOrdine(carrello);
@@ -130,6 +179,9 @@ public class GestionePController {
         System.out.println("Ordine concluso con successo!");
     }
 
+    /**
+     * Apre la vista del carrello, permettendo all'utente di gestire gli articoli nel carrello.
+     */
     public void apriCarrello() {
         if (carrelloView != null) {
             Stage stage = (Stage) carrelloView.getRootLayout().getScene().getWindow();
@@ -158,12 +210,18 @@ public class GestionePController {
         carrelloView.mostra();
     }
 
+    /**
+     * Apre la vista dello storico delle spedizioni per visualizzare le spedizioni passate.
+     */
     public void apriStoricoSpedizioni() {
         ArrayList<Spedizione> spedizioni = gestioneInventarioService.getAllSpedizioni();
         StoricoSpedizioniView storicoView = new StoricoSpedizioniView();
         storicoView.mostra(spedizioni);
     }
 
+    /**
+     * Aggiorna la vista del carrello con gli ultimi articoli nel carrello.
+     */
     public void aggiornaVistaCarrello() {
         Carrello carrello = Carrello.getInstance();
         if (carrelloView == null) {
@@ -174,6 +232,11 @@ public class GestionePController {
         }
     }
 
+    /**
+     * Mostra un messaggio di errore nella vista dei prodotti.
+     * 
+     * @param messaggio Il messaggio di errore da visualizzare.
+     */
     private void mostraErrore(String messaggio) {
         prodottiView.mostraErrore(messaggio);
     }
