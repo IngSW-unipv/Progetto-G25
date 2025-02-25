@@ -155,7 +155,7 @@ public class ProdottiClienteController {
         Stage newStage = new Stage();
 
         // Crea il controller dell'acquisto e gli passa il prodotto selezionato
-        AcquistoController acquistoController = new AcquistoController(stageAttuale);
+        AcquistoController acquistoController = new AcquistoController(stageAttuale, newStage);
         acquistoController.setStockSelezionato(stock);
 
         // Mostra la schermata con il prodotto selezionato

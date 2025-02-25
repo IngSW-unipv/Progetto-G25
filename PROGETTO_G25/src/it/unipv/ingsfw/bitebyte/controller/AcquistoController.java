@@ -34,10 +34,13 @@ public class AcquistoController {
     private PortafoglioService portafoglioService;
     private StockService stockService;
     private OrdineService ordineService; // Aggiunto per gestire gli ordini
+    private Stage newStage;
 
-    public AcquistoController(Stage previousStage) {
+    public AcquistoController(Stage previousStage,Stage newStage) {
+    	
         this.view = new ViewPrSelected();
         this.previousStage = previousStage;
+        this.newStage = newStage;
         this.clienteService = new ClienteService();
         this.portafoglioService = new PortafoglioService();
         this.stockService = new StockService();
@@ -89,10 +92,10 @@ public class AcquistoController {
 
         view.aggiornaImmagine(stockSelezionato);
     }
-
-    public void tornaIndietro(Stage currentStage) {
-        currentStage.close();
-        previousStage.show();
+    
+    public void tornaIndietro(Stage newStage, Stage previousStage) {
+        newStage.close();  // Chiudi la finestra corrente
+        previousStage.show();  // Mostra la finestra precedente
     }
 
     public void acquistaProdotto(Stock stock) {	//Gestisce l'acquisto di un prodotto, aggiornando il saldo, lo stock e registrando l'ordine.
@@ -105,7 +108,8 @@ public class AcquistoController {
         BigDecimal prezzoProdotto = stock.getProdotto().getPrezzo();
 
         if (!clienteService.saldoSufficiente(clienteLoggato, prezzoProdotto)) {
-            System.out.println("Saldo insufficiente per acquistare: " + stock.getProdotto().getNome());
+            AlertUtils.mostraAlertConferma("Saldo insufficiente!", "Il saldo a disposione non è sufficiente","Saldo insufficiente per acquistare: " + stock.getProdotto().getNome() + " " + "Ricaricare il portafoglio virtuale");
+            tornaAllaPaginaProfiloCliente();
             return;
         }
 
@@ -143,25 +147,24 @@ public class AcquistoController {
         }
     }
     
-    @FXML
+    
     private void tornaAllaPaginaProfiloCliente() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ProfiloCliente.fxml"));
             Parent root = loader.load();
-
+            // Imposta la scena sulla stessa finestra già esistente
             Scene scene = new Scene(root, 600, 400);
-            Stage newStage = new Stage();
-            newStage.setScene(scene);
+            newStage.setScene(scene); // Usa newStage già creata
             newStage.setTitle("Profilo Cliente");
             newStage.show();
-
-            if (previousStage != null) {
-                previousStage.close();
-            }
-
+            // Chiudi la finestra precedente solo dopo averla mostrata
+            newStage.setOnShown(event -> {
+                if (previousStage != null) {
+                    previousStage.close();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    
+    }    
 }

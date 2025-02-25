@@ -71,15 +71,7 @@ public class ViewPrSelected {
         backImageView.setFitHeight(50);
         backImageView.setPreserveRatio(true);
         backImageView.setOnMouseClicked(e -> {
-            mostraFinestraCaricamento();
-            new Thread(() -> {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-                Platform.runLater(() -> controller.tornaIndietro(newStage));
-            }).start();
+            mostraFinestraCaricamento(newStage, previousStage, controller);  // Passa gli stage necessari
         });
 
         Region spacerTop = new Region();
@@ -111,7 +103,7 @@ public class ViewPrSelected {
         return root;
     }
 
-    public void mostraFinestraCaricamento(Stage newStage) {
+    public void mostraFinestraCaricamento(Stage newStage, Stage previousStage, AcquistoController controller) {
         Stage loadingStage = new Stage();
         loadingStage.initStyle(StageStyle.UNDECORATED);
         loadingStage.initModality(Modality.APPLICATION_MODAL);
@@ -125,11 +117,9 @@ public class ViewPrSelected {
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout, 200, 200);
         loadingStage.setScene(scene);
-
-        // Mostra la finestra di caricamento
         loadingStage.show();
 
-        // Avvia un nuovo thread per simulare il processo di caricamento
+        // Avvia il thread che simula il caricamento
         new Thread(() -> {
             try {
                 Thread.sleep(2000); // Simula il caricamento
@@ -137,11 +127,10 @@ public class ViewPrSelected {
                 e.printStackTrace();
             }
 
-            // Quando il caricamento è completato, chiudi la finestra e passa alla finestra successiva
+            // Quando il caricamento è completato, chiudi la finestra di caricamento e torna alla finestra precedente
             Platform.runLater(() -> {
-                loadingStage.close();
-                // Chiama il metodo per navigare alla nuova pagina
-                AcquistoController.tornaIndietro(newStage);  // Passa newStage qui
+                loadingStage.close();  // Chiudi la finestra di caricamento
+                controller.tornaIndietro(newStage, previousStage);  // Naviga indietro
             });
         }).start();
     }
