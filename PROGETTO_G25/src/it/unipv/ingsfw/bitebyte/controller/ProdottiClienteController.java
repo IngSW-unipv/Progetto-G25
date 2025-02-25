@@ -30,8 +30,7 @@ public class ProdottiClienteController {
 	 private StockDAO stockDAO = new StockDAO();
 	 private DistributoreDAO distributoreDAO = new DistributoreDAO();
 	 private boolean modalitaVisualizzazione = false;
-	    
-
+	 
     @FXML
     private FlowPane prodottiContainer;
 
@@ -85,6 +84,7 @@ public class ProdottiClienteController {
     }
     // Inizializzazione della scena
     public void initialize() {
+    	
     	
         prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
         prodottiContainer.setPrefWrapLength(600);
@@ -167,7 +167,9 @@ public class ProdottiClienteController {
             }
         }
     }
+    
 
+    
     private VBox createProductBox(Stock stock) {
         VBox box = new VBox(5);
         box.getStyleClass().add("product-box");
@@ -216,14 +218,44 @@ public class ProdottiClienteController {
 
         // Se non siamo in modalità visualizzazione, aggiungi il bottone sotto lo stato
         if (!modalitaVisualizzazione) {
-            Button selectButton = createSelectButton(stock);
-            box.getChildren().add(selectButton);
-        }
+            Button purchaseButton = createProductButton(stock);  // Nuovo nome del metodo
+            purchaseButton.setOnAction(e -> { 
+            	try {
+                // Carica la schermata di acquisto
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/acquisto-view.fxml"));
+                AcquistoController acquistoController = new AcquistoController(); // Crea il controller
+                loader.setController(acquistoController); // Imposta il controller
+                VBox vbox = loader.load(); // Carica il file FXML
 
+                // Passa lo stock al controller
+                acquistoController.setSelectedStock(stock);
+
+                // Crea una scena per la schermata di acquisto
+                Scene acquistoScene = new Scene(vbox);
+                Stage primaryStage = (Stage) purchaseButton.getScene().getWindow(); // Usa la finestra corrente
+                primaryStage.setScene(acquistoScene); // Imposta la scena
+                primaryStage.setTitle("Acquisto Prodotto");
+                primaryStage.show(); // Mostra la finestra
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            });
+        
+        box.getChildren().add(purchaseButton);    
         box.getChildren().add(spacer);
+        
+        }
         return box;
     }
-
+    
+    private Button createProductButton(Stock stock) {
+        Button button = new Button("Aggiungi al carrello");
+        button.getStyleClass().add("product-button");
+        button.setPrefWidth(200);
+        // Aggiungi altre configurazioni del bottone, se necessario
+        return button;
+    }
     /*
     public Button createSelectButton(Stock stock) {
         Button button = new Button("Seleziona");
@@ -412,9 +444,3 @@ public class ProdottiClienteController {
         }
     }
 */
-
-
-
-
-
-

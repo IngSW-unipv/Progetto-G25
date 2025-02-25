@@ -18,7 +18,7 @@
          <children>
             <ImageView fitHeight="400.0" fitWidth="293.0" layoutX="-15.0">
                <image>
-                  <Image url="@../resources/BITEBYTE_tall.jpg" />
+                  <Image url="@../../../../../../../resources/BITEBYTE_tall.jpg" />
                </image>
             </ImageView>
          </children>
@@ -30,7 +30,7 @@
             <Polygon fill="#eeb729" layoutX="143.0" layoutY="71.0" points="-181.20001220703125, -71.0, -145.0, 53.80000305175781, -25.0, -71.0" stroke="#edb62b" strokeType="INSIDE" />
             <ImageView fitHeight="140.0" fitWidth="151.0" layoutX="97.0" layoutY="34.0">
                <image>
-                  <Image url="@../resources/35982858-lucchetto-simbolo-vettore-illustrazione-disegno-sicurezza-e-sicurezza-protezione-su-bianca-sfondo-vettoriale-removebg-preview.png" />
+                  <Image url="@../../../../../../../resources/35982858-lucchetto-simbolo-vettore-illustrazione-disegno-sicurezza-e-sicurezza-protezione-su-bianca-sfondo-vettoriale-removebg-preview.png" />
                </image>
             </ImageView>
             <Label layoutX="40.0" layoutY="214.0" text="Username">
@@ -43,14 +43,14 @@
                   <Font name="System Bold Italic" size="14.0" />
                </font>
             </Label>
-            <TextField id="usernameLogin" layoutX="130.0" layoutY="211.0" promptText="Nome utente" />
-            <PasswordField id="passwordLogin" layoutX="131.0" layoutY="254.0" promptText="Password" />
+            <TextField fx:id="usernameLogin" layoutX="130.0" layoutY="211.0" promptText="Nome utente" />
+            <PasswordField fx:id="passwordLogin" layoutX="131.0" layoutY="254.0" promptText="Password" />
             <Label layoutX="134.0" layoutY="164.0" text="Benvenuto!">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Button id="pulsanteAccedi" layoutX="140.0" layoutY="298.0" mnemonicParsing="false" style="-fx-background-color: #dc143c;" text="Log in!" textFill="WHITE">
+            <Button fx:id="login" layoutX="140.0" layoutY="298.0" mnemonicParsing="false" onAction="#accedi" style="-fx-background-color: #dc143c;" text="Log in!" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -60,7 +60,7 @@
                   <Font name="System Bold Italic" size="15.0" />
                </font>
             </Label>
-            <Button fx:id="pulsanteVaiARegistrazione" layoutX="198.0" layoutY="354.0" mnemonicParsing="false" style="-fx-background-color: #eeb729;" text="Registrati!" onAction="#cambiaScena">
+            <Button fx:id="bottoneregistrati" layoutX="198.0" layoutY="354.0" mnemonicParsing="false" onAction="#cambiaScena" style="-fx-background-color: #eeb729;" text="Registrati!">
                <font>
                   <Font name="System Bold Italic" size="14.0" />
                </font>

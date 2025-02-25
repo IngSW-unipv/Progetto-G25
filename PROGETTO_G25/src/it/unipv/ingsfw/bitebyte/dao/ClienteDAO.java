@@ -13,6 +13,7 @@ public class ClienteDAO implements IClienteDAO {
 		this.schema = "progettog25";
 	}
 
+	@Override
 	public boolean esisteUsername(String username) {
 		connection = DBConnection.startConnection(connection, schema);
 		String query = "SELECT COUNT(*) FROM cliente WHERE username = ? ";
@@ -33,6 +34,7 @@ public class ClienteDAO implements IClienteDAO {
 		return false;
 	}
 
+	@Override
 	public boolean esisteCliente(String email) {
 		connection = DBConnection.startConnection(connection, schema);
 		String query = "SELECT COUNT(*) FROM cliente WHERE email = ? ";
@@ -54,7 +56,7 @@ public class ClienteDAO implements IClienteDAO {
 	@Override
 	public void registraCliente(Cliente cliente) {
 		connection = DBConnection.startConnection(connection, schema);
-		String query = "INSERT INTO cliente (Cf, Nome, Cognome, Username, Data_N, Email, Password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO cliente (Cf, Nome, Cognome, Username, Data_N, Email, Passw) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
@@ -79,7 +81,7 @@ public class ClienteDAO implements IClienteDAO {
 	@Override
 	public boolean verificaLogin(String username, String password) {
 		connection = DBConnection.startConnection(connection, schema);
-		String query = "SELECT * FROM cliente WHERE username = ? and password = ? ";
+		String query = "SELECT * FROM cliente WHERE username = ? and passw = ? ";
 		try {
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, username);
@@ -102,18 +104,18 @@ public class ClienteDAO implements IClienteDAO {
 
 		try {
 			connection = DBConnection.startConnection(connection, schema);
-			String query = "SELECT * FROM cliente WHERE username = ? AND password = ? ";
+			String query = "SELECT * FROM cliente WHERE username = ? AND passw = ? ";
 			PreparedStatement stmt = connection.prepareStatement(query);
 			stmt.setString(1, username);
 			stmt.setString(2, password);
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
-				Date dataNascitaSQL = rs.getDate("dataN");
+				Date dataNascitaSQL = rs.getDate("Data_N");
 				LocalDate dataNascita = dataNascitaSQL.toLocalDate();
 
 				cliente = new Cliente(rs.getString("cf"), rs.getString("nome"), rs.getString("cognome"),
-						rs.getString("email"), rs.getString("password"), dataNascita, rs.getString("username"));
+						rs.getString("email"), rs.getString("passw"), dataNascita, rs.getString("username"));
 			}
 
 		} catch (SQLException e) {
@@ -130,12 +132,12 @@ public class ClienteDAO implements IClienteDAO {
 
 		try {
 			connection = DBConnection.startConnection(connection, schema);
-			String query = "UPDATE Cliente SET username = ?, nome = ?, cognome = ?, password = ? WHERE cf = ? ";
+			String query = "UPDATE Cliente SET nome = ?, cognome = ?, username = ?, passw = ? WHERE cf = ? ";
 			PreparedStatement stmt = connection.prepareStatement(query);
 
-			stmt.setString(1, clienteModificato.getUsername());
-			stmt.setString(2, clienteModificato.getNome());
-			stmt.setString(3, clienteModificato.getCognome());
+			stmt.setString(1, clienteModificato.getNome());
+			stmt.setString(2, clienteModificato.getCognome());
+			stmt.setString(3, clienteModificato.getUsername());
 			stmt.setString(4, clienteModificato.getPassword());
 			stmt.setString(5, clienteModificato.getCf());
 
