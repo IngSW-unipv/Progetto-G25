@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * Finestra per modificare il prezzo di un prodotto presente nello stock.
+ */
 public class ModificaPrezzoView {
     private Stage stage;
     private TextField prezzoField;
@@ -19,6 +22,12 @@ public class ModificaPrezzoView {
     private Stock stock;
     private OnPriceUpdateListener listener;
 
+    /**
+     * Costruttore della finestra di modifica prezzo.
+     * 
+     * @param stock    L'oggetto Stock relativo al prodotto.
+     * @param listener Listener per l'aggiornamento del prezzo.
+     */
     public ModificaPrezzoView(Stock stock, OnPriceUpdateListener listener) {
         this.stock = stock;
         this.listener = listener;
@@ -52,6 +61,10 @@ public class ModificaPrezzoView {
         stage.setScene(scene);
     }
 
+    /**
+     * Recupera il nuovo prezzo inserito e lo passa al listener.
+     * Se l'input non è valido, mostra un messaggio di errore.
+     */
     public void getNuovoPrezzo() {
         try {
             BigDecimal nuovoPrezzo = new BigDecimal(prezzoField.getText());
@@ -62,6 +75,11 @@ public class ModificaPrezzoView {
         }
     }
 
+    /**
+     * Mostra un messaggio di errore in una finestra di dialogo.
+     * 
+     * @param messaggio Il messaggio di errore da mostrare.
+     */
     public void mostraErrore(String messaggio) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore");
@@ -74,10 +92,17 @@ public class ModificaPrezzoView {
         alert.showAndWait();
     }
     
+    /**
+     * Mostra la finestra di modifica prezzo.
+     */
     public void show() {
         stage.showAndWait();
     }
-    //Interfaccia implementata come classe anonima nel controller
+    
+    /**
+     * Interfaccia per gestire l'aggiornamento del prezzo
+     * L'implementazione come classe anonima verrà fatta nel controller.
+     */
     public interface OnPriceUpdateListener {
         void onPriceUpdated(Stock stock, BigDecimal nuovoPrezzo);
     }

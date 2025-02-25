@@ -98,7 +98,7 @@ public class CarrelloView {
 
         detailsBox.getChildren().addAll(nameLabel, supplierLabel, quantityLabel, totalLabel);
 
-        Button removeButton = new Button("🗑️");
+        Button removeButton = new Button("Rimuovi");
         removeButton.getStyleClass().add("remove-button");
         removeButton.setOnAction(e -> {
             if (onRimuoviProdotto != null) onRimuoviProdotto.accept(item);

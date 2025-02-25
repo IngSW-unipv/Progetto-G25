@@ -140,10 +140,7 @@ public class ProdottiView {
         File productImageFile = new File("resources/immaginiDB/" + stock.getProdotto().getIdProdotto() + ".jpg");
         if (productImageFile.exists()) {
             imageView.setImage(new Image(productImageFile.toURI().toString()));
-        } else {
-            System.err.println("❌ Immagine non trovata -> " + productImageFile.getAbsolutePath());
-        }
-
+        } 
         imageContainer.getChildren().add(imageView);
 
         Label nameLabel = new Label(stock.getProdotto().getNome());
@@ -193,10 +190,7 @@ public class ProdottiView {
         File imageFile = new File(imagePath);
         if (imageFile.exists()) {
             icon.setImage(new Image(imageFile.toURI().toString()));
-        } else {
-            System.err.println("❌ Icona non trovata -> " + imageFile.getAbsolutePath());
-        }
-
+        } 
         Button button = new Button();
         button.setGraphic(icon);
         button.getStyleClass().add("restock-button");

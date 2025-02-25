@@ -71,3 +71,8 @@
     -fx-pref-height: 40px;
     -fx-max-height: 40px;
 }
+
+#confermaButton:hover {
+	-fx-background-color: #2e8b57; 
+    -fx-border-color: #222222;
+}

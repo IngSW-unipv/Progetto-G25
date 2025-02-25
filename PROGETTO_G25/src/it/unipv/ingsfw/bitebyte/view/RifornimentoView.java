@@ -12,11 +12,22 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
+/**
+ * Classe per la gestione della visualizzazione del rifornimento dei prodotti.
+ * Permette di selezionare un fornitore e specificare la quantità di prodotti da ordinare da esso.
+ */
 public class RifornimentoView {
     private VBox rootLayout;
     private FlowPane fornitoriContainer;
     private RifornimentoListener listener;
 
+    /**
+     * Costruttore della vista di rifornimento.
+     * 
+     * @param forniture Lista delle forniture disponibili.
+     * @param stock Stock del prodotto da rifornire.
+     * @param listener Listener per gestire la selezione del fornitore.
+     */
     public RifornimentoView(ArrayList<Fornitura> forniture, Stock stock, RifornimentoListener listener) {
         this.listener = listener;
 
@@ -42,6 +53,15 @@ public class RifornimentoView {
         rootLayout.getChildren().addAll(titleLabel, scrollPane);
     }
 
+    /**
+     * Crea un riquadro contenente le informazioni di un fornitore e un campo per specificare la quantità
+     * del prodotto desiderato.
+     * 
+     * @param fornitura La fornitura del fornitore.
+     * @param stock Il prodotto da rifornire.
+     * @return Un VBox contenente le informazioni del fornitore e il pulsante di selezione
+     *         per confermare la quantità inserita e il fornitore scelto.
+     */
     private VBox creaRiquadroFornitura(Fornitura fornitura, Stock stock) {
         VBox box = new VBox(10);
         box.setAlignment(Pos.CENTER);
@@ -77,6 +97,11 @@ public class RifornimentoView {
         return box;
     }
 
+    /**
+     * Mostra un messaggio di errore in caso di input non valido.
+     * 
+     * @param message Il messaggio di errore da mostrare.
+     */
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore");
@@ -85,6 +110,9 @@ public class RifornimentoView {
         alert.showAndWait();
     }
 
+    /**
+     * Mostra la finestra per l'elenco dei fornitori
+     */
     public void mostra() {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -98,10 +126,18 @@ public class RifornimentoView {
         stage.showAndWait();
     }
 
+    /**
+     * Restituisce il layout principale della vista.
+     * 
+     * @return Il layout principale come VBox.
+     */
     public VBox getView() {
         return rootLayout;
     }
 
+    /**
+     * Interfaccia per la gestione della selezione di un fornitore.
+     */
     public interface RifornimentoListener {
         void onFornitoreSelezionato(Fornitura fornitura, int quantita);
     }

@@ -42,6 +42,10 @@ public class GestionePController {
             new StockService(), new FornituraService(), new ProdottoService(), new DistributoreService(), new SpedizioneService()
         );
         this.prodottiView = new ProdottiView(); 
+        initialize();
+    }
+    
+    private void initialize() {
         this.prodottiView.setOnSelezionaDistributore(this::setIdInventario); // Imposta listener per il distributore
         this.prodottiView.setOnRestock(this::handleRestock); // Imposta listener per il rifornimento
         this.prodottiView.setOnSostituzione(this::handleSostituzione); // Imposta listener per la sostituzione
@@ -50,7 +54,6 @@ public class GestionePController {
         this.prodottiView.setOnApriStoricoSpedizioni(this::apriStoricoSpedizioni); // Imposta listener per aprire storico spedizioni
         caricaDistributori();  
     }
-
     public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
         caricaProdotti();
@@ -154,8 +157,6 @@ public class GestionePController {
         });
         carrelloView.mostra();
     }
-
-
 
     public void apriStoricoSpedizioni() {
         ArrayList<Spedizione> spedizioni = gestioneInventarioService.getAllSpedizioni();
