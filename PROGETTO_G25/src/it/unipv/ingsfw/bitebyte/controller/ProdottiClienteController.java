@@ -19,6 +19,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 import java.util.List;
 
 public class ProdottiClienteController {
@@ -172,8 +174,26 @@ public class ProdottiClienteController {
     
     
     //Questo metodo implementa la logica che deve essere eseguita quando un prodotto viene selezionato.
+    /** @author Davide **/
+    
     public void handleSelect(Stock stock) {
         System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
+
+        // Ottieni lo Stage attuale
+        Stage stageAttuale = (Stage) prodottiContainer.getScene().getWindow();
+
+        // Crea una nuova finestra per la schermata di dettaglio
+        Stage newStage = new Stage();
+
+        // Crea il controller dell'acquisto e gli passa il prodotto selezionato
+        AcquistoController acquistoController = new AcquistoController(stageAttuale, newStage);
+        acquistoController.setStockSelezionato(stock);
+
+        // Mostra la schermata con il prodotto selezionato
+        acquistoController.mostraInterfaccia(stock, newStage);
+
+        // Nasconde la finestra attuale per simulare il cambio schermata
+        stageAttuale.hide();
     }
     
     //METODI DI GESTIONE DEGLI EVENTI

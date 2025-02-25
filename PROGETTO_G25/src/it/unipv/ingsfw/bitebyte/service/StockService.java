@@ -24,4 +24,10 @@ public class StockService {
     public void deleteStock(int idInventario) {
         stockDAO.deleteStock(idInventario);
     }
+    
+    
+    //per Davide
+    public void aggiornaQuantita(Stock stock) {
+        stockDAO.updateStock(stock); 
+    }
 }
