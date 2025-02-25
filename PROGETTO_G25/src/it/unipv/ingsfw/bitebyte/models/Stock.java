@@ -68,4 +68,9 @@ public class Stock {
                ", prodotto=" + prodotto +
                '}';
     }
+
+	public String getNome() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

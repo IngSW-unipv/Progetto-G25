@@ -1,8 +1,7 @@
 package it.unipv.ingsfw.bitebyte.models;
+
 import java.math.BigDecimal;
-
 import it.unipv.ingsfw.bitebyte.types.Categoria;
-
 
 /**
  * La classe Prodotto rappresenta un prodotto disponibile nel sistema BiteByte.
@@ -17,7 +16,7 @@ public class Prodotto {
 
     private int idProdotto;
     private String nome;
-    private BigDecimal prezzo;
+    private BigDecimal prezzo; // Modificato a BigDecimal
     private Categoria categoria;
     
     
@@ -26,7 +25,7 @@ public class Prodotto {
      * 
      * @param idProdotto Identificativo univoco del prodotto.
      * @param nome Nome del prodotto.
-     * @param prezzo Prezzo del prodotto.
+     * @param prezzo Prezzo del prodotto (BigDecimal).
      * @param categoria Categoria del prodotto.
      */
     public Prodotto(int idProdotto, String nome, BigDecimal prezzo, Categoria categoria) {
@@ -75,7 +74,7 @@ public class Prodotto {
     /**
      * Restituisce il prezzo del prodotto.
      * 
-     * @return Prezzo del prodotto.
+     * @return Prezzo del prodotto (BigDecimal).
      */
     public BigDecimal getPrezzo() {
         return prezzo;
@@ -84,7 +83,7 @@ public class Prodotto {
     /**
      * Imposta il prezzo del prodotto.
      * 
-     * @param prezzo Nuovo prezzo del prodotto.
+     * @param prezzo Nuovo prezzo del prodotto (BigDecimal).
      */
     public void setPrezzo(BigDecimal prezzo) {
         this.prezzo = prezzo;
@@ -119,5 +118,3 @@ public class Prodotto {
                '}';
     }
 }
-
-
