@@ -246,19 +246,16 @@ public class ProfiloClientController {
 			}
 		} else if (clickedButton.getId().equals("idmodifica")) {
 			System.out.println("sono in switch scene");
-			switchScene(stage, "ModificaProfilo.fxml", "Modifica Profilo");
+			switchScene(stage, "ModificaProfiloCliente.fxml", "Modifica Profilo");
 		} else if (clickedButton.getId().equals("logout")) {
-			// dovrei chiamare il metodo logout per annullare la sessione?
+			Sessione.getInstance().logout();
 			System.out.println("sono in switch scene");
+			showAlert("Successo", "Effettuato Logout");
 			switchScene(stage, "login-view.fxml", "Login");
 		}else if (clickedButton.getId().equals("tornaProfilo")) {
 			System.out.println("sono in switch scene");
 			switchScene(stage, "ProfiloCliente.fxml", "Profilo Cliente");
-		}else if (clickedButton.getId().equals("idmodifica")) {
-		    System.out.println("Apertura schermata Modifica Profilo");
-		    switchScene(stage, "ModificaProfilo.fxml", "Modifica Profilo");
 		}
-
 	}
 	
 	
@@ -275,13 +272,13 @@ public class ProfiloClientController {
 		}
 	}
 
-    public void logout() {
+   /* public void logout() {
         Sessione.getInstance().logout();
         mostraLogin();
     }
 
     private void mostraLogin() {
         System.out.println("Sei stato disconnesso. Torna alla schermata di login.");
-    }    
+    } */   
 
 }
