@@ -35,7 +35,8 @@ public class AuthService {
         }
         return null;
     }
-
+    
+    
     public boolean registraCliente(Cliente cliente) {
         if (!clienteDAO.esisteUsername(cliente.getUsername()) && !clienteDAO.esisteCliente(cliente.getEmail())) {
             clienteDAO.registraCliente(cliente);
