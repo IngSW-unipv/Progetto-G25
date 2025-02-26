@@ -102,7 +102,7 @@ public class Authcontroller implements Initializable {
         	AmministratoreDAO amministratoreDAO = new AmministratoreDAO();
         	AmministratoreService amministratoreService = new AmministratoreService();
         	amministratoreService.loginAmministratore(password);
-
+        	return;
         }
         ClienteDAO clienteDAO = new ClienteDAO(); // Crea un'istanza di ClienteDAO
 		PortafoglioVirtualeDAO portafoglioDAO = new PortafoglioVirtualeDAO(); // Crea un'istanza di
