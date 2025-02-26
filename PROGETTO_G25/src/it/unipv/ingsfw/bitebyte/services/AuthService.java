@@ -24,8 +24,7 @@ public class AuthService {
     public Cliente login(String username, String password) {
         if (verificaLogin(username, password)) {
             Cliente cliente = clienteDAO.getCliente(username, password);
-            PortafoglioVirtuale portafoglio = portafoglioDAO.leggiPortafoglio(cliente.getCf());
-            
+            PortafoglioVirtuale portafoglio = portafoglioDAO.leggiPortafoglio(cliente.getCf());            
             // Gestione della sessione
             Sessione sessione = Sessione.getInstance();
             sessione.setClienteConnesso(cliente);
