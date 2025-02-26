@@ -44,6 +44,5 @@ public class Sessione {
 		// Resetta l'istanza del singleton, quindi anche clienteConnesso sarà null
 		instance = null;
 	}
-	
 
 }

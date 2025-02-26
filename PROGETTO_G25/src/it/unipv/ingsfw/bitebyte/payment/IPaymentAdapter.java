@@ -1,8 +1,8 @@
-package it.unipv.ingsfw.bitebyte.pagamenti;
+package it.unipv.ingsfw.bitebyte.payment;
 
 /**
  * Interfaccia per il pattern Strategy che definisce il comportamento
- * per le diverse strategie di pagamento (es. Bancomat, PayPal).
+ * per le diverse strategie di pagamento (Bancomat e PayPal).
  */
 
 public interface IPaymentAdapter {
