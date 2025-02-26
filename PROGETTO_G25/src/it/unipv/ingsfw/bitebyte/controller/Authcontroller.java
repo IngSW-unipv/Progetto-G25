@@ -100,7 +100,7 @@ public class Authcontroller implements Initializable {
         if (nomeUtente.equals("root")) { 
         	System.out.println("Prova root");
         	AmministratoreDAO amministratoreDAO = new AmministratoreDAO();
-        	AmministratoreService amministratoreService = new AmministratoreService(amministratoreDAO);
+        	AmministratoreService amministratoreService = new AmministratoreService();
         	amministratoreService.loginAmministratore(password);
 
         }

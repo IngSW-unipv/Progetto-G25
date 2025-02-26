@@ -6,18 +6,18 @@ import it.unipv.ingsfw.bitebyte.dao.PortafoglioVirtualeDAO;
 
 public class AmministratoreService {
 	
-	private final AmministratoreDAO amministratoreDAO;
+	private AmministratoreDAO amministratoreDAO;
 	
 	
 	
-    public AmministratoreService(AmministratoreDAO amministratoreDAO) {   
-        this.amministratoreDAO = amministratoreDAO;
+    public AmministratoreService() {   
+        this.amministratoreDAO = new AmministratoreDAO();
     }
 	
     public void loginAmministratore (String password) {
-        AmministratoreDAO amministratoreDAO = new AmministratoreDAO(); // Crea un'istanza del DAO
-        AmministratoreService amministratoreService = new AmministratoreService(amministratoreDAO);
-        boolean esisteA = amministratoreService.esisteAmministratore(password);
+        // Crea un'istanza del DAO
+        //AmministratoreService amministratoreService = new AmministratoreService(amministratoreDAO);
+        boolean esisteA = esisteAmministratore(password);
         if (esisteA) {
         	System.out.println("Prova Amministratore");
         	
