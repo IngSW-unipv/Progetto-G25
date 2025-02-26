@@ -150,7 +150,7 @@ public class AcquistoController {
     
     private void tornaAllaPaginaProfiloCliente() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ProfiloCliente.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/it/unipv/ingsfw/bitebyte/view/fxml/ProfiloCliente.fxml"));
             Parent root = loader.load();
             // Imposta la scena sulla stessa finestra già esistente
             Scene scene = new Scene(root, 600, 400);
