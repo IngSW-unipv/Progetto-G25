@@ -1,6 +1,4 @@
-package it.unipv.ingsfw.bitebyte.pagamenti;
-
-import it.unipv.ingsfw.bitebyte.test.BancomatService;
+package it.unipv.ingsfw.bitebyte.payment;
 
 /**
  * Adapter per la gestione del pagamento tramite Bancomat.

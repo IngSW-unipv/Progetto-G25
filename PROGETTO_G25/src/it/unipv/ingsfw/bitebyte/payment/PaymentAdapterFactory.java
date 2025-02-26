@@ -1,11 +1,9 @@
-package it.unipv.ingsfw.bitebyte.pagamenti;
+package it.unipv.ingsfw.bitebyte.payment;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import it.unipv.ingsfw.bitebyte.test.BancomatService;
-import it.unipv.ingsfw.bitebyte.test.PayPalService;
 import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 
 //Alice

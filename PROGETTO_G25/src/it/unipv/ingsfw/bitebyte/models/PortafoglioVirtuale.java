@@ -1,6 +1,6 @@
 package it.unipv.ingsfw.bitebyte.models;
 
-import it.unipv.ingsfw.bitebyte.pagamenti.IPaymentAdapter;
+import it.unipv.ingsfw.bitebyte.payment.IPaymentAdapter;
 import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 
 public class PortafoglioVirtuale {

@@ -1,6 +1,4 @@
-package it.unipv.ingsfw.bitebyte.pagamenti;
-
-import it.unipv.ingsfw.bitebyte.test.PayPalService;
+package it.unipv.ingsfw.bitebyte.payment;
 
 /**
  * Adapter per la gestione del pagamento tramite PayPal.

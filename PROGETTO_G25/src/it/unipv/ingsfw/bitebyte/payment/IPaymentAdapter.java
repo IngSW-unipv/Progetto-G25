@@ -1,4 +1,4 @@
-package it.unipv.ingsfw.bitebyte.pagamenti;
+package it.unipv.ingsfw.bitebyte.payment;
 
 /**
  * Interfaccia per il pattern Strategy che definisce il comportamento
