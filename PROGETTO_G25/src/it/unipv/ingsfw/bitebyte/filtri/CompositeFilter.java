@@ -14,6 +14,7 @@ public class CompositeFilter implements IFilterStrategy {
     @Override
     public List<Stock> applyFilter(List<Stock> stocks) {
         List<Stock> filteredStocks = stocks;   //variabile locale che inizializzo con la lista originale
+                                               //serve per antenere il risultato aggiornato dopo ogni passaggio del filtro
         for (IFilterStrategy filter : filters) {
             filteredStocks = filter.applyFilter(filteredStocks);
         }

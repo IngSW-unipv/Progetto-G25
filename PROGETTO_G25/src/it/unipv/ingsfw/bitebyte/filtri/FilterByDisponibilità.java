@@ -1,3 +1,4 @@
+
 package it.unipv.ingsfw.bitebyte.filtri;
 
 import it.unipv.ingsfw.bitebyte.models.Stock;
@@ -10,9 +11,9 @@ public class FilterByDisponibilità implements IFilterStrategy {
     public List<Stock> applyFilter(List<Stock> stocks) {
         List<Stock> stockFiltrati = new ArrayList<>();
 
-        // Filtro dei prodotti con almeno 1 unità disponibile
+        // Filtro i prodotti che sono disponibili sia in termini di quantità che di stato
         for (Stock stock : stocks) {
-            if (stock.getQuantitaDisp() > 0) {  // Verifica se la quantità disponibile è maggiore di zero
+            if (stock.getQuantitaDisp() > 0 && "Disponibile".equals(stock.getStato())) {
                 stockFiltrati.add(stock);
             }
         }
