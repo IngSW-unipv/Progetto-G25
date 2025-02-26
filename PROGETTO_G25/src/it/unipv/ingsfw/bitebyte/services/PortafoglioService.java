@@ -42,5 +42,9 @@ public class PortafoglioService {
         // Aggiorna il saldo nel database tramite PortafoglioDAO
 		portafoglioDAO.aggiornaSaldo(codiceFiscale, nuovoSaldo);
 	}
+	
+	public int getIdPort(String codiceFiscale) {
+		return portafoglioDAO.getIdPortByCliente(codiceFiscale);	
+	}
 
 }

@@ -144,5 +144,37 @@ public class PortafoglioVirtualeDAO implements IPortafoglioVirtualeDAO {
             throw new RuntimeException("Errore nell'aggiornamento del saldo per il codice fiscale: " + codiceFiscale, e);
         }
     }
+    
+    public int getIdPortByCliente(String codiceFiscale) {
+        int idPort = 0;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = DBConnection.startConnection(connection, schema);
+            String query = "SELECT ID_Port " +
+                           "FROM progettog25.portafoglio_virtuale " +
+                           "WHERE Cf = ?";
+
+            ps = connection.prepareStatement(query);
+            ps.setString(1, codiceFiscale); // Imposta il codice fiscale come parametro
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                idPort = rs.getInt("ID_Port");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Errore nel recupero dell'ID del portafoglio per il codice fiscale: " + codiceFiscale, e);
+        } finally {
+            // Chiusura delle risorse
+            DBConnection.closeConnection(connection);
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return idPort;
+    }
 
 }

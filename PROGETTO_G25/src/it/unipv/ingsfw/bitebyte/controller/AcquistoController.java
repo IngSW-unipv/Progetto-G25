@@ -14,6 +14,7 @@ import it.unipv.ingsfw.bitebyte.services.ClientService;
 import it.unipv.ingsfw.bitebyte.services.OrdineService;
 import it.unipv.ingsfw.bitebyte.services.PortafoglioService;
 import it.unipv.ingsfw.bitebyte.services.StockService;
+import it.unipv.ingsfw.bitebyte.services.TransazioneService;
 import it.unipv.ingsfw.bitebyte.types.StatoOrd;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import it.unipv.ingsfw.bitebyte.utils.AlertUtils;
@@ -104,7 +105,6 @@ public class AcquistoController {
             System.out.println("Errore: Nessun cliente loggato.");
             return;
         }
-
         BigDecimal prezzoProdotto = stock.getProdotto().getPrezzo();
 
         if (!clienteService.saldoSufficiente(clienteLoggato, prezzoProdotto)) {
@@ -119,26 +119,33 @@ public class AcquistoController {
             return;
         }
 
-        // Aggiornamento saldo
-        double saldoAttuale = clienteService.getSaldo(clienteLoggato);
-        double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue();
-        portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo);
 
-        // Riduzione della quantità in stock
-        stock.setQuantitaDisp(quantitaDisponibile - 1);
-        stockService.aggiornaQuantita(stock);
-
-        System.out.println("Acquisto effettuato per: " + stock.getProdotto().getNome());
-        System.out.println("Il nuovo saldo è: " + nuovoSaldo);
-        System.out.println("Nuova quantità disponibile: " + stock.getQuantitaDisp());
 
         // Creazione dell'ordine con il prodotto associato
-        Ordine nuovoOrdine = new Ordine(GenerazioneId.generaIdCasuale(), LocalDateTime.now(),StatoOrd.CONFERMATO,prezzoProdotto,clienteLoggato,stock.getProdotto()
-        );
-
+        Ordine nuovoOrdine = new Ordine(GenerazioneId.generaIdCasuale(), LocalDateTime.now(),StatoOrd.CONFERMATO,prezzoProdotto,clienteLoggato,stock.getProdotto()        		
+        );     
         boolean ordineCreato = ordineService.creaOrdine(nuovoOrdine);
         if (ordineCreato) {
             System.out.println("Ordine registrato con successo! ID: " + nuovoOrdine.getIdOrdine());
+            // Aggiornamento saldo
+            double saldoAttuale = clienteService.getSaldo(clienteLoggato);
+            double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue();
+            portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo);
+            
+            // Riduzione della quantità in stock
+            stock.setQuantitaDisp(quantitaDisponibile - 1);
+            stockService.aggiornaQuantita(stock);
+            //PortafoglioService portafoglioService = new PortafoglioService(); // istanzio il portafoglio
+            int ID_portafoglio = portafoglioService.getIdPort(clienteLoggato.getCf()); //mi recupero l'id del portafoglio per creare la transazione
+            TransazioneService transazioneservice = new TransazioneService();
+            boolean controlloTransazione = transazioneservice.creaTransazione(nuovoOrdine, ID_portafoglio);
+	        if (controlloTransazione) {
+	        	AlertUtils.mostraAlertConferma("Successo","Transazione eseguita!","Transazione eseguita correttamente!!");
+	        } else {
+	        	AlertUtils.mostraAlertConferma("Insuccesso","Transazione non eseguita!","Transazione non eseguita. Riprovare!!");
+	        	tornaAllaPaginaProfiloCliente();
+	        	return;
+	        }
             AlertUtils.mostraAlertConferma("Successo","Acquisto confermato","Acquisto confermato e prodotto erogato!!");
             tornaAllaPaginaProfiloCliente();
             
