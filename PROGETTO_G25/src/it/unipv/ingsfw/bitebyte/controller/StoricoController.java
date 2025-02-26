@@ -68,6 +68,6 @@ public class StoricoController {
 
     @FXML
     public void buttonTornaIndietro(ActionEvent event) {
-    	SwitchSceneUtils.switchScene(event, "/it/unipv/ingsfw/bitebyte/view/fxml/ProfiloCliente.fxml", "Profilo cliente");
+    	SwitchSceneUtils.switchScene(event, "ProfiloCliente.fxml", "Profilo cliente");
     }
 }
