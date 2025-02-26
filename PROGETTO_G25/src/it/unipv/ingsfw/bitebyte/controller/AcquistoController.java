@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import it.unipv.ingsfw.bitebyte.dao.OrdineDAO;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Ordine;
 import it.unipv.ingsfw.bitebyte.models.PortafoglioVirtuale;
@@ -47,7 +48,7 @@ public class AcquistoController {
         this.clienteService = new ClientService();
         this.portafoglioService = new PortafoglioService();
         this.stockService = new StockService();
-        this.ordineService = new OrdineService();
+        this.ordineService = new OrdineService(new OrdineDAO()); 
     }
 
     public void setStockSelezionato(Stock stock) {
