@@ -17,14 +17,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.awt.ScrollPane;
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
 import java.util.List;
 
 public class StoricoController {
 
     @FXML
     private VBox contenitoreOrdini;
-    
+    @FXML
+    private Button btnTornaIndietro;
     
     private ListView<Ordine> listViewOrdini;  // Riferimento alla ListView in FXML
 

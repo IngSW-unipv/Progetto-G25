@@ -1,6 +1,7 @@
 package it.unipv.ingsfw.bitebyte.utils;
 
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
+
 import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
