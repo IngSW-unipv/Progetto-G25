@@ -16,7 +16,7 @@ public class Prodotto {
 
     private int idProdotto;
     private String nome;
-    private BigDecimal prezzo; // Modificato a BigDecimal
+    private BigDecimal prezzo; 
     private Categoria categoria;
     
     
