@@ -36,30 +36,43 @@ public class TestPrezzoScontato {
         fornitura.setPpu(new BigDecimal("10.00"));
         
         // Inizializza uno stock con quantità disponibili e massime
-        stock = new Stock(1001, 0, 10, "Disponibile", prodotto);    
+        stock = new Stock(1001, 0, 10, "Esaurito", prodotto);    
         // Inizializza il servizio senza dipendenze reali
         gestioneInventarioService = new GestioneInventarioService(null, null, null, null, null);
     }
 
     @Test
     public void testCalcolaPrezzoScontato() {
-        // Definisci una quantità per il test
-        int quantita = 8;
-        
-        // Ottenere la strategia di sconto da DiscountFactory
+        // Quantità per il test, minore di quella massima inseribile
+    	int quantita = 8;
+        // Ottengo la strategia di sconto da DiscountFactory
         IDiscountStrategy discountStrategy = DiscountFactory.getDiscountStrategy("quantity.strategy");
-        
         // Verifica che la strategia sia stata trovata (evita NullPointerException)
         assertNotNull("La strategia di sconto non dovrebbe essere null", discountStrategy);
-        
         // Crea un SupplyContext per il calcolo del prezzo scontato
         SupplyContext supplyContext = new SupplyContext(discountStrategy, fornitura.getPpu());
         BigDecimal expectedPrice = supplyContext.calculateFinalPrice(quantita, stock);
-        
         // Calcola il prezzo scontato con il metodo da testare
         BigDecimal actualPrice = gestioneInventarioService.calcolaPrezzoScontato(fornitura, quantita, stock);
-        
         // Confronta il prezzo calcolato con quello atteso
         assertEquals("Il prezzo calcolato non corrisponde al valore atteso", expectedPrice, actualPrice);
     }
+    
+    @Test
+    public void testCalcolaPrezzoScontatoMax() {
+        // Quantità per il test, pari al massimo inseribile
+        int quantita = 10;
+        // Ottengo la strategia di sconto "maxquantity"
+        IDiscountStrategy discountStrategy = DiscountFactory.getDiscountStrategy("maxquantity.strategy");
+        // Verifica che la strategia sia stata trovata
+        assertNotNull("La strategia di sconto non dovrebbe essere null", discountStrategy);
+        // SupplyContext per il calcolo del prezzo scontato
+        SupplyContext supplyContext = new SupplyContext(discountStrategy, fornitura.getPpu());
+        BigDecimal expectedPrice = supplyContext.calculateFinalPrice(quantita, stock);
+        // Calcola il prezzo scontato con il metodo da testare
+        BigDecimal actualPrice = gestioneInventarioService.calcolaPrezzoScontato(fornitura, quantita, stock);
+        // Confronta il prezzo calcolato con quello atteso
+        assertEquals("Il prezzo calcolato con strategia fissa non corrisponde al valore atteso", expectedPrice, actualPrice);
+    }
+
 }
