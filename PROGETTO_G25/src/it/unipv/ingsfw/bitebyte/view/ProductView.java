@@ -1,3 +1,19 @@
+/**
+ * La classe ProductView è responsabile della creazione delle viste grafiche per i prodotti
+ * all'interno dell'interfaccia utente dell'applicazione. Fornisce metodi per generare
+ * rappresentazioni visive dei prodotti disponibili, mostrando informazioni come nome, prezzo,
+ * quantità disponibile e stato del prodotto. Inoltre, gestisce la creazione di bottoni di azione
+ * per la selezione dei prodotti o per la visualizzazione di distributori alternativi in caso di
+ * indisponibilità del prodotto.
+ *
+ * La classe utilizza componenti JavaFX per costruire l'interfaccia grafica, tra cui `BorderPane`,
+ * `VBox`, `HBox`, `Label`, `Button` e `ImageView`. I metodi di questa classe sono statici per
+ * consentire la creazione di viste senza la necessità di istanziare la classe.
+ *
+ * @author Anna
+ * 
+ */
+
 package it.unipv.ingsfw.bitebyte.view;
 
 import it.unipv.ingsfw.bitebyte.models.Stock;

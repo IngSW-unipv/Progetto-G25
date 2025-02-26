@@ -9,6 +9,7 @@ import java.io.IOException;
 /**
  * ViewManager centralizza la logica di creazione delle scene e la navigazione.
  * Implementato come singleton per garantire una sola istanza globale.
+ * @author anna
  */
 public class ViewManager {
 
@@ -18,6 +19,7 @@ public class ViewManager {
         // Costruttore privato per il singleton
     }
 
+    //metodo per ottenere l'istanza singola
     public static ViewManager getInstance() {
         if (instance == null) {
             instance = new ViewManager();
@@ -32,14 +34,16 @@ public class ViewManager {
      * @param width    larghezza della scena
      * @param height   altezza della scena
      * @param title    titolo della finestra
-     * @param <T>      tipo del controller associato
+     * @param <T>      tipo del controller associato 
      * @return il controller caricato dall'FXML
      */
+    
+    
     public <T> T showStageWithController(String fxmlPath, double width, double height, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
          
-            Parent root = loader.load();
+            Parent root = loader.load();  //carica il file fxml e restituisce il nodo radice che viene memorizzato in root
             T controller = loader.getController();
             Stage stage = new Stage();
             stage.setScene(new Scene(root, width, height));

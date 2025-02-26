@@ -10,9 +10,10 @@ public class CompositeFilter implements IFilterStrategy {
         filters.add(filter);
     }
 
+    //Il metodo applyFilter applica in sequenza tutti i filtri aggiunti alla lista.
     @Override
     public List<Stock> applyFilter(List<Stock> stocks) {
-        List<Stock> filteredStocks = stocks;
+        List<Stock> filteredStocks = stocks;   //variabile locale che inizializzo con la lista originale
         for (IFilterStrategy filter : filters) {
             filteredStocks = filter.applyFilter(filteredStocks);
         }
