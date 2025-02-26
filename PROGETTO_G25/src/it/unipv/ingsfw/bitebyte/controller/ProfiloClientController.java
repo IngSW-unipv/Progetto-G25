@@ -65,7 +65,8 @@ public class ProfiloClientController {
     private Button idmodifica;
     @FXML
     private Button logout;
-    
+    @FXML 
+    private Button btnConnetti;
     //pulsanti ModificaProfilo
     @FXML
     private Button salvaModifica;
@@ -245,19 +246,23 @@ public class ProfiloClientController {
 				switchScene(stage, "PortafoglioVirtuale.fxml", "Portafoglio Virtuale");;
 			}
 		} else if (clickedButton.getId().equals("idmodifica")) {
-			System.out.println("sono in switch scene");
+			System.out.println("sono in modifca");
 			switchScene(stage, "ModificaProfiloCliente.fxml", "Modifica Profilo");
 		} else if (clickedButton.getId().equals("logout")) {
 			Sessione.getInstance().logout();
 			System.out.println("sono in switch scene");
 			showAlert("Successo", "Effettuato Logout");
 			switchScene(stage, "login-view.fxml", "Login");
+		} else if (clickedButton.getId().equals("btnConnetti")) {
+			System.out.println("sono in switch scene");
+			switchScene(stage, "collegamentoDistributore.fxml", "Connettiti al distributore");
+		}
 		}
 		/*else if (clickedButton.getId().equals("tornaProfilo")) {
 			System.out.println("sono in switch scene");
 			switchScene(stage, "ProfiloCliente.fxml", "Profilo Cliente");
 		}*/
-	}
+	
 	
 	
 	private void switchScene(Stage stage, String fxml, String title) {

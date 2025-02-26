@@ -13,7 +13,7 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #66cdaa;" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btnConnetti" layoutX="367.0" layoutY="324.0" onAction="#connettiDistributore" mnemonicParsing="false" prefHeight="29.0" prefWidth="205.0" style="-fx-background-color: #dc143c;" text="Connetti a un distributore" textFill="WHITE">
+            <Button fx:id="btnConnetti"  layoutX="367.0" layoutY="324.0" mnemonicParsing="false" onAction="#cambiaScena" prefHeight="29.0" prefWidth="205.0" style="-fx-background-color: #dc143c;" text="Connetti a un distributore" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -63,7 +63,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Button fx:id="idmodifica" layoutX="499.0" layoutY="21.0" mnemonicParsing="false" style="-fx-background-color: #eeb729;" text="Modifica" onAction="#cambiaScena">
+            <Button fx:id="idmodifica"  layoutX="499.0" layoutY="21.0" mnemonicParsing="false" onAction="#cambiaScena" style="-fx-background-color: #eeb729;" text="Modifica">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -73,7 +73,7 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Button>
-            <Button fx:id="btnStoricoOrdini" layoutX="470.0" layoutY="218.0" mnemonicParsing="false" style="-fx-background-color: #dc143c;" onAction="#visualizzaStoricoOrdini" text="Storico Ordini" textFill="WHITE">
+            <Button fx:id="btnStoricoOrdini" layoutX="470.0" layoutY="218.0" mnemonicParsing="false" style="-fx-background-color: #dc143c;" text="Storico Ordini" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
