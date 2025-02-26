@@ -127,19 +127,17 @@ public class AcquistoController {
         boolean ordineCreato = ordineService.creaOrdine(nuovoOrdine);
         if (ordineCreato) {
             System.out.println("Ordine registrato con successo! ID: " + nuovoOrdine.getIdOrdine());
-            // Aggiornamento saldo
-            double saldoAttuale = clienteService.getSaldo(clienteLoggato);
-            double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue();
-            portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo);
-            
-            // Riduzione della quantità in stock
-            stock.setQuantitaDisp(quantitaDisponibile - 1);
-            stockService.aggiornaQuantita(stock);
-            //PortafoglioService portafoglioService = new PortafoglioService(); // istanzio il portafoglio
             int ID_portafoglio = portafoglioService.getIdPort(clienteLoggato.getCf()); //mi recupero l'id del portafoglio per creare la transazione
             TransazioneService transazioneservice = new TransazioneService();
             boolean controlloTransazione = transazioneservice.creaTransazione(nuovoOrdine, ID_portafoglio);
 	        if (controlloTransazione) {
+	            // Aggiornamento saldo
+	            double saldoAttuale = clienteService.getSaldo(clienteLoggato);
+	            double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue();
+	            portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo);        
+	            // Riduzione della quantità in stock
+	            stock.setQuantitaDisp(quantitaDisponibile - 1);
+	            stockService.aggiornaQuantita(stock);
 	        	AlertUtils.mostraAlertConferma("Successo","Transazione eseguita!","Transazione eseguita correttamente!!");
 	        } else {
 	        	AlertUtils.mostraAlertConferma("Insuccesso","Transazione non eseguita!","Transazione non eseguita. Riprovare!!");
@@ -152,9 +150,7 @@ public class AcquistoController {
         } else {
             System.out.println("Errore nella creazione dell'ordine.");
         }
-    }
-    
-    
+    } 
     private void tornaAllaPaginaProfiloCliente() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/it/unipv/ingsfw/bitebyte/view/fxml/ProfiloCliente.fxml"));

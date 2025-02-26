@@ -29,21 +29,14 @@ public class TransazioneService {
 	        // Ora chiama il DAO per inserire la transazione
 	        boolean transazioneInserita = transazioneDAO.inserisciTransazione(transazione, ordine.getIdOrdine(), ID_Port);
 	        
-	        if (transazioneInserita) {
-	        	AlertUtils.mostraAlertConferma("Successo","Transazione eseguita!","Transazione eseguita correttamente!!");
-	        	return;
-	        } else {
-	            System.out.println("Errore nell'inserimento dell'ordine.");
-	        }
+
 	        return transazioneInserita;
 	    }
 
 	    
 	    
 	    private int generaIdTransazione() {
-	        // Puoi usare una logica personalizzata per generare un ID unico, ad esempio un ID incrementale
-	        // o recuperarlo dal database come ultima transazione.
-	        return (int) (Math.random() * 100000); // Genera un ID casuale come esempio
+	        return (int) (Math.random() * 100000); // Genera un ID casuale
 	    }
 }
 	 
