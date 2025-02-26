@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Ordine;
+import it.unipv.ingsfw.bitebyte.models.PortafoglioVirtuale;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.models.Stock;
 import it.unipv.ingsfw.bitebyte.services.ClientService;
@@ -137,7 +138,11 @@ public class AcquistoController {
 	            // Aggiornamento saldo
 	            double saldoAttuale = clienteService.getSaldo(clienteLoggato);
 	            double nuovoSaldo = saldoAttuale - prezzoProdotto.doubleValue();
-	            portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo);        
+	            portafoglioService.aggiornaSaldo(clienteLoggato.getCf(), nuovoSaldo);    
+	            PortafoglioVirtuale portafoglio = Sessione.getInstance().getPortafoglioCliente();
+	            if (portafoglio != null) {
+	                portafoglio.setSaldo(nuovoSaldo);  // Aggiorna l'oggetto in sessione
+	            }
 	            // Riduzione della quantità in stock
 	            stock.setQuantitaDisp(quantitaDisponibile - 1);
 	            stockService.aggiornaQuantita(stock);

@@ -17,13 +17,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.awt.ScrollPane;
+import javafx.event.ActionEvent;
 import java.util.List;
 
 public class StoricoController {
 
     @FXML
     private VBox contenitoreOrdini;
-    
+    @FXML
+    private Button btnTornaIndietro;
     
     private ListView<Ordine> listViewOrdini;  // Riferimento alla ListView in FXML
 
@@ -65,7 +67,7 @@ public class StoricoController {
     }
 
     @FXML
-    private void buttonTornaIndietro(javafx.event.ActionEvent event) {
+    public void buttonTornaIndietro(ActionEvent event) {
     	SwitchSceneUtils.switchScene(event, "/it/unipv/ingsfw/bitebyte/view/fxml/ProfiloCliente.fxml", "Profilo cliente");
     }
 }

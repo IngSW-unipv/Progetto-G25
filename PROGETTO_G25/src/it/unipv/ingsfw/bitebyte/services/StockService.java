@@ -85,7 +85,6 @@ public class StockService {
         Random random = new Random();      
         // Estrai un numero casuale da 1 a 10
         int numeroCasuale = random.nextInt(10) + 1; // nextInt(10) genera un numero tra 0 e 9, quindi aggiungiamo 1
-        numeroCasuale = 1;
         // Se il numero estratto è 1, fai una determinata azione
         if (numeroCasuale == 1) {
         	stockDAO.setNonDisponibile(stock.getIdInventario(), stock.getProdotto().getIdProdotto());
