@@ -1,10 +1,12 @@
 //CONTROLLER
 package it.unipv.ingsfw.bitebyte.controller;
 
+import it.unipv.ingsfw.bitebyte.dao.AmministratoreDAO;
 import it.unipv.ingsfw.bitebyte.dao.ClienteDAO;
 import it.unipv.ingsfw.bitebyte.dao.PortafoglioVirtualeDAO;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
+import it.unipv.ingsfw.bitebyte.services.AmministratoreService;
 import it.unipv.ingsfw.bitebyte.services.AuthService;
 import it.unipv.ingsfw.bitebyte.services.ValidationService;
 import it.unipv.ingsfw.bitebyte.utils.AlertUtils;
@@ -95,8 +97,14 @@ public class Authcontroller implements Initializable {
 	public void accedi() {
 		String nomeUtente = usernameLogin.getText();
 		String password = passwordLogin.getText();
+        if (nomeUtente.equals("root")) { 
+        	System.out.println("Prova root");
+        	AmministratoreDAO amministratoreDAO = new AmministratoreDAO();
+        	AmministratoreService amministratoreService = new AmministratoreService(amministratoreDAO);
+        	amministratoreService.loginAmministratore(password);
 
-		ClienteDAO clienteDAO = new ClienteDAO(); // Crea un'istanza di ClienteDAO
+        }
+        ClienteDAO clienteDAO = new ClienteDAO(); // Crea un'istanza di ClienteDAO
 		PortafoglioVirtualeDAO portafoglioDAO = new PortafoglioVirtualeDAO(); // Crea un'istanza di
 																				// PortafoglioVirtualeDAO
 
