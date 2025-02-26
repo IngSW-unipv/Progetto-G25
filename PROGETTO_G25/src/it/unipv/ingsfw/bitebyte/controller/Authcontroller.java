@@ -29,8 +29,6 @@ import java.util.ResourceBundle;
 
 public class Authcontroller implements Initializable {
 
-
-	
 	@FXML
 	private TextField usernameLogin;
 	@FXML
@@ -59,21 +57,18 @@ public class Authcontroller implements Initializable {
 	@FXML
 	private Label erroreRegPassword;
 
-	//Pulsanti login-view
+	// Pulsanti login-view
 	@FXML
 	private Button login;
 	@FXML
 	private Button bottoneregistrati;
-	
-	//Pulsanti registration-view
+
+	// Pulsanti registration-view
 	@FXML
 	private Button tornaLogin;
 	@FXML
 	private Button registrato;
-	
-	
-	
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Questo metodo verrà chiamato quando la vista è completamente caricata
@@ -82,91 +77,94 @@ public class Authcontroller implements Initializable {
 
 	@FXML
 	public void cambiaScena(javafx.event.ActionEvent event) {
-	    Button clickedButton = (Button) event.getSource();
-	    Stage stage = (Stage) clickedButton.getScene().getWindow();
-	    
-	    if (clickedButton.getId().equals("pulsanteVaiALogin")) {
-	        SwitchSceneUtils.switchScene(stage, "login-view.fxml", "Login");
-	    } else if (clickedButton.getId().equals("bottoneregistrati")) {
-	    	 SwitchSceneUtils.switchScene(stage, "registration-view.fxml", "Registrazione");
-	    } else if (clickedButton.getId().equals("tornaLogin")) {
-	    	 SwitchSceneUtils.switchScene(stage, "login-view.fxml", "Login");
-	    } else if (clickedButton.getId().equals("registrato")) {
-	    	 SwitchSceneUtils.switchScene(stage, "login-view.fxml", "Login");
-	    }
+		Button clickedButton = (Button) event.getSource();
+		//Stage stage = (Stage) clickedButton.getScene().getWindow();
+		SwitchSceneUtils switchSceneUtils = new SwitchSceneUtils();
+		if (clickedButton.getId().equals("pulsanteVaiALogin")) {
+			switchSceneUtils.Scene(clickedButton, "login-view.fxml", "Login");
+		} else if (clickedButton.getId().equals("bottoneregistrati")) {
+			switchSceneUtils.Scene(clickedButton, "registration-view.fxml", "Registrazione");
+		} else if (clickedButton.getId().equals("tornaLogin")) {
+			switchSceneUtils.Scene(clickedButton, "login-view.fxml", "Login");
+		} else if (clickedButton.getId().equals("registrato")) {
+			switchSceneUtils.Scene(clickedButton, "login-view.fxml", "Login");
+		}
 	}
 
+	@FXML
+	public void accedi() {
+		String nomeUtente = usernameLogin.getText();
+		String password = passwordLogin.getText();
 
-    @FXML
-    public void accedi() {
-        String nomeUtente = usernameLogin.getText();
-        String password = passwordLogin.getText();
-        
-        ClienteDAO clienteDAO = new ClienteDAO(); // Crea un'istanza di ClienteDAO
-        PortafoglioVirtualeDAO portafoglioDAO = new PortafoglioVirtualeDAO(); // Crea un'istanza di PortafoglioVirtualeDAO
-        
-        AuthService authService = new AuthService(clienteDAO, portafoglioDAO); // Passa i DAO al costruttore di AuthService
-        Cliente cliente = authService.login(nomeUtente, password);
-        if (cliente != null) {
-        	AlertUtils.showAlert("Successo", "Acesso eseguito correttamente");
-            // Switch scena qui (mostra ProfiloCliente.fxml)
-        } else {
-            AlertUtils.showAlert("Errore", "Credenziali errate");
-        }
-    }
-    
-    
-    // Controlla l'email in tempo reale mentre l'utente digita
+		ClienteDAO clienteDAO = new ClienteDAO(); // Crea un'istanza di ClienteDAO
+		PortafoglioVirtualeDAO portafoglioDAO = new PortafoglioVirtualeDAO(); // Crea un'istanza di
+																				// PortafoglioVirtualeDAO
+
+		AuthService authService = new AuthService(clienteDAO, portafoglioDAO); // Passa i DAO al costruttore di
+																				// AuthService
+		Cliente cliente = authService.login(nomeUtente, password);
+		if (cliente != null) {
+			AlertUtils.showAlert("Successo", "Acesso eseguito correttamente");
+			//Stage stage = (Stage) login.getScene().getWindow();
+			SwitchSceneUtils switchSceneUtils = new SwitchSceneUtils();
+			switchSceneUtils.Scene(login, "ProfiloCliente.fxml", "Login");
+		} else {
+			AlertUtils.showAlert("Errore", "Credenziali errate");
+		}
+	}
+
+	// Controlla l'email in tempo reale mentre l'utente digita
 	@FXML
 	private void controllaEmail(KeyEvent evento) {
-	    String email = emailReg.getText();
-	    if (!ValidationService.emailFormatoValido(email)) {
-	        erroreRegEmail.setText("L'email deve terminare con @universitadipavia.it");
-	        erroreRegEmail.setTextFill(Color.RED);
-	    } else {
-	        erroreRegEmail.setText(""); // Nasconde il messaggio d'errore
-	    }
+		String email = emailReg.getText();
+		if (!ValidationService.emailFormatoValido(email)) {
+			erroreRegEmail.setText("L'email deve terminare con @universitadipavia.it");
+			erroreRegEmail.setTextFill(Color.RED);
+		} else {
+			erroreRegEmail.setText(""); // Nasconde il messaggio d'errore
+		}
 	}
 
 	@FXML
 	private void controllaPassword(KeyEvent evento) {
-	    String password = passwordReg.getText();
-	    if (!ValidationService.passwordValida(password)) {
-	        erroreRegPassword.setText("Min. 8 caratteri, un numero, una lettera maiuscola e un carattere speciale.");
-	        erroreRegPassword.setTextFill(Color.RED);
-	    } else {
-	        erroreRegPassword.setText(""); // Nasconde il messaggio d'errore
-	    }
+		String password = passwordReg.getText();
+		if (!ValidationService.passwordValida(password)) {
+			erroreRegPassword.setText("Min. 8 caratteri, un numero, una lettera maiuscola e un carattere speciale.");
+			erroreRegPassword.setTextFill(Color.RED);
+		} else {
+			erroreRegPassword.setText(""); // Nasconde il messaggio d'errore
+		}
 	}
 
 	@FXML
 	public void controlloCampi() {
-	    System.out.println("Bottone premuto!");
-	    
-	    String cf = cfReg.getText().toUpperCase();
-	    String nomeUtente = usernameReg.getText();
-	    String email = emailReg.getText();
-	    String password = passwordReg.getText();
-	    String confirmPassword = passwordConfReg.getText();
-	    String nome = nomeReg.getText();
-	    String cognome = cognomeReg.getText();
-	    LocalDate dataNascita = dataNReg.getValue();
-	    
-	    ClienteDAO clienteDAO = new ClienteDAO();
-	    
-	    String errore = ValidationService.controlloCampi(cf, nomeUtente, email, password, confirmPassword, nome, cognome, dataNascita, clienteDAO);
-	    
-	    if (errore != null) {
-	        AlertUtils.showAlert("Errore", errore);
-	        return;
-	    }
+		System.out.println("Bottone premuto!");
 
-	    Cliente nuovoCliente = new Cliente(cf, nome, cognome, email, password, dataNascita, nomeUtente);
-	    clienteDAO.registraCliente(nuovoCliente);
-	    AlertUtils.showAlert("Successo", "REGISTRAZIONE COMPLETATA!");
-	    
-	    Stage stage = (Stage) registrato.getScene().getWindow();
-	    SwitchSceneUtils.switchScene(stage, "login-view.fxml", "Login");
+		String cf = cfReg.getText().toUpperCase();
+		String nomeUtente = usernameReg.getText();
+		String email = emailReg.getText();
+		String password = passwordReg.getText();
+		String confirmPassword = passwordConfReg.getText();
+		String nome = nomeReg.getText();
+		String cognome = cognomeReg.getText();
+		LocalDate dataNascita = dataNReg.getValue();
+
+		ClienteDAO clienteDAO = new ClienteDAO();
+
+		String errore = ValidationService.controlloCampi(cf, nomeUtente, email, password, confirmPassword, nome,
+				cognome, dataNascita, clienteDAO);
+
+		if (errore != null) {
+			AlertUtils.showAlert("Errore", errore);
+			return;
+		}
+
+		Cliente nuovoCliente = new Cliente(cf, nome, cognome, email, password, dataNascita, nomeUtente);
+		clienteDAO.registraCliente(nuovoCliente);
+		AlertUtils.showAlert("Successo", "REGISTRAZIONE COMPLETATA!");
+		SwitchSceneUtils switchSceneUtils = new SwitchSceneUtils();
+		//Stage stage = (Stage) registrato.getScene().getWindow();
+		switchSceneUtils.Scene(registrato, "login-view.fxml", "Login");
 	}
 
 }
