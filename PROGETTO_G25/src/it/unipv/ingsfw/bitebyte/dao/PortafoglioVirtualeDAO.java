@@ -81,6 +81,28 @@ public class PortafoglioVirtualeDAO implements IPortafoglioVirtualeDAO {
 		}
 	}
 
+	@Override
+	// Metodo per verificare se l'ID è già presente nel database
+	public boolean isIdPortPresente(int id) {
+		connection = DBConnection.startConnection(connection, schema);
+		String query = "SELECT COUNT(*) FROM portafoglio_virtuale WHERE ID_Port = ?";
+		try {
+			PreparedStatement stmt = connection.prepareStatement(query);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				return count == 0; // Se count è 0, l'ID è unico
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			DBConnection.closeConnection(connection);
+		}
+		return false; // Se qualcosa va storto, considera l'ID non unico
+	}
+
 	// Davide
 
 	// Metodo per recuperare il saldo
@@ -143,6 +165,39 @@ public class PortafoglioVirtualeDAO implements IPortafoglioVirtualeDAO {
 			throw new RuntimeException("Errore nell'aggiornamento del saldo per il codice fiscale: " + codiceFiscale,
 					e);
 		}
+	}
+
+	public int getIdPortByCliente(String codiceFiscale) {
+		int idPort = 0;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = DBConnection.startConnection(connection, schema);
+			String query = "SELECT ID_Port " + "FROM progettog25.portafoglio_virtuale " + "WHERE Cf = ?";
+
+			ps = connection.prepareStatement(query);
+			ps.setString(1, codiceFiscale); // Imposta il codice fiscale come parametro
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				idPort = rs.getInt("ID_Port");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(
+					"Errore nel recupero dell'ID del portafoglio per il codice fiscale: " + codiceFiscale, e);
+		} finally {
+			// Chiusura delle risorse
+			DBConnection.closeConnection(connection);
+			try {
+				if (ps != null)
+					ps.close();
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return idPort;
 	}
 
 }
