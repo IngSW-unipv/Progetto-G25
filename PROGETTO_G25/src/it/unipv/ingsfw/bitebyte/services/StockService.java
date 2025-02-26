@@ -64,7 +64,12 @@ public class StockService {
     public ArrayList<Stock> getStockByProdotto(int idProdotto) {
         return stockDAO.getStockByProdotto(idProdotto);
     }
-   
+    
+    
+    public void aggiornaQuantita(Stock stock) {
+        stockDAO.updateStock(stock); // Chiama il DAO per aggiornare il DB
+    }
+
     /**
      * Aggiorna un oggetto Stock nel database.
      * 
