@@ -21,6 +21,7 @@ public class PortafoglioService {
 
 	public static void aggiornaPortafoglio(PortafoglioVirtuale portafoglio, Cliente cliente) {
 		PortafoglioVirtualeDAO portafoglioDAO = new PortafoglioVirtualeDAO();
+		System.out.println("Prova portafoglio");
 		portafoglioDAO.aggiornaPortafoglio(portafoglio, cliente);
 
 	}
