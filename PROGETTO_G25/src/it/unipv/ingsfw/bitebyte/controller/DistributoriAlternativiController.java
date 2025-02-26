@@ -66,9 +66,17 @@ public class DistributoriAlternativiController {
         apriInventarioDistributore(d, this.searchQuery);
     }
 
-    private void apriGoogleMaps(double lat, double lon) {
+    
+    private void apriGoogleMaps(double altLat, double altLon) {
         try {
-            String url = "https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lon;
+            // Recupera le coordinate del distributore corrente
+            double originLat = distributoreCorrente.getLat();
+            double originLon = distributoreCorrente.getLon();
+            
+            // Costruisci l'URL con origin e destination
+            String url = "https://www.google.com/maps/dir/?api=1" +
+                         "&origin=" + originLat + "," + originLon +
+                         "&destination=" + altLat + "," + altLon;
             Desktop.getDesktop().browse(new URI(url));
         } catch (Exception e) {
             e.printStackTrace();
