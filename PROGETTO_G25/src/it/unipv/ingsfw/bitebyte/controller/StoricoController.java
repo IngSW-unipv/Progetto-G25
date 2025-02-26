@@ -4,20 +4,28 @@ import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Ordine;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.services.OrdineService;
+import it.unipv.ingsfw.bitebyte.utils.SwitchSceneUtils;
 import it.unipv.ingsfw.bitebyte.view.ViewStorico;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.awt.ScrollPane;
+import javafx.event.ActionEvent;
 import java.util.List;
 
 public class StoricoController {
 
     @FXML
     private VBox contenitoreOrdini;
-    
+    @FXML
+    private Button btnTornaIndietro;
     
     private ListView<Ordine> listViewOrdini;  // Riferimento alla ListView in FXML
 
@@ -57,10 +65,9 @@ public class StoricoController {
     public void setViewStorico(ViewStorico viewStorico) {
         this.viewStorico = viewStorico;
     }
-    // Metodo per gestire il bottone "Indietro"
+
     @FXML
-    private void handleBackButton() {
-        System.out.println("Indietro cliccato");
-        // Implementa il comportamento di ritorno qui
+    public void buttonTornaIndietro(ActionEvent event) {
+    	SwitchSceneUtils.switchScene(event, "ProfiloCliente.fxml", "Profilo cliente");
     }
 }

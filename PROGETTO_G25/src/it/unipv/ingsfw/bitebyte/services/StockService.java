@@ -6,6 +6,7 @@ package it.unipv.ingsfw.bitebyte.services;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Random;
 
 import it.unipv.ingsfw.bitebyte.dao.StockDAO;
 import it.unipv.ingsfw.bitebyte.models.Stock;
@@ -77,5 +78,18 @@ public class StockService {
      */
     public void updateStock(Stock stock) {
         stockDAO.updateStock(stock);
+    }
+    
+    public boolean erroreStato(Stock stock) {
+        // cro un oggetto Random
+        Random random = new Random();      
+        // Estrai un numero casuale da 1 a 10
+        int numeroCasuale = random.nextInt(10) + 1; // nextInt(10) genera un numero tra 0 e 9, quindi aggiungiamo 1
+        // Se il numero estratto è 1, fai una determinata azione
+        if (numeroCasuale == 1) {
+        	stockDAO.setNonDisponibile(stock.getIdInventario(), stock.getProdotto().getIdProdotto());
+        	return false;
+        }
+        return true;
     }
 }

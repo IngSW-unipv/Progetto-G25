@@ -72,7 +72,9 @@ public class ProfiloClientController {
     private Button salvaModifica;
     @FXML
     private Button tornaProfilo;
-
+    @FXML 
+    private Button btnStoricoOrdini;
+    
     private ClientService clienteService;
 
     public ProfiloClientController() {
@@ -256,6 +258,9 @@ public class ProfiloClientController {
 		} else if (clickedButton.getId().equals("btnConnetti")) {
 			System.out.println("sono in switch scene");
 			switchScene(stage, "collegamentoDistributore.fxml", "Connettiti al distributore");
+		}else if (clickedButton.getId().equals("btnStoricoOrdini")) {
+			System.out.println("sono in switch scene");
+			switchScene(stage, "StoricoOrdini.fxml", "Storico degli ordini");
 		}
 		}
 		/*else if (clickedButton.getId().equals("tornaProfilo")) {
