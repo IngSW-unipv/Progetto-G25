@@ -19,6 +19,7 @@ import it.unipv.ingsfw.bitebyte.types.StatoOrd;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import it.unipv.ingsfw.bitebyte.utils.AlertUtils;
 import it.unipv.ingsfw.bitebyte.utils.GenerazioneId;
+import it.unipv.ingsfw.bitebyte.utils.SceneUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -118,12 +119,14 @@ public class AcquistoController {
             System.out.println("Prodotto esaurito: " + stock.getProdotto().getNome());
             return;
         }
-
-
-
-        // Creazione dell'ordine con il prodotto associato
-        Ordine nuovoOrdine = new Ordine(GenerazioneId.generaIdCasuale(), LocalDateTime.now(),StatoOrd.CONFERMATO,prezzoProdotto,clienteLoggato,stock.getProdotto()        		
-        );     
+        
+        if (!stockService.erroreStato(stock)) {
+        	AlertUtils.mostraAlertConferma("Problema!!","Distributore malfunzionante","Prodotto non più disponibile, contattare Amministratore");
+        	tornaAllaPaginaProfiloCliente();
+        	return;
+        } // metodo implementato per la simulazione di un errore da parte del distributore 1 possibilità su 10
+        
+        Ordine nuovoOrdine = new Ordine(GenerazioneId.generaIdCasuale(), LocalDateTime.now(),StatoOrd.CONFERMATO,prezzoProdotto,clienteLoggato,stock.getProdotto());     
         boolean ordineCreato = ordineService.creaOrdine(nuovoOrdine);
         if (ordineCreato) {
             System.out.println("Ordine registrato con successo! ID: " + nuovoOrdine.getIdOrdine());

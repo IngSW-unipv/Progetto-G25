@@ -21,7 +21,7 @@ public class TransazioneDAO {
 
     public boolean inserisciTransazione(Transazione transazione, String idOrd, int idPort) {
         connection = DBConnection.startConnection(connection, schema);
-        String query = "INSERT INTO transazioni (ID_Trans, Esito, T_stamp, ID_Ord, ID_Port) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO transazione (ID_Trans, Esito, T_stamp, ID_Ord, ID_Port) VALUES (?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
