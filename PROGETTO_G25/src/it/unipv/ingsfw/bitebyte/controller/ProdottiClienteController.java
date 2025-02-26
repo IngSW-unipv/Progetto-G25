@@ -254,7 +254,7 @@ public class ProdottiClienteController {
             alert.showAndWait();
         } else {
         	DistributoriAlternativiController controller = ViewManager.getInstance()
-        	        .showStageWithController("/distributoriAlternativi.fxml", 800, 600, "Distributori Alternativi");
+        	        .showStageWithController("/it/unipv/ingsfw/bitebyte/view/fxml/distributoriAlternativi.fxml", 800, 600, "Distributori Alternativi");
         	controller.setSearchQuery(nomeProdotto);
         	controller.setDistributori(distributoreCorrente.getIdDistr(), nomeProdotto);
 

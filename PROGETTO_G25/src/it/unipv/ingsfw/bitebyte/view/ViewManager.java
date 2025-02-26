@@ -38,6 +38,7 @@ public class ViewManager {
     public <T> T showStageWithController(String fxmlPath, double width, double height, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+         
             Parent root = loader.load();
             T controller = loader.getController();
             Stage stage = new Stage();

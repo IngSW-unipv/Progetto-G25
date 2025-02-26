@@ -80,7 +80,7 @@ public class ProdottoController {
 
                 // Utilizza ViewManager per aprire la schermata ProdottiCliente
                 ProdottiClienteController prodController = ViewManager.getInstance()
-                        .showStageWithController("/prodottiCliente.fxml", 800, 600, "BiteByte - Prodotti Cliente");
+                        .showStageWithController("/it/unipv/ingsfw/bitebyte/view/fxml/prodottiCliente.fxml", 800, 600, "BiteByte - Prodotti Cliente");
                 
                 // Passa i dati necessari al nuovo controller
               

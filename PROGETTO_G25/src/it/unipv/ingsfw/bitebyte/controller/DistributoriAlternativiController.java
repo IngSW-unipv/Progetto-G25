@@ -78,7 +78,7 @@ public class DistributoriAlternativiController {
     private void apriInventarioDistributore(Distributore distributore, String searchQuery) {
         // Usa il ViewManager per aprire la schermata ProdottiCliente
         ProdottiClienteController prodController = ViewManager.getInstance()
-                .showStageWithController("/prodottiCliente.fxml", 800, 600, "Prodotti del Distributore " + distributore.getIdDistr());
+                .showStageWithController("/it/unipv/ingsfw/bitebyte/view/fxml/prodottiCliente.fxml", 800, 600, "Prodotti del Distributore " + distributore.getIdDistr());
         prodController.setDistributoreCorrente(distributore);
         prodController.setSearchQuery(searchQuery);
         prodController.setModalitaVisualizzazione(true);
