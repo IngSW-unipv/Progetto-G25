@@ -18,7 +18,7 @@
          <children>
             <ImageView fitHeight="166.0" fitWidth="191.0" layoutX="7.0" layoutY="99.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../resources/Icona_registrazione-removebg-preview.png" />
+                  <Image url="@../../../../../../../resources/Icona_registrazione-removebg-preview.png" />
                </image>
             </ImageView>
             <Circle fill="#1f93ff00" layoutX="103.0" layoutY="193.0" radius="101.0" stroke="#dba62a" strokeType="INSIDE" strokeWidth="3.0" />
