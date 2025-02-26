@@ -242,4 +242,31 @@ public class StockDAO implements IStockDAO {
             DBConnection.closeConnection(connection);
         }
     }
+    
+    //metodo che implementa "per simulazione" degli errori
+    public void setNonDisponibile(int idInventario, int idProdotto) {
+        connection = DBConnection.startConnection(connection, schema);
+        
+        // Query SQL per aggiornare lo stato del prodotto a "Non Disponibile"
+        String query = "UPDATE stock_dettagli SET Stato = ? WHERE ID_Inventario = ? AND ID_Prodotto = ?";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, "Non Disponibile");  // Imposta lo stato a "Non Disponibile"
+            stmt.setInt(2, idInventario);
+            stmt.setInt(3, idProdotto);
+            
+            int rowsAffected = stmt.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                System.out.println("Lo stato del prodotto è stato aggiornato a 'Non Disponibile'.");
+            } else {
+                System.out.println("Nessun prodotto trovato con l'ID specificato.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(connection);
+        }
+    }
+    
 }

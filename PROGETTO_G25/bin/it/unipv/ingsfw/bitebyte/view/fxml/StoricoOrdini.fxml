@@ -13,5 +13,5 @@
     <VBox fx:id="contenitoreOrdini" spacing="10" alignment="CENTER"/>
     
     <!-- Il bottone per tornare indietro -->
-    <Button text="Torna indietro" onAction="#handleBackButton" style="-fx-background-color: #FF6347; -fx-text-fill: white; -fx-font-size: 16px;"/>
+    <Button text="Torna indietro" onAction="#buttonTornaIndietro" style="-fx-background-color: #FF6347; -fx-text-fill: white; -fx-font-size: 16px;"/>
 </VBox>
