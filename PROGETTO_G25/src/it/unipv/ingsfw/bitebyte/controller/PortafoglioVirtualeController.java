@@ -5,6 +5,7 @@ import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.payment.IPaymentAdapter;
 import it.unipv.ingsfw.bitebyte.payment.PaymentAdapterFactory;
 import it.unipv.ingsfw.bitebyte.services.PortafoglioService;
+import it.unipv.ingsfw.bitebyte.utils.AlertUtils;
 import it.unipv.ingsfw.bitebyte.utils.SwitchSceneUtils;
 
 import javafx.event.ActionEvent;
@@ -30,6 +31,20 @@ public class PortafoglioVirtualeController {
 	@FXML
 	private TextField tipoTXT;
 
+	private PortafoglioService portafoglioService;
+	private SwitchSceneUtils switchScene;
+
+	public PortafoglioVirtualeController() {
+		this.portafoglioService = new PortafoglioService();
+		this.switchScene = new SwitchSceneUtils();
+	}
+
+	// Costruttore con iniezione delle dipendenze
+	public PortafoglioVirtualeController(PortafoglioService portafoglioService, SwitchSceneUtils switchScene) {
+		this.portafoglioService = portafoglioService;
+		this.switchScene = switchScene;
+	}
+
 	@FXML
 	public void initialize() {
 		if (Sessione.getInstance().getClienteConnesso() != null) {
@@ -39,24 +54,25 @@ public class PortafoglioVirtualeController {
 
 	@FXML
 	public void cambiaScena(ActionEvent event) {
-		SwitchSceneUtils switchSceneUtils = new SwitchSceneUtils();
-		switchSceneUtils.Scene(tornaProfilo, "ProfiloCliente.fxml", "Profilo Cliente");
+		switchScene.Scene(tornaProfilo, "ProfiloCliente.fxml", "Profilo Cliente");
 	}
 
 	@FXML
 	public void ricarica(ActionEvent event) {
 		IPaymentAdapter adattatore = PaymentAdapterFactory
-				.getPaymentAdapter(Sessione.getInstance().getPortafoglioCliente().getTipologiaPagamento());
-		Sessione.getInstance().getPortafoglioCliente().ricarica(5, adattatore);
-		PortafoglioService.aggiornaPortafoglio(Sessione.getInstance().getPortafoglioCliente(),
-				Sessione.getInstance().getClienteConnesso());
-		SwitchSceneUtils switchSceneUtils = new SwitchSceneUtils();
-		switchSceneUtils.Scene(ricarica, "ProfiloCliente.fxml", "Profilo Cliente");
+				.getPaymentAdapter(portafoglioService.getTipologiaPagamento());
+
+		portafoglioService.getPortafoglioCliente().ricarica(5, adattatore); // importo di ricarica fisso a 5€
+		AlertUtils.showAlert("Ricarica", "Ricaricato di 5€!");
+		PortafoglioService.aggiornaPortafoglio(portafoglioService.getPortafoglioCliente(),
+				portafoglioService.getClienteConnesso());
+		caricaPortafoglio();
 	}
 
 	@FXML
 	public void caricaPortafoglio() {
-		PortafoglioVirtuale portafoglio = Sessione.getInstance().getPortafoglioCliente();
+		PortafoglioVirtuale portafoglio = portafoglioService.getPortafoglioCliente();
+		// Sessione.getInstance().getPortafoglioCliente();
 		saldoTXT.setText(String.valueOf(portafoglio.getSaldo()));
 		idTXT.setText(portafoglio.getIdPort());
 		tipoTXT.setText(portafoglio.getTipologiaPagamento().name());

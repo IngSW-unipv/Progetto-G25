@@ -10,6 +10,8 @@ public interface IPortafoglioVirtualeDAO {
 	PortafoglioVirtuale leggiPortafoglio(String cf);
 
 	boolean aggiornaPortafoglio(PortafoglioVirtuale portafoglio, Cliente cliente);
+	
+	public boolean isIdPortPresente(int id);
 
 	// Davide
 	double getSaldo(String codiceFiscale);

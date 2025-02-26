@@ -11,7 +11,7 @@ import it.unipv.ingsfw.bitebyte.models.PortafoglioVirtuale;
 import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 
 public class PortafoglioVirtualeDAO implements IPortafoglioVirtualeDAO {
-	//Alice
+	// Alice
 	private Connection connection;
 	private String schema;
 
@@ -52,7 +52,7 @@ public class PortafoglioVirtualeDAO implements IPortafoglioVirtualeDAO {
 				String idPort = String.valueOf(rs.getInt("ID_Port"));
 				double saldo = rs.getDouble("Saldo");
 				String tipoPagamentoStr = rs.getString("Tipo_pagamento");
-                TipologiaPagamento tipoPagamento = TipologiaPagamento.valueOf(tipoPagamentoStr.toUpperCase());
+				TipologiaPagamento tipoPagamento = TipologiaPagamento.valueOf(tipoPagamentoStr.toUpperCase());
 
 				portafoglio = new PortafoglioVirtuale(idPort, saldo, tipoPagamento);
 			}
@@ -80,101 +80,124 @@ public class PortafoglioVirtualeDAO implements IPortafoglioVirtualeDAO {
 			DBConnection.closeConnection(connection);
 		}
 	}
-	
-	
-	//Davide
 
-    // Metodo per recuperare il saldo
-    public double getSaldo(String codiceFiscale) {
-        double saldo = 0;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+	@Override
+	// Metodo per verificare se l'ID è già presente nel database
+	public boolean isIdPortPresente(int id) {
+		connection = DBConnection.startConnection(connection, schema);
+		String query = "SELECT COUNT(*) FROM portafoglio_virtuale WHERE ID_Port = ?";
+		try {
+			PreparedStatement stmt = connection.prepareStatement(query);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				return count == 0; // Se count è 0, l'ID è unico
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			DBConnection.closeConnection(connection);
+		}
+		return false; // Se qualcosa va storto, considera l'ID non unico
+	}
 
-        try {
-            // Connessione al database
-            connection = DBConnection.startConnection(connection, schema);
+	// Davide
 
-            // Query SQL per recuperare il saldo
-            String query = "SELECT p.Saldo " +
-                           "FROM progettog25.portafoglio_virtuale p " +
-                           "JOIN progettog25.cliente c ON c.Cf = p.Cf " +
-                           "WHERE c.Cf = ?";
+	// Metodo per recuperare il saldo
+	public double getSaldo(String codiceFiscale) {
+		double saldo = 0;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-            // Prepara la query
-            ps = connection.prepareStatement(query);
-            ps.setString(1, codiceFiscale); // Imposta il codice fiscale come parametro
+		try {
+			// Connessione al database
+			connection = DBConnection.startConnection(connection, schema);
 
-            // Esecuzione della query
-            rs = ps.executeQuery();
+			// Query SQL per recuperare il saldo
+			String query = "SELECT p.Saldo " + "FROM progettog25.portafoglio_virtuale p "
+					+ "JOIN progettog25.cliente c ON c.Cf = p.Cf " + "WHERE c.Cf = ?";
 
-            // Verifica se il risultato esiste e ottieni il saldo
-            if (rs.next()) {
-                saldo = rs.getDouble("Saldo");
-            }
-        } catch (SQLException e) {
-            // Gestione dell'errore: stampa l'eccezione o rilancia
-            e.printStackTrace();
-            throw new RuntimeException("Errore nel recupero del saldo per il codice fiscale: " + codiceFiscale, e);
-        } finally {
-            // Chiusura delle risorse
-            DBConnection.closeConnection(connection);
-            try {
-                if (ps != null) ps.close();
-                if (rs != null) rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+			// Prepara la query
+			ps = connection.prepareStatement(query);
+			ps.setString(1, codiceFiscale); // Imposta il codice fiscale come parametro
 
-        return saldo;
-    }
+			// Esecuzione della query
+			rs = ps.executeQuery();
 
-    public void aggiornaSaldo(String codiceFiscale, double nuovoSaldo) {
-        String query = "UPDATE progettog25.portafoglio_virtuale SET saldo = ? WHERE Cf = ?";
+			// Verifica se il risultato esiste e ottieni il saldo
+			if (rs.next()) {
+				saldo = rs.getDouble("Saldo");
+			}
+		} catch (SQLException e) {
+			// Gestione dell'errore: stampa l'eccezione o rilancia
+			e.printStackTrace();
+			throw new RuntimeException("Errore nel recupero del saldo per il codice fiscale: " + codiceFiscale, e);
+		} finally {
+			// Chiusura delle risorse
+			DBConnection.closeConnection(connection);
+			try {
+				if (ps != null)
+					ps.close();
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
-        try (Connection connection = DBConnection.startConnection(null, schema);
-             PreparedStatement ps = connection.prepareStatement(query)) {
+		return saldo;
+	}
 
-            ps.setDouble(1, nuovoSaldo); // Imposta il nuovo saldo
-            ps.setString(2, codiceFiscale); // Imposta il codice fiscale
-            ps.executeUpdate(); // Esegui l'aggiornamento
+	public void aggiornaSaldo(String codiceFiscale, double nuovoSaldo) {
+		String query = "UPDATE progettog25.portafoglio_virtuale SET saldo = ? WHERE Cf = ?";
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Errore nell'aggiornamento del saldo per il codice fiscale: " + codiceFiscale, e);
-        }
-    }
-    
-    public int getIdPortByCliente(String codiceFiscale) {
-        int idPort = 0;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            connection = DBConnection.startConnection(connection, schema);
-            String query = "SELECT ID_Port " +
-                           "FROM progettog25.portafoglio_virtuale " +
-                           "WHERE Cf = ?";
+		try (Connection connection = DBConnection.startConnection(null, schema);
+				PreparedStatement ps = connection.prepareStatement(query)) {
 
-            ps = connection.prepareStatement(query);
-            ps.setString(1, codiceFiscale); // Imposta il codice fiscale come parametro
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                idPort = rs.getInt("ID_Port");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Errore nel recupero dell'ID del portafoglio per il codice fiscale: " + codiceFiscale, e);
-        } finally {
-            // Chiusura delle risorse
-            DBConnection.closeConnection(connection);
-            try {
-                if (ps != null) ps.close();
-                if (rs != null) rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return idPort;
-    }
+			ps.setDouble(1, nuovoSaldo); // Imposta il nuovo saldo
+			ps.setString(2, codiceFiscale); // Imposta il codice fiscale
+			ps.executeUpdate(); // Esegui l'aggiornamento
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Errore nell'aggiornamento del saldo per il codice fiscale: " + codiceFiscale,
+					e);
+		}
+	}
+
+	public int getIdPortByCliente(String codiceFiscale) {
+		int idPort = 0;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = DBConnection.startConnection(connection, schema);
+			String query = "SELECT ID_Port " + "FROM progettog25.portafoglio_virtuale " + "WHERE Cf = ?";
+
+			ps = connection.prepareStatement(query);
+			ps.setString(1, codiceFiscale); // Imposta il codice fiscale come parametro
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				idPort = rs.getInt("ID_Port");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(
+					"Errore nel recupero dell'ID del portafoglio per il codice fiscale: " + codiceFiscale, e);
+		} finally {
+			// Chiusura delle risorse
+			DBConnection.closeConnection(connection);
+			try {
+				if (ps != null)
+					ps.close();
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return idPort;
+	}
 
 }
