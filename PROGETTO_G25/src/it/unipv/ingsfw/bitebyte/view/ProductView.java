@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 public class ProductView {
 
     /**
-     * Crea e restituisce la view (BorderPane) per un prodotto.
+     * Crea e restituisce la view (BorderPane) per un prodotto. BorderPane permette di posizionare facilmente il contenuto in aree specifiche
      *
      * @param stock                   il modello da rappresentare
      * @param modalitaVisualizzazione se siamo in modalità di sola visualizzazione
@@ -29,9 +29,9 @@ public class ProductView {
                                                  Consumer<Stock> onSelect, Consumer<Stock> onShowAlternatives) {
         BorderPane productPane = new BorderPane();
         productPane.getStyleClass().add("product-box");
-        productPane.setPadding(new Insets(10));
+        productPane.setPadding(new Insets(10));   //per garantire margini interni
 
-        VBox centerBox = createProductInfo(stock);
+        VBox centerBox = createProductInfo(stock);   
         productPane.setCenter(centerBox);
 
         if (!modalitaVisualizzazione) {
@@ -52,7 +52,7 @@ public class ProductView {
         Label quantityLabel = createLabel("Disponibili: " + stock.getQuantitaDisp(), "product-quantity");
         Label statusLabel = createStatusLabel(stock);
 
-        VBox centerBox = new VBox(5, imageView, nameLabel, priceLabel, quantityLabel, statusLabel);
+        VBox centerBox = new VBox(5, imageView, nameLabel, priceLabel, quantityLabel, statusLabel);  //organizzo tutti gli elementi in una VBox
         centerBox.setAlignment(Pos.CENTER);
         return centerBox;
     }
@@ -68,7 +68,8 @@ public class ProductView {
 
         File productImageFile = new File("resources/immaginiDB/" + stock.getProdotto().getIdProdotto() + ".jpg");
         if (productImageFile.exists()) {
-            imageView.setImage(new Image(productImageFile.toURI().toString()));
+            imageView.setImage(new Image(productImageFile.toURI().toString()));  //conversione del percorso in un oggetto URI 
+                                                                                 //e converto URI in una stringa che è accettata dal construttore di Image(JavaFx)
         } else {
         	imageView.setImage(null);
         }
@@ -113,13 +114,17 @@ public class ProductView {
      */
     private static HBox createActionButton(Stock stock, Consumer<Stock> onSelect, Consumer<Stock> onShowAlternatives) {
         Button actionButton;
-        if (stock.getQuantitaDisp() == 0) {
+        
+        // Se il prodotto è esaurito (quantità = 0) oppure lo stato è "Non disponibile"
+        if (stock.getQuantitaDisp() == 0 || "Non disponibile".equals(stock.getStato())) {
             actionButton = new Button("Visualizza distributori vicini");
             actionButton.setOnAction(e -> onShowAlternatives.accept(stock));
-        } else {
+        } else { 
+            // Il pulsante "Seleziona" appare solo se il prodotto è "Disponibile"
             actionButton = new Button("Seleziona");
             actionButton.setOnAction(e -> onSelect.accept(stock));
         }
+        
         actionButton.getStyleClass().add("select-button");
 
         HBox buttonContainer = new HBox(actionButton);
@@ -128,6 +133,7 @@ public class ProductView {
 
         return buttonContainer;
     }
+
     
     /**
      * Crea una vista che informa l'utente che il prodotto cercato non è disponibile

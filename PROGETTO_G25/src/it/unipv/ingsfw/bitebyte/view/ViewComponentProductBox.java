@@ -59,7 +59,7 @@ public class ViewComponentProductBox extends VBox {
             statusLabel.setText("Stato: Esaurito");
             statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         }
-
+/*
         selectButton = new Button();
         if (modalitaVisualizzazione) {
             selectButton.setText("Visualizza");
@@ -72,6 +72,23 @@ public class ViewComponentProductBox extends VBox {
             }
             selectButton.setOnAction(e -> onSelectAction.run());
         }
+        */
+        selectButton = new Button();
+        if (modalitaVisualizzazione) {
+            selectButton.setText("Visualizza");
+            selectButton.setDisable(true);
+        } else {
+            // Se la quantità disponibile è zero oppure lo stato non è "Disponibile",
+            // mostriamo "Visualizza distributori vicini".
+            if (stock.getQuantitaDisp() == 0 || !"Disponibile".equals(stock.getStato())) {
+                selectButton.setText("Visualizza distributori vicini");
+            } else {
+                selectButton.setText("Seleziona");
+            }
+            selectButton.setOnAction(e -> onSelectAction.run());
+        }
+        
+    
 
         // Imposta l'immagine
         File imageFile = new File("resources/immaginiDB/" + stock.getProdotto().getIdProdotto() + ".jpg");

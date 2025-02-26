@@ -73,9 +73,11 @@ public class ProdottiClienteController {
                 "Bevanda Calda", "Bevanda Fredda", "Snack Salato", "Snack Dolce"
         ));
 
-        sugarControls.setVisible(false);    //I controlli dello zucchero vengono mostrati solo per i distributori di beveande calde
-        sugarLevel.setText(String.valueOf(currentSugar));
-        btnSugarMinus.setOnAction(e -> handleSugarMinus());
+        sugarControls.setVisible(false);                     //I controlli dello zucchero vengono mostrati solo per i distributori di beveande calde
+        sugarLevel.setText(String.valueOf(currentSugar));    //currentSugar è un numero intero (int).String.valueOf(currentSugar) converte il valore intero in una stringa.
+                                                             //ugarLevel è un oggetto di tipo Label
+        btnSugarMinus.setOnAction(e -> handleSugarMinus());  //Il metodo .setOnAction(...) permette di assegnare un'azione che verrà eseguita quando il bottone viene cliccato.
+                                                             //Quando il bottone btnSugarMinus viene premuto, viene chiamato il metodo handleSugarMinus().
         btnSugarPlus.setOnAction(e -> handleSugarPlus());
     }
     
@@ -121,13 +123,16 @@ public class ProdottiClienteController {
     }
   */
     
+    
+  //carica i prodotti basandosi sul contenuto attuale del campo di ricerca e
     public void setModalitaVisualizzazione(boolean visualizza) {
         this.modalitaVisualizzazione = visualizza;
         caricaProdotti(searchField.getText());
     }
 
+    
     public void setSearchQuery(String query) {
-        searchField.setText(query);
+        searchField.setText(query);               //impostiamo la serarchField con la query(inserita dall'utente) e poi carichiamo i prodotti
         caricaProdotti(query);
     }
     
@@ -140,7 +145,7 @@ public class ProdottiClienteController {
      */
     public void caricaProdotti(String query) {
         List<Stock> stocks = ricercaFacade.cercaProdotti(query, idInventario);
-        prodottiContainer.getChildren().clear();
+        prodottiContainer.getChildren().clear();   //pulisce tutto ciò che era presente in precedenza nel FlowPane
 
         if (stocks.isEmpty() && !query.trim().isEmpty()) {
             prodottiContainer.getChildren().add(ProductView.createNoProductView(query, this::mostraDistributoriAlternativiByName));
@@ -164,7 +169,7 @@ public class ProdottiClienteController {
                 prodottiContainer.getChildren().add(ProductView.createProductView(
                     stock,
                     modalitaVisualizzazione,
-                    this::handleSelect,
+                    this::handleSelect,   // stocks -> this.handleSelect(Stock)
                     s -> mostraDistributoriAlternativiByName(s.getProdotto().getNome())
                 ));
             }
@@ -247,7 +252,7 @@ public class ProdottiClienteController {
         }
         List<Distributore> distributori = ricercaFacade.cercaDistributoriConProdotto(distributoreCorrente.getIdDistr(), nomeProdotto);
         if (distributori.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);  
             alert.setTitle("Prodotto non disponibile");
             alert.setHeaderText(null);
             alert.setContentText("Non ci sono distributori alternativi disponibili per questo prodotto.");
@@ -255,6 +260,7 @@ public class ProdottiClienteController {
         } else {
         	DistributoriAlternativiController controller = ViewManager.getInstance()
         	        .showStageWithController("/it/unipv/ingsfw/bitebyte/view/fxml/distributoriAlternativi.fxml", 800, 600, "Distributori Alternativi");
+        	//passo il contesto
         	controller.setSearchQuery(nomeProdotto);
         	controller.setDistributori(distributoreCorrente.getIdDistr(), nomeProdotto);
 

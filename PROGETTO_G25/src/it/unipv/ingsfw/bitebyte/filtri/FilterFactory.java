@@ -1,6 +1,4 @@
 package it.unipv.ingsfw.bitebyte.filtri;
-
-import it.unipv.ingsfw.bitebyte.models.Stock;
 import it.unipv.ingsfw.bitebyte.types.Categoria;
 
 public class FilterFactory {
