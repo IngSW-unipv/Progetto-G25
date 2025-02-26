@@ -9,13 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class SceneUtils {
-    public static void switchScene(javafx.event.ActionEvent event, String fxmlPath, String title) {
+public class SwitchSceneUtils {
+	
+    public static void switchScene(Stage stage, String fxmlPath, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(SceneUtils.class.getResource(fxmlPath));
-            Parent root = loader.load();
-            
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(SwitchSceneUtils.class.getResource(fxmlPath));
+            Parent root = loader.load();         
             stage.setTitle(title);
             stage.setScene(new Scene(root));
             stage.show();

@@ -19,7 +19,7 @@ import it.unipv.ingsfw.bitebyte.types.StatoOrd;
 import it.unipv.ingsfw.bitebyte.view.ViewPrSelected;
 import it.unipv.ingsfw.bitebyte.utils.AlertUtils;
 import it.unipv.ingsfw.bitebyte.utils.GenerazioneId;
-import it.unipv.ingsfw.bitebyte.utils.SceneUtils;
+import it.unipv.ingsfw.bitebyte.utils.SwitchSceneUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

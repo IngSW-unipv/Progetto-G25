@@ -4,7 +4,7 @@ import it.unipv.ingsfw.bitebyte.models.Cliente;
 import it.unipv.ingsfw.bitebyte.models.Ordine;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.services.OrdineService;
-import it.unipv.ingsfw.bitebyte.utils.SceneUtils;
+import it.unipv.ingsfw.bitebyte.utils.SwitchSceneUtils;
 import it.unipv.ingsfw.bitebyte.view.ViewStorico;
 
 import javafx.fxml.FXML;
@@ -66,6 +66,6 @@ public class StoricoController {
 
     @FXML
     private void buttonTornaIndietro(javafx.event.ActionEvent event) {
-    	SceneUtils.switchScene(event, "/it/unipv/ingsfw/bitebyte/view/fxml/ProfiloCliente.fxml", "Profilo cliente");
+    	SwitchSceneUtils.switchScene(event, "/it/unipv/ingsfw/bitebyte/view/fxml/ProfiloCliente.fxml", "Profilo cliente");
     }
 }
