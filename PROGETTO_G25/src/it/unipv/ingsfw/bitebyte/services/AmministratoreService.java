@@ -19,7 +19,7 @@ public class AmministratoreService {
         //AmministratoreService amministratoreService = new AmministratoreService(amministratoreDAO);
         boolean esisteA = esisteAmministratore(password);
         if (esisteA) {
-        	System.out.println("Prova Amministratore");
+        	//System.out.println("Prova Amministratore");
         	
         }
     	
