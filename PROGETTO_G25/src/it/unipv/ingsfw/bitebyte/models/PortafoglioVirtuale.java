@@ -1,7 +1,6 @@
 package it.unipv.ingsfw.bitebyte.models;
-import java.math.BigDecimal;
 
-import it.unipv.ingsfw.bitebyte.pagamenti.IPaymentAdapter;
+import it.unipv.ingsfw.bitebyte.payment.IPaymentAdapter;
 import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 
 public class PortafoglioVirtuale {
@@ -10,11 +9,11 @@ public class PortafoglioVirtuale {
 	private double saldo;
 	private TipologiaPagamento tipologiaPagamento;
 
-	//costruttore
+	// costruttore
 	public PortafoglioVirtuale(String idPort, double saldo, TipologiaPagamento tipologiaPagamento) {
-		 this.idPort = idPort;
-		 this.saldo = saldo;
-		 this.tipologiaPagamento = tipologiaPagamento;
+		this.idPort = idPort;
+		this.saldo = saldo;
+		this.tipologiaPagamento = tipologiaPagamento;
 	}
 
 	// Getters and Setters
@@ -60,6 +59,5 @@ public class PortafoglioVirtuale {
 			System.out.println("Ricarica fallita.");
 		}
 	}
-	
-}
 
+}

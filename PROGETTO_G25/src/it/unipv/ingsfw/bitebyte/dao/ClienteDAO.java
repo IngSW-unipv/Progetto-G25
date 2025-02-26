@@ -98,6 +98,7 @@ public class ClienteDAO implements IClienteDAO {
 		return false;
 	}
 
+	//Alice
 	@Override
 	public Cliente getCliente(String username, String password) {
 		Cliente cliente = null;
@@ -141,7 +142,6 @@ public class ClienteDAO implements IClienteDAO {
 			stmt.setString(4, clienteModificato.getPassword());
 			stmt.setString(5, clienteModificato.getCf());
 
-			// Eseguo l'update e controllo se almeno una riga è stata modificata
 			int rowsUpdated = stmt.executeUpdate();
 			return rowsUpdated > 0;
 

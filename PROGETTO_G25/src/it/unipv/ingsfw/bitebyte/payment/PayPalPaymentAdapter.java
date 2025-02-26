@@ -1,6 +1,4 @@
-package it.unipv.ingsfw.bitebyte.pagamenti;
-
-import it.unipv.ingsfw.bitebyte.test.PayPalService;
+package it.unipv.ingsfw.bitebyte.payment;
 
 /**
  * Adapter per la gestione del pagamento tramite PayPal.
@@ -15,7 +13,7 @@ public class PayPalPaymentAdapter implements IPaymentAdapter {
 
 	@Override
 	public boolean ricarica(double amount) {
-			return payPalService.processaPagamento(amount);
+		return payPalService.processaPagamento(amount);
 	}
 
 	@Override
