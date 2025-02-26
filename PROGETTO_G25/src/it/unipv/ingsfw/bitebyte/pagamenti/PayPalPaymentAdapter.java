@@ -15,7 +15,7 @@ public class PayPalPaymentAdapter implements IPaymentAdapter {
 
 	@Override
 	public boolean ricarica(double amount) {
-			return payPalService.processaPagamento(amount);
+		return payPalService.processaPagamento(amount);
 	}
 
 	@Override

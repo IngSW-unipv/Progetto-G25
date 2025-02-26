@@ -42,8 +42,6 @@ public class BancomatDAO implements IBancomatDAO {
 		}
 	}
 
-	// String numCarta, String titolare, YearMonth dataScadenza, String circuito,
-	// int codice
 	@Override
 	public Bancomat leggiBancomat(String cf) {
 		connection = DBConnection.startConnection(connection, schema);
