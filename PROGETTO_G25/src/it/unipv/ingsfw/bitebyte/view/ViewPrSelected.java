@@ -66,7 +66,7 @@ public class ViewPrSelected {
         infoContainer.setAlignment(Pos.CENTER_LEFT);
         infoContainer.setPadding(new Insets(10));
 
-        ImageView backImageView = new ImageView(new Image(getClass().getResource("/immagini/back_arrow2.png").toString()));
+        ImageView backImageView = new ImageView(new Image(getClass().getResource("/immagini/back_arrow.png").toString()));
         backImageView.setFitWidth(50);
         backImageView.setFitHeight(50);
         backImageView.setPreserveRatio(true);

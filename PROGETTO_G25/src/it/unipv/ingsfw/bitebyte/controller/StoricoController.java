@@ -26,15 +26,14 @@ public class StoricoController {
     @FXML
     private Button btnTornaIndietro;
 
-    private final IOrdineService ordineService;
-    private ViewStorico viewStorico;  
+    private OrdineService ordineService;
+    private ViewStorico viewStorico;
 
     public StoricoController() {
-        IOrdineDAO ordineDAO = new OrdineDAO(); // Inizializza il DAO
-        this.ordineService = new OrdineService(ordineDAO); // Inietta il servizio
+        OrdineDAO ordineDAO = new OrdineDAO(); // Inizializza il DAO
+        this.ordineService = new OrdineService(ordineDAO); // Inietta il servizio con il DAO
         this.viewStorico = new ViewStorico(); // Inizializza la vista
     }
-
     @FXML
     public void initialize() {
         // Recupera il cliente loggato dalla sessione
