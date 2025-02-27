@@ -8,8 +8,6 @@ import java.time.YearMonth;
 
 import it.unipv.ingsfw.bitebyte.models.Bancomat;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
-import it.unipv.ingsfw.bitebyte.models.PortafoglioVirtuale;
-import it.unipv.ingsfw.bitebyte.types.TipologiaPagamento;
 
 public class BancomatDAO implements IBancomatDAO {
 	private Connection connection;
