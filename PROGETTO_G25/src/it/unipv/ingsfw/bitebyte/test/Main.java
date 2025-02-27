@@ -1,4 +1,4 @@
-package it.unipv.ingsfw.bitebyte.view;
+package it.unipv.ingsfw.bitebyte.test;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
