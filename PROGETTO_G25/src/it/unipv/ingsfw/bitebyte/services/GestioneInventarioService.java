@@ -179,12 +179,14 @@ public class GestioneInventarioService {
      * @param stock L'oggetto {@link Stock} che contiene informazioni sul prodotto.
      * @return Il prezzo finale del prodotto con sconto applicato.
      */
-    public BigDecimal calcolaPrezzoScontato(Fornitura fornitura, int quantita, Stock stock) {
-        String strategyKey = (quantita == stock.getQMaxInseribile()) ? "maxquantity.strategy" : "quantity.strategy";
+    private BigDecimal calcolaPrezzoScontato(Fornitura fornitura, int quantita, Stock stock) {
+    	//confrontando quantità disponibile e massima, decido la strategia da applicare
+        String strategyKey = (quantita == stock.getQMaxInseribile()) ? "maxquantity.strategy" : "quantity.strategy"; 
         IDiscountStrategy discountStrategy = DiscountFactory.getDiscountStrategy(strategyKey);
         if (discountStrategy == null) {
             throw new RuntimeException("Errore nel caricamento della strategia di sconto.");
         }
+        //Passo strategia e costo unitario del prodotto per il calcolo del prezzo scontato
         SupplyContext supplyContext = new SupplyContext(discountStrategy, fornitura.getPpu());
         return supplyContext.calculateFinalPrice(quantita, stock);
     }
@@ -223,12 +225,17 @@ public class GestioneInventarioService {
             int idProdotto = item.getFornitura().getProdotto().getIdProdotto();
             int quantita = item.getQuantita();
             BigDecimal prezzo = item.getPrezzoTotale();
-            
+         /* Aggiorna la quantità totale del prodotto nel Map `quantitaTotalePerProdotto`
+            Se il prodotto `idProdotto` esiste già, prende il valore corrente e lo somma alla nuova `quantita`
+            Se il prodotto non esiste ancora, usa il valore predefinito `0` e somma `quantita` */
             quantitaTotalePerProdotto.put(idProdotto, quantitaTotalePerProdotto.getOrDefault(idProdotto, 0) + quantita);
+         /* Aggiorna il prezzo totale del prodotto nel Map `prezzoTotalePerProdotto`
+             Se il prodotto `idProdotto` esiste già, prende il valore corrente (BigDecimal) e somma il nuovo `prezzo`
+             Se il prodotto non esiste ancora, usa il valore predefinito `BigDecimal.ZERO` e somma `prezzo`  */
             prezzoTotalePerProdotto.put(idProdotto, prezzoTotalePerProdotto.getOrDefault(idProdotto, BigDecimal.ZERO).add(prezzo));
         }
         // Distribuisci le quantità tra gli inventari che contengono quel prodotto
-        for (Map.Entry<Integer, Integer> entry : quantitaTotalePerProdotto.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : quantitaTotalePerProdotto.entrySet()) { //per ogni coppia chiave-valore...
             int idProdotto = entry.getKey();
             int quantitaTotale = entry.getValue();
             // Inventari che contengono il prodotto

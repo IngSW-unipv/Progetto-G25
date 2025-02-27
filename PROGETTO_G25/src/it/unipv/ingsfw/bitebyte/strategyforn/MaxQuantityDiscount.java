@@ -25,8 +25,8 @@ public class MaxQuantityDiscount implements IDiscountStrategy {
     public BigDecimal applyDiscount(BigDecimal price, int quantity, Stock stock) {
         // Verifica se la quantità acquistata è uguale alla quantità massima inseribile nello stock
         if (quantity == stock.getQMaxInseribile()) {
-            // Calcola il prezzo scontato (10% di sconto)
-            BigDecimal discountPrice = (price.multiply(new BigDecimal("0.90"))).multiply(new BigDecimal(quantity));
+            // Calcola il prezzo scontato (15% di sconto)
+            BigDecimal discountPrice = (price.multiply(new BigDecimal("0.85"))).multiply(new BigDecimal(quantity));
             // Arrotonda il prezzo scontato a due decimali
             BigDecimal roundedDiscountPrice = discountPrice.setScale(2, RoundingMode.HALF_UP);
             return roundedDiscountPrice;
