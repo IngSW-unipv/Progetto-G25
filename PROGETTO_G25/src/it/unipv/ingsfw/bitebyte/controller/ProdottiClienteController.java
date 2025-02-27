@@ -103,7 +103,8 @@ public class ProdottiClienteController {
             }
 
             // INFINE CARICHIAMO I PRODOTTI
-            caricaProdotti("");
+            caricaProdotti("");  //carica i prodotti del sitributore con query vuota in modo da mostrali tutti
+                                 // query vuota per indicare che non si sta effettuando alcun filtro 
         }
     }
 
@@ -124,7 +125,11 @@ public class ProdottiClienteController {
   */
     
     
-  //carica i prodotti basandosi sul contenuto attuale del campo di ricerca e
+  /**il metodo consente di cambiare la modalità di visualizzazione e, 
+   * contestualmente, di aggiornare la lista dei prodotti mostrati 
+   * in base al testo presente nella barra di ricerca.
+   * @param visualizza
+   */
     public void setModalitaVisualizzazione(boolean visualizza) {
         this.modalitaVisualizzazione = visualizza;
         caricaProdotti(searchField.getText());
@@ -132,14 +137,15 @@ public class ProdottiClienteController {
 
     
     public void setSearchQuery(String query) {
-        searchField.setText(query);               //impostiamo la serarchField con la query(inserita dall'utente) e poi carichiamo i prodotti
+        searchField.setText(query);  //impostiamo la serarchField con la query(inserita dall'utente) e poi carichiamo i prodotti
         caricaProdotti(query);
     }
     
     //METODI PER LA LOGICA PRINCIPALE
     
     /**
-     * Cerca e carica i prodotti in base a una query di ricerca.
+     * caricaProdotti: Recupera i dati (gli stock) e decide, in base ai risultati e alla query,
+     * se mostrare un messaggio di "nessun prodotto trovato" o aggiornare l'interfaccia con i prodotti trovati.
      * 
      * @param query la query di ricerca
      */
@@ -148,6 +154,7 @@ public class ProdottiClienteController {
         prodottiContainer.getChildren().clear();   //pulisce tutto ciò che era presente in precedenza nel FlowPane
 
         if (stocks.isEmpty() && !query.trim().isEmpty()) {
+        	//prodottiContainer è il cotnenitore grafico di tipo FlowPane
             prodottiContainer.getChildren().add(ProductView.createNoProductView(query, this::mostraDistributoriAlternativiByName));
         } else {
             aggiornaProdotti(stocks);
@@ -155,7 +162,7 @@ public class ProdottiClienteController {
     }
 
     /**
-     * Aggiorna la visualizzazione dei prodotti nella UI.
+     * aggiornaProdotti: È responsabile esclusivamente di aggiornare il container grafico (ad esempio, il FlowPane) con la lista di prodotti fornita, creando le visualizzazioni appropriate per ogni prodotto.
      * 
      * @param stocks la lista di prodotti disponibili
      */
