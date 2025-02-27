@@ -128,6 +128,8 @@ public class AcquistoController {
                 aggiornaSaldoCliente(clienteLoggato, prezzoProdotto);
                 aggiornaQuantitaStock(stock);
                 AlertUtils.mostraAlertConferma("Successo", "Acquisto confermato", "Prodotto erogato!");
+                tornaAllaPaginaProfiloCliente();
+                return;
             } else {
                 AlertUtils.mostraAlertConferma("Insuccesso", "Transazione non eseguita", "Riprovare!");
                 tornaAllaPaginaProfiloCliente();
