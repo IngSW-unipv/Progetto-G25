@@ -16,31 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `fornitore`
+-- Table structure for table `amministratore`
 --
 
-DROP TABLE IF EXISTS `fornitore`;
+DROP TABLE IF EXISTS `amministratore`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `fornitore` (
-  `ID_Fornitore` int NOT NULL AUTO_INCREMENT,
-  `Nome_F` varchar(100) NOT NULL,
-  `Citta` varchar(50) NOT NULL,
-  `Via` varchar(50) NOT NULL,
-  `N_Civico` varchar(5) NOT NULL,
-  PRIMARY KEY (`ID_Fornitore`),
-  UNIQUE KEY `Nome_F` (`Nome_F`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `amministratore` (
+  `Cf` varchar(16) NOT NULL,
+  `Nome` varchar(50) NOT NULL,
+  `Cognome` varchar(50) NOT NULL,
+  `Data_N` date NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Passw` varchar(100) NOT NULL,
+  PRIMARY KEY (`Cf`),
+  UNIQUE KEY `Email` (`Email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `fornitore`
+-- Dumping data for table `amministratore`
 --
 
-LOCK TABLES `fornitore` WRITE;
-/*!40000 ALTER TABLE `fornitore` DISABLE KEYS */;
-INSERT INTO `fornitore` VALUES (1,'Gourmet Italia Srl','Milano','Via Garibaldi','32'),(2,'Dolce & Salato Srl','Pavia','Via Dante','22'),(3,'Forniture Alimentari Bianchi','Milano','Viale Certosa','18'),(4,'Sapori Srl','Pavia','Via Verdi','12'),(5,'Cibi & Bevande Rossi','Torino','Corso Francia','45'),(6,'La Saporita Italia','Roma','Via Nazionale','50'),(7,'Gusto Più','Napoli','Piazza del Plebiscito','10'),(8,'Delizia & Co.','Bologna','Via Indipendenza','5'),(9,'Forniture Verdi','Firenze','Piazza della Repubblica','8'),(10,'Food&more Srl','Genova','Via San Vincenzo','17');
-/*!40000 ALTER TABLE `fornitore` ENABLE KEYS */;
+LOCK TABLES `amministratore` WRITE;
+/*!40000 ALTER TABLE `amministratore` DISABLE KEYS */;
+INSERT INTO `amministratore` VALUES ('DLELSN02S18E506A','Alessandro','D\'Elia','2002-11-18','alessandro.delia@unipv.it','Password3'),('MRNLCA02D67M109H','Alice','Marano','2002-04-27','alice.marano@unipv.it','Password1'),('NZLNMR02L58C134M','Annamaria','Anzelmi','2002-07-18','annamaria.anzelmi@unipv.it','Passowrd4'),('REXDVD02H14I577Y','Davide','Re','2002-06-14','davide.re@unipv.it','Password2');
+/*!40000 ALTER TABLE `amministratore` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 19:50:24
+-- Dump completed on 2025-02-27 15:17:39

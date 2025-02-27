@@ -16,33 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `transazione`
+-- Table structure for table `sped_dettagli`
 --
 
-DROP TABLE IF EXISTS `transazione`;
+DROP TABLE IF EXISTS `sped_dettagli`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `transazione` (
-  `ID_Trans` int NOT NULL AUTO_INCREMENT,
-  `Esito` tinyint(1) NOT NULL,
-  `T_stamp` datetime NOT NULL,
-  `ID_Ord` varchar(3) NOT NULL,
-  `ID_Port` int NOT NULL,
-  PRIMARY KEY (`ID_Trans`),
-  KEY `ID_Port` (`ID_Port`),
-  KEY `ID_Ord` (`ID_Ord`),
-  CONSTRAINT `transazione_ibfk_1` FOREIGN KEY (`ID_Port`) REFERENCES `portafoglio_virtuale` (`ID_Port`),
-  CONSTRAINT `transazione_ibfk_2` FOREIGN KEY (`ID_Ord`) REFERENCES `ordine` (`ID_Ordine`)
+CREATE TABLE `sped_dettagli` (
+  `ID_Sped` varchar(5) NOT NULL,
+  `ID_Prodotto` int NOT NULL,
+  `q_ord` int DEFAULT NULL,
+  `prezzo_tot` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`ID_Sped`,`ID_Prodotto`),
+  KEY `ID_Prodotto` (`ID_Prodotto`),
+  CONSTRAINT `sped_dettagli_ibfk_1` FOREIGN KEY (`ID_Sped`) REFERENCES `spedizione` (`ID_Sped`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `sped_dettagli_ibfk_2` FOREIGN KEY (`ID_Prodotto`) REFERENCES `prodotto` (`ID_Prodotto`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `transazione`
+-- Dumping data for table `sped_dettagli`
 --
 
-LOCK TABLES `transazione` WRITE;
-/*!40000 ALTER TABLE `transazione` DISABLE KEYS */;
-/*!40000 ALTER TABLE `transazione` ENABLE KEYS */;
+LOCK TABLES `sped_dettagli` WRITE;
+/*!40000 ALTER TABLE `sped_dettagli` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sped_dettagli` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 19:50:22
+-- Dump completed on 2025-02-27 15:17:39

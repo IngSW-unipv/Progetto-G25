@@ -16,33 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `distributore`
+-- Table structure for table `fornitore`
 --
 
-DROP TABLE IF EXISTS `distributore`;
+DROP TABLE IF EXISTS `fornitore`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `distributore` (
-  `ID_Distributore` int NOT NULL AUTO_INCREMENT,
-  `Tipo` enum('Bevande Calde','Cibi e Bevande Fredde') NOT NULL,
+CREATE TABLE `fornitore` (
+  `ID_Fornitore` int NOT NULL AUTO_INCREMENT,
+  `Nome_F` varchar(100) NOT NULL,
   `Citta` varchar(50) NOT NULL,
   `Via` varchar(50) NOT NULL,
-  `N_civico` varchar(5) NOT NULL,
-  `ID_Inventario` int DEFAULT NULL,
-  PRIMARY KEY (`ID_Distributore`),
-  KEY `distributore_ibfk_1` (`ID_Inventario`),
-  CONSTRAINT `distributore_ibfk_1` FOREIGN KEY (`ID_Inventario`) REFERENCES `inventario` (`ID_Inventario`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `N_Civico` varchar(5) NOT NULL,
+  PRIMARY KEY (`ID_Fornitore`),
+  UNIQUE KEY `Nome_F` (`Nome_F`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `distributore`
+-- Dumping data for table `fornitore`
 --
 
-LOCK TABLES `distributore` WRITE;
-/*!40000 ALTER TABLE `distributore` DISABLE KEYS */;
-INSERT INTO `distributore` VALUES (1,'Bevande Calde','Pavia','Corso Cavour','15',1),(2,'Cibi e Bevande Fredde','Pavia','Corso Cavour','15',2),(3,'Bevande Calde','Pavia','Via A. Ferrata','5',3),(4,'Cibi e Bevande Fredde','Pavia','Via A. Ferrata','5',4),(5,'Bevande Calde','Pavia','Corso Strada Nuova','106',5),(6,'Cibi e Bevande Fredde','Pavia','Corso Strada Nuova','106',6);
-/*!40000 ALTER TABLE `distributore` ENABLE KEYS */;
+LOCK TABLES `fornitore` WRITE;
+/*!40000 ALTER TABLE `fornitore` DISABLE KEYS */;
+INSERT INTO `fornitore` VALUES (1,'Gourmet Italia Srl','Milano','Via Garibaldi','32'),(2,'Dolce & Salato Srl','Pavia','Via Dante','22'),(3,'Forniture Alimentari Bianchi','Milano','Viale Certosa','18'),(4,'Sapori Srl','Pavia','Via Verdi','12'),(5,'Cibi & Bevande Rossi','Torino','Corso Francia','45'),(6,'La Saporita Italia','Roma','Via Nazionale','50'),(7,'Gusto Più','Napoli','Piazza del Plebiscito','10'),(8,'Delizia & Co.','Bologna','Via Indipendenza','5'),(9,'Forniture Verdi','Firenze','Piazza della Repubblica','8'),(10,'Food&more Srl','Genova','Via San Vincenzo','17');
+/*!40000 ALTER TABLE `fornitore` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 19:50:22
+-- Dump completed on 2025-02-27 15:17:39
