@@ -4,23 +4,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import it.unipv.ingsfw.bitebyte.models.Cliente;
-import it.unipv.ingsfw.bitebyte.models.PortafoglioVirtuale;
 import it.unipv.ingsfw.bitebyte.models.Sessione;
-import it.unipv.ingsfw.bitebyte.services.ClientService;
 import it.unipv.ingsfw.bitebyte.utils.AlertUtils;
 import it.unipv.ingsfw.bitebyte.utils.SwitchSceneUtils;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 public class ProfiloClientController {
 

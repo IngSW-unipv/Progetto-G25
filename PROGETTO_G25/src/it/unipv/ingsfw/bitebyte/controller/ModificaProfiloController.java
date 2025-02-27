@@ -72,21 +72,6 @@ public class ModificaProfiloController {
 		}
 	}
 
-	// USERNAME DA SISTEMARE
-	/*@FXML
-	private void controllaUsername1() {
-		String nuovoUsername = usernameTXT.getText();
-		String usernameAttuale = Sessione.getInstance().getClienteConnesso().getUsername();
-
-		if (nuovoUsername.equals(usernameAttuale)) {
-			usernameL.setText("Uguale allo username precedente!");
-			usernameL.setTextFill(Color.RED);
-			return;
-		} else {
-			usernameL.setText("");
-		}
-	}*/
-
 	@FXML
 	private boolean controllaUsername2() {
 		String nuovoUsername = usernameTXT.getText();
