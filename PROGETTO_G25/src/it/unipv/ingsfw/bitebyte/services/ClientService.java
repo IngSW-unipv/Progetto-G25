@@ -13,26 +13,10 @@ public class ClientService {
 
 	// Validazione completa del cliente
 	public boolean isClienteValido(Cliente cliente) {
-		return cliente != null && isCampoValido(cliente.getNome()) && isCampoValido(cliente.getCognome())
-				&& isPasswordValida(cliente.getPassword()) && isUsernameDisponibile(cliente.getUsername());
-	}
-
-	// Validazione del nome e cognome
-	public boolean isCampoValido(String campo) {
-		if (campo == null || campo.trim().isEmpty()) {
-			return false;
-		}
-		String regex = "^[A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+$";
-		return campo.matches(regex);
-	}
-
-	// Validazione della password
-	public boolean isPasswordValida(String password) {
-		if (password == null) {
-			return false;
-		}
-		String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,}$";
-		return password.matches(regex);
+		return cliente != null && ValidationService.isNomeValido(cliente.getNome())
+				&& ValidationService.isNomeValido(cliente.getNome())
+				&& ValidationService.passwordValida(cliente.getPassword())
+				&& isUsernameDisponibile(cliente.getUsername());
 	}
 
 	// Controlla se lo username è disponibile
@@ -40,7 +24,7 @@ public class ClientService {
 		if (username == null || username.isEmpty()) {
 			return false;
 		}
-		return !clienteDAO.esisteUsername(username);
+		return !clienteDAO.esisteUsername(username); // se non esiste lo username nel DB restituisce true
 	}
 
 	// Aggiorna il profilo del cliente

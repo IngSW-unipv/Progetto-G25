@@ -19,8 +19,6 @@ public class PortafoglioVirtualeController {
 	@FXML
 	private Button tornaProfilo;
 	@FXML
-	private Button tornaTipologia;
-	@FXML
 	private Button ricarica;
 
 	// campi PortafoglioVirtuale
@@ -57,6 +55,9 @@ public class PortafoglioVirtualeController {
 		switchScene.Scene(tornaProfilo, "ProfiloCliente.fxml", "Profilo Cliente");
 	}
 
+	// Metodo per la ricarica del portafoglio virtuale
+	// Ottiene l'adattatore usando PaymentAdapterFactory in base alla tipologia di
+	// pagamento scelta.
 	@FXML
 	public void ricarica(ActionEvent event) {
 		IPaymentAdapter adattatore = PaymentAdapterFactory

@@ -13,9 +13,9 @@ import javafx.stage.Stage;
 
 public class SwitchSceneUtils {
 
+	//Davide
 	public static void switchScene(ActionEvent event, String fxml, String title) {
 		try {
-			//Stage stage = (Stage) button.getScene().getWindow();
 			FXMLLoader loader = new FXMLLoader(
 			SwitchSceneUtils.class.getResource("/it/unipv/ingsfw/bitebyte/view/fxml/" + fxml));
 			Parent root = loader.load();
@@ -25,27 +25,14 @@ public class SwitchSceneUtils {
 	         stage.setScene(new Scene(root));
 	         stage.show();
 		} catch (IOException e) {
-			e.printStackTrace(); // Potresti anche loggare l'errore in un file
+			e.printStackTrace(); 
 		}
 	}
-/*
-	public void Scene(Stage stage, String fxml, String title) {
-		try {
-			//System.out.println("sono in switch scene");
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/it/unipv/ingsfw/bitebyte/view/fxml/" + fxml));
-			Parent root = loader.load();
-			stage.setTitle(title);
-			stage.setScene(new Scene(root));
-			stage.show();
-		} catch (Exception e) {
-			e.printStackTrace(); // Questo mostrerà eventuali errori
-		}
-	}
-*/	
+	
+	//Alice
 	public void Scene(Button bottone, String fxml, String title) {
 		try {
 			Stage stage = (Stage) bottone.getScene().getWindow();
-			//System.out.println("sono in switch scene");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/it/unipv/ingsfw/bitebyte/view/fxml/" + fxml));
 			Parent root = loader.load();
 			stage.setTitle(title);
