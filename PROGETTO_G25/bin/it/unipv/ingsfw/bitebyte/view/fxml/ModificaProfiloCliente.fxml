@@ -8,7 +8,10 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #eeb729;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipv.ingsfw.bitebyte.controller.ModificaProfiloController">
    <children>
-      <Label fx:id="passwordL" layoutX="143.0" layoutY="348.0" prefHeight="52.0" prefWidth="149.0" />
+      <Label fx:id="passwordL" layoutX="143.0" layoutY="348.0" prefHeight="52.0" prefWidth="373.0">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
       <Button fx:id="salvaModifica" layoutX="424.0" layoutY="315.0" mnemonicParsing="false" onAction="#modificaDati" style="-fx-background-color: #66cdaa;" text="Salva e riconnettiti!">
          <font>
             <Font name="System Bold" size="13.0" />
@@ -45,11 +48,20 @@
          </font>
       </Label>
       <TextField fx:id="passTXT" layoutX="143.0" layoutY="316.0" onKeyReleased="#controllaPassword" />
-      <TextField fx:id="usernameTXT" layoutX="143.0" layoutY="245.0" onMouseExited="#controllaUsername" />
+      <TextField fx:id="usernameTXT" layoutX="143.0" layoutY="245.0" onMouseExited="#controllaUsername2" />
       <TextField fx:id="cognomeTXT" layoutX="144.0" layoutY="169.0" onMouseExited="#controllaNomeOCognome" />
       <TextField fx:id="nomeTXT" layoutX="144.0" layoutY="94.0" onMouseExited="#controllaNomeOCognome" />
-      <Label fx:id="usernameL" layoutX="144.0" layoutY="287.0" prefHeight="17.0" prefWidth="149.0" />
-      <Label fx:id="cognomeL" layoutX="144.0" layoutY="212.0" prefHeight="17.0" prefWidth="149.0" />
-      <Label fx:id="nomeL" layoutX="144.0" layoutY="133.0" prefHeight="17.0" prefWidth="149.0" />
+      <Label fx:id="usernameL" layoutX="144.0" layoutY="287.0" prefHeight="19.0" prefWidth="415.0">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+      <Label fx:id="cognomeL" layoutX="144.0" layoutY="212.0" prefHeight="17.0" prefWidth="149.0">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+      <Label fx:id="nomeL" layoutX="144.0" layoutY="133.0" prefHeight="17.0" prefWidth="149.0">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
    </children>
 </Pane>
