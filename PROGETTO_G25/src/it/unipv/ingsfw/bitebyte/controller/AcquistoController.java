@@ -112,7 +112,9 @@ public class AcquistoController {
         }
 
         if (!stockService.erroreStato(stock)) {
-            AlertUtils.mostraAlertConferma("Problema", "Distributore malfunzionante", "Prodotto non disponibile.");
+            AlertUtils.mostraAlertConferma("Problema", "Distributore malfunzionante", "Prodotto non disponibile. Contattare un tecnico!");
+            Ordine nuovoOrdine = new Ordine(GenerazioneId.generaIdCasuale(), LocalDateTime.now(), StatoOrd.FALLITO, prezzoProdotto, clienteLoggato, stock.getProdotto());
+            boolean ordineCreato = ordineService.creaOrdine(nuovoOrdine);
             tornaAllaPaginaProfiloCliente();
             return;
         }
