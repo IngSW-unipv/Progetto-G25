@@ -33,7 +33,8 @@ import java.util.function.Consumer;
 public class ProductView {
 
     /**
-     * Crea e restituisce la view (BorderPane) per un prodotto. BorderPane permette di posizionare facilmente il contenuto in aree specifiche
+     * Crea e restituisce la view (BorderPane) per un prodotto. 
+     * BorderPane permette di posizionare facilmente il contenuto in aree specifiche
      *
      * @param stock                   il modello da rappresentare
      * @param modalitaVisualizzazione se siamo in modalità di sola visualizzazione
@@ -47,10 +48,12 @@ public class ProductView {
         productPane.getStyleClass().add("product-box");
         productPane.setPadding(new Insets(10));   //per garantire margini interni
 
+        //È un layout che dispone i suoi figli in una colonna verticale
         VBox centerBox = createProductInfo(stock);   
         productPane.setCenter(centerBox);
 
         if (!modalitaVisualizzazione) {
+        	//È un layout che dispone i suoi figli in una riga orizzontale
             HBox buttonContainer = createActionButton(stock, onSelect, onShowAlternatives);
             productPane.setBottom(buttonContainer);
         }

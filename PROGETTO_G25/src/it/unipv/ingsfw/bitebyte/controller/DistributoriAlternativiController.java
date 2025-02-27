@@ -1,8 +1,3 @@
-/**La classe DistributoriAlternativiController gestisce la logica per la visualizzazione dei distributori alternativi
- *  che offrono un determinato prodotto. In particolare, popola una tabella (TableView) con righe di tipo DistributoreBin 
- *  (un oggetto che racchiude le informazioni visuali per un distributore) e gestisce le azioni associate 
- *  (ad esempio, aprire Google Maps o visualizzare i prodotti di un distributore).
- */
 
 package it.unipv.ingsfw.bitebyte.controller;
 
@@ -20,7 +15,12 @@ import java.awt.Desktop;  //Permette di aprire URL e applicazioni esterne tramit
 import java.net.URI;
 import java.util.List;
 
-//controller per gestire la logica della visualizzazione dei distributori alternativi che hanno un determinato prodotto disponibile.
+/**La classe DistributoriAlternativiController gestisce la logica per la visualizzazione dei distributori alternativi
+*  che offrono un determinato prodotto. In particolare, popola una tabella (TableView) con righe di tipo DistributoreBin 
+*  (un oggetto che racchiude le informazioni visuali per un distributore) e gestisce le azioni associate 
+*  (ad esempio, aprire Google Maps o visualizzare i prodotti di un distributore).
+*/
+
 public class DistributoriAlternativiController {
 
     @FXML private TableView<DistributoreBin> distributoriTable;                     //La tabella che mostrerà la lista dei distributori alternativi, dove ogni riga è un oggetto di tipo DistributoreBin.
