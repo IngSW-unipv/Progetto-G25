@@ -11,6 +11,8 @@ package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.facade.RicercaFacade;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
+import it.unipv.ingsfw.bitebyte.services.AcquistoService;
+import it.unipv.ingsfw.bitebyte.services.ClientService;
 import it.unipv.ingsfw.bitebyte.view.ProductView;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
 import javafx.event.ActionEvent;
@@ -195,11 +197,14 @@ public class ProdottiClienteController {
         acquistoController.setStockSelezionato(stock);
 
         // Mostra la schermata con il prodotto selezionato
-        acquistoController.mostraInterfaccia(stock, newStage);
+        acquistoController.mostraInterfaccia(stock);
 
         // Nasconde la finestra attuale per simulare il cambio schermata
         stageAttuale.hide();
     }
+    
+
+
     
     //METODI DI GESTIONE DEGLI EVENTI
     
