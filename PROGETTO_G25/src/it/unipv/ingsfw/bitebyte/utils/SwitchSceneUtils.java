@@ -28,8 +28,8 @@ public class SwitchSceneUtils {
 			e.printStackTrace(); // Potresti anche loggare l'errore in un file
 		}
 	}
-/*
-	public void Scene(Stage stage, String fxml, String title) {
+
+	public void switchSceneStage(Stage stage, String fxml, String title) {
 		try {
 			//System.out.println("sono in switch scene");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/it/unipv/ingsfw/bitebyte/view/fxml/" + fxml));
@@ -41,7 +41,6 @@ public class SwitchSceneUtils {
 			e.printStackTrace(); // Questo mostrerà eventuali errori
 		}
 	}
-*/	
 	public void Scene(Button bottone, String fxml, String title) {
 		try {
 			Stage stage = (Stage) bottone.getScene().getWindow();
