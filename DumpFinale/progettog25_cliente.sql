@@ -16,26 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `inventario`
+-- Table structure for table `cliente`
 --
 
-DROP TABLE IF EXISTS `inventario`;
+DROP TABLE IF EXISTS `cliente`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `inventario` (
-  `ID_Inventario` int NOT NULL,
-  PRIMARY KEY (`ID_Inventario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci KEY_BLOCK_SIZE=4;
+CREATE TABLE `cliente` (
+  `Cf` varchar(16) NOT NULL,
+  `Nome` varchar(50) NOT NULL,
+  `Cognome` varchar(50) NOT NULL,
+  `Username` varchar(50) NOT NULL,
+  `Data_N` date NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Passw` varchar(100) NOT NULL,
+  PRIMARY KEY (`Cf`),
+  UNIQUE KEY `Username` (`Username`),
+  UNIQUE KEY `Email` (`Email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `inventario`
+-- Dumping data for table `cliente`
 --
 
-LOCK TABLES `inventario` WRITE;
-/*!40000 ALTER TABLE `inventario` DISABLE KEYS */;
-INSERT INTO `inventario` VALUES (1),(2),(3),(4),(5),(6);
-/*!40000 ALTER TABLE `inventario` ENABLE KEYS */;
+LOCK TABLES `cliente` WRITE;
+/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -47,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 19:50:23
+-- Dump completed on 2025-02-27 15:17:39

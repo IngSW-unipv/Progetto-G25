@@ -16,32 +16,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `portafoglio_virtuale`
+-- Table structure for table `ordine`
 --
 
-DROP TABLE IF EXISTS `portafoglio_virtuale`;
+DROP TABLE IF EXISTS `ordine`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `portafoglio_virtuale` (
-  `ID_Port` int NOT NULL AUTO_INCREMENT,
-  `Saldo` decimal(3,2) NOT NULL,
-  `Num_carta` varchar(16) NOT NULL,
+CREATE TABLE `ordine` (
+  `ID_Ordine` varchar(3) NOT NULL,
+  `data_ord` date DEFAULT NULL,
+  `Totale` decimal(3,2) NOT NULL,
+  `Stato` enum('Confermato','Fallito','In Elaborazione') DEFAULT NULL,
+  `ID_Prodotto` int NOT NULL,
   `Cf` varchar(16) NOT NULL,
-  PRIMARY KEY (`ID_Port`),
-  UNIQUE KEY `Num_carta` (`Num_carta`),
+  PRIMARY KEY (`ID_Ordine`),
+  UNIQUE KEY `ID_Prodotto` (`ID_Prodotto`),
   KEY `Cf` (`Cf`),
-  CONSTRAINT `portafoglio_virtuale_ibfk_1` FOREIGN KEY (`Cf`) REFERENCES `cliente` (`Cf`),
-  CONSTRAINT `portafoglio_virtuale_ibfk_2` FOREIGN KEY (`Num_carta`) REFERENCES `metodo_pagamento` (`Num_carta`)
+  CONSTRAINT `fk_ordine_prodotto` FOREIGN KEY (`ID_Prodotto`) REFERENCES `prodotto` (`ID_Prodotto`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `ordine_ibfk_1` FOREIGN KEY (`Cf`) REFERENCES `cliente` (`Cf`),
+  CONSTRAINT `ordine_ibfk_2` FOREIGN KEY (`ID_Prodotto`) REFERENCES `prodotto` (`ID_Prodotto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `portafoglio_virtuale`
+-- Dumping data for table `ordine`
 --
 
-LOCK TABLES `portafoglio_virtuale` WRITE;
-/*!40000 ALTER TABLE `portafoglio_virtuale` DISABLE KEYS */;
-/*!40000 ALTER TABLE `portafoglio_virtuale` ENABLE KEYS */;
+LOCK TABLES `ordine` WRITE;
+/*!40000 ALTER TABLE `ordine` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ordine` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 19:50:23
+-- Dump completed on 2025-02-27 15:17:40

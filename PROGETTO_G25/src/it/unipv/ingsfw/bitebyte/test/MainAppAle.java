@@ -20,7 +20,7 @@ public class MainAppAle extends Application {
         Scene scene = new Scene(controller.getView().getView(), 800, 600);
 
         // Impostiamo lo stage
-        primaryStage.setTitle("Test Prodotti");
+        primaryStage.setTitle("Gestione Prodotti");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

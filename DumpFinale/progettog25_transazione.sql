@@ -16,29 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `spedizione`
+-- Table structure for table `transazione`
 --
 
-DROP TABLE IF EXISTS `spedizione`;
+DROP TABLE IF EXISTS `transazione`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `spedizione` (
-  `ID_Sped` varchar(5) NOT NULL,
-  `Data_sp` date NOT NULL,
-  `Cf` varchar(16) NOT NULL,
-  PRIMARY KEY (`ID_Sped`),
-  KEY `Cf` (`Cf`),
-  CONSTRAINT `spedizione_ibfk_1` FOREIGN KEY (`Cf`) REFERENCES `amministratore` (`Cf`)
+CREATE TABLE `transazione` (
+  `ID_Trans` int NOT NULL AUTO_INCREMENT,
+  `Esito` tinyint(1) NOT NULL,
+  `T_stamp` datetime NOT NULL,
+  `ID_Ord` varchar(3) NOT NULL,
+  `ID_Port` int NOT NULL,
+  PRIMARY KEY (`ID_Trans`),
+  KEY `ID_Port` (`ID_Port`),
+  KEY `ID_Ord` (`ID_Ord`),
+  CONSTRAINT `transazione_ibfk_1` FOREIGN KEY (`ID_Port`) REFERENCES `portafoglio_virtuale` (`ID_Port`),
+  CONSTRAINT `transazione_ibfk_2` FOREIGN KEY (`ID_Ord`) REFERENCES `ordine` (`ID_Ordine`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `spedizione`
+-- Dumping data for table `transazione`
 --
 
-LOCK TABLES `spedizione` WRITE;
-/*!40000 ALTER TABLE `spedizione` DISABLE KEYS */;
-/*!40000 ALTER TABLE `spedizione` ENABLE KEYS */;
+LOCK TABLES `transazione` WRITE;
+/*!40000 ALTER TABLE `transazione` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transazione` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 19:50:23
+-- Dump completed on 2025-02-27 15:17:39

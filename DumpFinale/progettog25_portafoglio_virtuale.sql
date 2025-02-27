@@ -16,33 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cliente`
+-- Table structure for table `portafoglio_virtuale`
 --
 
-DROP TABLE IF EXISTS `cliente`;
+DROP TABLE IF EXISTS `portafoglio_virtuale`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cliente` (
+CREATE TABLE `portafoglio_virtuale` (
+  `ID_Port` int NOT NULL AUTO_INCREMENT,
+  `Saldo` decimal(4,2) NOT NULL,
   `Cf` varchar(16) NOT NULL,
-  `Nome` varchar(50) NOT NULL,
-  `Cognome` varchar(50) NOT NULL,
-  `Username` varchar(50) NOT NULL,
-  `Data_N` date NOT NULL,
-  `Email` varchar(100) NOT NULL,
-  `Passw` varchar(100) NOT NULL,
-  PRIMARY KEY (`Cf`),
-  UNIQUE KEY `Username` (`Username`),
-  UNIQUE KEY `Email` (`Email`)
+  `Tipo_pagamento` enum('Bancomat','Paypal') DEFAULT NULL,
+  PRIMARY KEY (`ID_Port`),
+  UNIQUE KEY `Cf_UNIQUE` (`Cf`),
+  KEY `Cf` (`Cf`),
+  CONSTRAINT `portafoglio_virtuale_ibfk_1` FOREIGN KEY (`Cf`) REFERENCES `cliente` (`Cf`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `cliente`
+-- Dumping data for table `portafoglio_virtuale`
 --
 
-LOCK TABLES `cliente` WRITE;
-/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
+LOCK TABLES `portafoglio_virtuale` WRITE;
+/*!40000 ALTER TABLE `portafoglio_virtuale` DISABLE KEYS */;
+/*!40000 ALTER TABLE `portafoglio_virtuale` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 19:50:24
+-- Dump completed on 2025-02-27 15:17:38

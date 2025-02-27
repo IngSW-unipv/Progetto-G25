@@ -16,32 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `metodo_pagamento`
+-- Table structure for table `bancomat`
 --
 
-DROP TABLE IF EXISTS `metodo_pagamento`;
+DROP TABLE IF EXISTS `bancomat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `metodo_pagamento` (
+CREATE TABLE `bancomat` (
   `Num_carta` varchar(16) NOT NULL,
-  `Data_scad` varchar(5) NOT NULL,
+  `Data_scad` varchar(7) NOT NULL,
   `CVV` int NOT NULL,
   `Titolare` varchar(200) NOT NULL,
   `Circuito` varchar(20) NOT NULL,
   `Cf` varchar(16) NOT NULL,
   PRIMARY KEY (`Num_carta`),
   KEY `Cf` (`Cf`),
-  CONSTRAINT `metodo_pagamento_ibfk_1` FOREIGN KEY (`Cf`) REFERENCES `cliente` (`Cf`)
+  CONSTRAINT `bancomat_ibfk_1` FOREIGN KEY (`Cf`) REFERENCES `cliente` (`Cf`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `metodo_pagamento`
+-- Dumping data for table `bancomat`
 --
 
-LOCK TABLES `metodo_pagamento` WRITE;
-/*!40000 ALTER TABLE `metodo_pagamento` DISABLE KEYS */;
-/*!40000 ALTER TABLE `metodo_pagamento` ENABLE KEYS */;
+LOCK TABLES `bancomat` WRITE;
+/*!40000 ALTER TABLE `bancomat` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bancomat` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 19:50:24
+-- Dump completed on 2025-02-27 15:17:38
