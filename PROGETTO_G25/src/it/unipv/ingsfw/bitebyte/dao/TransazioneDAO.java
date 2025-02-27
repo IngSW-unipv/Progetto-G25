@@ -2,16 +2,11 @@ package it.unipv.ingsfw.bitebyte.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
 import it.unipv.ingsfw.bitebyte.models.Transazione;
-import it.unipv.ingsfw.bitebyte.models.Cliente;
 
-public class TransazioneDAO {
+public class TransazioneDAO implements ITransazioneDAO {
     private Connection connection;
     private String schema;
 
@@ -19,6 +14,7 @@ public class TransazioneDAO {
         this.schema = "progettog25"; 
     }
 
+    @Override
     public boolean inserisciTransazione(Transazione transazione, String idOrd, int idPort) {
         connection = DBConnection.startConnection(connection, schema);
         String query = "INSERT INTO transazione (ID_Trans, Esito, T_stamp, ID_Ord, ID_Port) VALUES (?, ?, ?, ?, ?)";
