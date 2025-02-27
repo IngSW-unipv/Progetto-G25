@@ -29,7 +29,8 @@ public class ViewStorico {
         }
 
         ScrollPane scrollPane = new ScrollPane(vbox);
-        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToWidth(true); 
+        scrollPane.setFitToHeight(true); 
         scrollPane.setStyle("-fx-background-color: transparent;");
         scrollPane.setPrefWidth(600);
         scrollPane.setPrefHeight(400);
@@ -51,15 +52,10 @@ public class ViewStorico {
         ordineLabel.setId("ordine-label-" + ordine.getIdOrdine());
 
         // Aggiungi pulsante dettagli
-        Button dettagliBtn = new Button("Dettagli");
-        dettagliBtn.setOnAction(e -> mostraDettagliOrdine(ordine));
+ 
 
-        ordineContainer.getChildren().addAll(ordineLabel, dataLabel, statoLabel, nomeLabel, prezzoLabel, dettagliBtn);
+        ordineContainer.getChildren().addAll(ordineLabel, dataLabel, statoLabel, nomeLabel, prezzoLabel);
         return ordineContainer;
     }
 
-    private void mostraDettagliOrdine(Ordine ordine) {
-        System.out.println("Mostra dettagli per ordine: " + ordine.getIdOrdine());
-        // Qui puoi aggiungere una finestra di dialogo con i dettagli
-    }
 }
