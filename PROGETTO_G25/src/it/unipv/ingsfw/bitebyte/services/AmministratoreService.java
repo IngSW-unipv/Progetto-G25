@@ -2,6 +2,8 @@ package it.unipv.ingsfw.bitebyte.services;
 
 import it.unipv.ingsfw.bitebyte.controller.GestionePController;
 import it.unipv.ingsfw.bitebyte.dao.AmministratoreDAO;
+import it.unipv.ingsfw.bitebyte.services.*;
+import it.unipv.ingsfw.bitebyte.view.ProdottiView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -31,7 +33,17 @@ public class AmministratoreService {
         boolean esisteA = esisteAmministratore(password);
         if (esisteA) {
             System.out.println("Prova Amministratore");
-            GestionePController gestionePController = new GestionePController();
+            //Creazione dei service e della vista principale da passare per la creazione del controller
+            ProdottiView prodottiView = new ProdottiView();
+            StockService stockService = new StockService();
+            FornituraService fornituraService = new FornituraService();
+            ProdottoService prodottoService = new ProdottoService();
+            DistributoreService distributoreService = new DistributoreService();
+            SpedizioneService spedizioneService = new SpedizioneService();
+            GestioneInventarioService gestioneInventarioService = new GestioneInventarioService (
+            		stockService, fornituraService, prodottoService, distributoreService, spedizioneService
+            		);
+            GestionePController gestionePController = new GestionePController(gestioneInventarioService, prodottiView);
             Scene scene = new Scene(gestionePController.getView().getView(), 800, 600);
             Stage stage = new Stage();
             stage.setTitle("Gestione prodotti");

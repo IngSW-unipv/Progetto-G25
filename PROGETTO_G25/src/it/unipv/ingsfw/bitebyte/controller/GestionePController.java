@@ -43,13 +43,12 @@ public class GestionePController {
     private CarrelloView carrelloView;
 
     /**
-     * Costruisce una nuova istanza del controller GestionePController, inizializzando i servizi e le viste.
+     * Costruisce una nuova istanza del controller GestionePController, inizializzando il Service e la vista
+     * principale 
      */
-    public GestionePController() {
-        this.gestioneInventarioService = new GestioneInventarioService(
-            new StockService(), new FornituraService(), new ProdottoService(), new DistributoreService(), new SpedizioneService()
-        );
-        this.prodottiView = new ProdottiView(); 
+    public GestionePController(GestioneInventarioService gestioneInventarioService, ProdottiView prodottiView) {
+        this.gestioneInventarioService = gestioneInventarioService;
+        this.prodottiView = prodottiView;
         initialize();
     }
 
