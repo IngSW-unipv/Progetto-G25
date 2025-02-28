@@ -13,12 +13,12 @@ public class PaymentAdapterFactory {
 
 	// Registriamo i metodi di pagamento disponibili
 	static {
-		register("bancomat", () -> new BancomatPaymentAdapter(new BancomatService()));
+		register("bancomat", () -> new BancomatPaymentAdapter(new BancomatService()));	
 		register("paypal", () -> new PayPalPaymentAdapter(new PayPalService()));
 	}
 
 	public static void register(String metodo, Supplier<IPaymentAdapter> supplier) {
-		adapterRegistry.put(metodo.toLowerCase(), supplier);
+		adapterRegistry.put(metodo.toLowerCase(), supplier);	// aggiunge una coppia chiave valore
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class PaymentAdapterFactory {
 	 */
 	public static IPaymentAdapter getPaymentAdapter(TipologiaPagamento tipologia) {
 		String tipologiaScelta = tipologia.name().toLowerCase();
-		Supplier<IPaymentAdapter> supplier = adapterRegistry.get(tipologiaScelta);
+		Supplier<IPaymentAdapter> supplier = adapterRegistry.get(tipologiaScelta);	// restituisce un supplier basandosi sulla tipologiaScelta
 		if (supplier == null) {
 			throw new IllegalArgumentException("Metodo di pagamento non supportato: " + tipologiaScelta);
 		}

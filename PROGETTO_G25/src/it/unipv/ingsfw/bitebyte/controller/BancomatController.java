@@ -36,12 +36,6 @@ public class BancomatController {
 
 	}
 
-	// Dependency Injection
-	public BancomatController(BancomatService bancomatService, SwitchSceneUtils navigator) {
-		this.bancomatService = bancomatService;
-		this.switchScene = navigator;
-	}
-
 	@FXML
 	public void registraCarta(ActionEvent event) {
 		try {

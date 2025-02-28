@@ -12,7 +12,7 @@
          <font>
             <Font size="13.0" />
          </font></Label>
-      <Button fx:id="salvaModifica" layoutX="424.0" layoutY="315.0" mnemonicParsing="false" onAction="#modificaDati" style="-fx-background-color: #66cdaa;" text="Salva e riconnettiti!">
+      <Button fx:id="salvaModifica" layoutX="489.0" layoutY="315.0" mnemonicParsing="false" onAction="#modificaDati" style="-fx-background-color: #66cdaa;" text="Salva!">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
