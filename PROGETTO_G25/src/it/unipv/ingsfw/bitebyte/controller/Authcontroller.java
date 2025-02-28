@@ -5,7 +5,6 @@ import it.unipv.ingsfw.bitebyte.dao.AmministratoreDAO;
 import it.unipv.ingsfw.bitebyte.dao.ClienteDAO;
 import it.unipv.ingsfw.bitebyte.dao.PortafoglioVirtualeDAO;
 import it.unipv.ingsfw.bitebyte.models.Cliente;
-import it.unipv.ingsfw.bitebyte.models.Sessione;
 import it.unipv.ingsfw.bitebyte.services.AmministratoreService;
 import it.unipv.ingsfw.bitebyte.services.AuthService;
 import it.unipv.ingsfw.bitebyte.services.ValidationService;
@@ -14,18 +13,10 @@ import it.unipv.ingsfw.bitebyte.utils.SwitchSceneUtils;
 
 import java.time.LocalDate;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 import javafx.fxml.Initializable;
-
-import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 

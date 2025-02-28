@@ -11,10 +11,9 @@ package it.unipv.ingsfw.bitebyte.controller;
 import it.unipv.ingsfw.bitebyte.facade.RicercaFacade;
 import it.unipv.ingsfw.bitebyte.models.Distributore;
 import it.unipv.ingsfw.bitebyte.models.Stock;
-import it.unipv.ingsfw.bitebyte.services.AcquistoService;
-import it.unipv.ingsfw.bitebyte.services.ClientService;
 import it.unipv.ingsfw.bitebyte.view.ProductView;
 import it.unipv.ingsfw.bitebyte.view.ViewManager;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -27,259 +26,274 @@ import java.util.List;
 
 public class ProdottiClienteController {
 
-	//Attributi 
-    private Distributore distributoreCorrente;                 //distributore selezionato dal cliente
-    private RicercaFacade ricercaFacade = new RicercaFacade(); // Uso RicercaFacade
-    private boolean modalitaVisualizzazione = false;
-    private int currentSugar = 0;                              //Contatore che indica il livello di zucchero selezionato (da 0 a 5).
-    private int idInventario;                                  //Identificatore dell'inventario del distributore corrente.
-    
-    //elementi grafici
-    
-    @FXML private FlowPane prodottiContainer;         //Contenitore per i prodotti.
-    @FXML private ScrollPane scrollPane;              //Permette lo scrolling verticale dei prodotti.
-    @FXML private TextField searchField;              //Campo per la ricerca dei prodotti.
-    @FXML private Button filterButton;                //Bottone che mostra/nasconde il pannello dei filtri.
-    @FXML private VBox filterPanel;                   // Pannello che contiene i filtri.
-    @FXML private ComboBox<String> categoryFilter;    //Filtro per la categoria dei prodotti.
-    @FXML private CheckBox availabilityFilter;        //Filtro per visualizzare solo i prodotti disponibili.
-    @FXML private ToggleGroup priceToggleGroup;       //Raggruppamento dei radio button per ordinare il prezzo.
-    @FXML private RadioButton priceAsc;               //Ordina i prodotti per prezzo crescente.
-    @FXML private RadioButton priceDesc;              //Ordina i prodotti per prezzo decrescente
-    @FXML private HBox sugarControls;                 //Controlli per la gestione del livello di zucchero
-    @FXML private Button btnSugarMinus;               //Pulsanti per modificare il livello di zucchero.
-    @FXML private Button btnSugarPlus;
-    @FXML private Label sugarLevel;                   //Mostra il livello attuale di zuccher
+	// Attributi
+	private Distributore distributoreCorrente; // distributore selezionato dal cliente
+	private RicercaFacade ricercaFacade = new RicercaFacade(); // Uso RicercaFacade
+	private boolean modalitaVisualizzazione = false;
+	private int currentSugar = 0; // Contatore che indica il livello di zucchero selezionato (da 0 a 5).
+	private int idInventario; // Identificatore dell'inventario del distributore corrente.
 
-    
-    // Inizializzazione
-    /**
-     * Metodo di inizializzazione chiamato automaticamente da JavaFX.
-     * Configura l'interfaccia grafica e imposta i listener per la ricerca e i controlli.
-     */
+	// elementi grafici
 
-    public void initialize() {
-        prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));   /*Questo codice imposta la larghezza preferita del contenitore dei prodotti (prodottiContainer) 
-                                                                                                 in modo che sia sempre 20 pixel più stretta rispetto alla larghezza dello scrollPane.
-                                                                                                */
-        prodottiContainer.setPrefWrapLength(600);
-        scrollPane.widthProperty().addListener((obs, oldVal, newVal) ->
-                prodottiContainer.setPrefWrapLength(newVal.doubleValue() - 20));
+	@FXML
+	private FlowPane prodottiContainer; // Contenitore per i prodotti.
+	@FXML
+	private ScrollPane scrollPane; // Permette lo scrolling verticale dei prodotti.
+	@FXML
+	private TextField searchField; // Campo per la ricerca dei prodotti.
+	@FXML
+	private Button filterButton; // Bottone che mostra/nasconde il pannello dei filtri.
+	@FXML
+	private VBox filterPanel; // Pannello che contiene i filtri.
+	@FXML
+	private ComboBox<String> categoryFilter; // Filtro per la categoria dei prodotti.
+	@FXML
+	private CheckBox availabilityFilter; // Filtro per visualizzare solo i prodotti disponibili.
+	@FXML
+	private ToggleGroup priceToggleGroup; // Raggruppamento dei radio button per ordinare il prezzo.
+	@FXML
+	private RadioButton priceAsc; // Ordina i prodotti per prezzo crescente.
+	@FXML
+	private RadioButton priceDesc; // Ordina i prodotti per prezzo decrescente
+	@FXML
+	private HBox sugarControls; // Controlli per la gestione del livello di zucchero
+	@FXML
+	private Button btnSugarMinus; // Pulsanti per modificare il livello di zucchero.
+	@FXML
+	private Button btnSugarPlus;
+	@FXML
+	private Label sugarLevel; // Mostra il livello attuale di zuccher
 
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> caricaProdotti(newVal));
-        searchField.setFocusTraversable(false);  // Impedisce che il campo di testo searchField riceva automaticamente il focus quando la finestra viene aperta. così non ci sarà il cursore sulla barra di ricerca
-        filterPanel.setVisible(false);           //pannello dei filtri non visibile inizialemnte
-        
-        //imposto le opzioni disponibili pe ril filtro delle categorie di prodotto nel box categoryFilter
-        categoryFilter.setItems(javafx.collections.FXCollections.observableArrayList(
-                "Bevanda Calda", "Bevanda Fredda", "Snack Salato", "Snack Dolce"
-        ));
+	// Inizializzazione
+	/**
+	 * Metodo di inizializzazione chiamato automaticamente da JavaFX. Configura
+	 * l'interfaccia grafica e imposta i listener per la ricerca e i controlli.
+	 */
 
-        sugarControls.setVisible(false);                     //I controlli dello zucchero vengono mostrati solo per i distributori di beveande calde
-        sugarLevel.setText(String.valueOf(currentSugar));    //currentSugar è un numero intero (int).String.valueOf(currentSugar) converte il valore intero in una stringa.
-                                                             //ugarLevel è un oggetto di tipo Label
-        btnSugarMinus.setOnAction(e -> handleSugarMinus());  //Il metodo .setOnAction(...) permette di assegnare un'azione che verrà eseguita quando il bottone viene cliccato.
-                                                             //Quando il bottone btnSugarMinus viene premuto, viene chiamato il metodo handleSugarMinus().
-        btnSugarPlus.setOnAction(e -> handleSugarPlus());
-    }
-    
-    //METODI SETTER PER CONFIGURARE IL CONTESTO
-    
-    /**
-     * Imposta il distributore corrente.
-     * 
-     * @param distributore il distributore selezionato
-     */
-    public void setDistributoreCorrente(Distributore distributore) {
-        this.distributoreCorrente = distributore;
-        
-        if (distributore != null) {
-            // SALVIAMO comunque l'idInventario, perché serve a "cercaProdotti(...)"
-            this.idInventario = distributore.getIdInventario();
+	public void initialize() {
+		prodottiContainer.prefWidthProperty().bind(scrollPane.widthProperty()
+				.subtract(20)); /*
+								 * Questo codice imposta la larghezza preferita del contenitore dei prodotti
+								 * (prodottiContainer) in modo che sia sempre 20 pixel più stretta rispetto alla
+								 * larghezza dello scrollPane.
+								 */
+		prodottiContainer.setPrefWrapLength(600);
+		scrollPane.widthProperty()
+				.addListener((obs, oldVal, newVal) -> prodottiContainer.setPrefWrapLength(newVal.doubleValue() - 20));
 
-            // IN BASE AL TIPO, DECIDIAMO SE MOSTRARE LO ZUCCHERO
-            if ("Bevande Calde".equalsIgnoreCase(distributore.getTipo())) {
-                sugarControls.setVisible(true);
-            } else {
-                sugarControls.setVisible(false);
-            }
+		searchField.textProperty().addListener((obs, oldVal, newVal) -> caricaProdotti(newVal));
+		searchField.setFocusTraversable(false); // Impedisce che il campo di testo searchField riceva automaticamente il
+												// focus quando la finestra viene aperta. così non ci sarà il cursore
+												// sulla barra di ricerca
+		filterPanel.setVisible(false); // pannello dei filtri non visibile inizialemnte
 
-            // INFINE CARICHIAMO I PRODOTTI
-            caricaProdotti("");  //carica i prodotti del sitributore con query vuota in modo da mostrali tutti
-                                 // query vuota per indicare che non si sta effettuando alcun filtro 
-        }
-    }
+		// imposto le opzioni disponibili pe ril filtro delle categorie di prodotto nel
+		// box categoryFilter
+		categoryFilter.setItems(javafx.collections.FXCollections.observableArrayList("Bevanda Calda", "Bevanda Fredda",
+				"Snack Salato", "Snack Dolce"));
 
-  
-    
- //versione non estendibile
-    
-  /*
-    public void setIdInventario(int idInventario) {
-        this.idInventario = idInventario;
-        if (idInventario == 1 || idInventario == 3 || idInventario == 5) {
-            sugarControls.setVisible(true);
-        } else {
-            sugarControls.setVisible(false);
-        }
-        caricaProdotti("");
-    }
-  */
-    
-    
-  /**il metodo consente di cambiare la modalità di visualizzazione e, 
-   * contestualmente, di aggiornare la lista dei prodotti mostrati 
-   * in base al testo presente nella barra di ricerca.
-   * @param visualizza
-   */
-    public void setModalitaVisualizzazione(boolean visualizza) {
-        this.modalitaVisualizzazione = visualizza;
-        caricaProdotti(searchField.getText());
-    }
+		sugarControls.setVisible(false); // I controlli dello zucchero vengono mostrati solo per i distributori di
+											// beveande calde
+		sugarLevel.setText(String.valueOf(currentSugar)); // currentSugar è un numero intero
+															// (int).String.valueOf(currentSugar) converte il valore
+															// intero in una stringa.
+															// ugarLevel è un oggetto di tipo Label
+		btnSugarMinus.setOnAction(e -> handleSugarMinus()); // Il metodo .setOnAction(...) permette di assegnare
+															// un'azione che verrà eseguita quando il bottone viene
+															// cliccato.
+															// Quando il bottone btnSugarMinus viene premuto, viene
+															// chiamato il metodo handleSugarMinus().
+		btnSugarPlus.setOnAction(e -> handleSugarPlus());
+	}
 
-    
-    public void setSearchQuery(String query) {
-        searchField.setText(query);  //impostiamo la serarchField con la query(inserita dall'utente) e poi carichiamo i prodotti
-        caricaProdotti(query);
-    }
-    
-    //METODI PER LA LOGICA PRINCIPALE
-    
-    /**
-     * caricaProdotti: Recupera i dati (gli stock) e decide, in base ai risultati e alla query,
-     * se mostrare un messaggio di "nessun prodotto trovato" o aggiornare l'interfaccia con i prodotti trovati.
-     * 
-     * @param query la query di ricerca
-     */
-    public void caricaProdotti(String query) {
-        List<Stock> stocks = ricercaFacade.cercaProdotti(query, idInventario);
-        prodottiContainer.getChildren().clear();   //pulisce tutto ciò che era presente in precedenza nel FlowPane
+	// METODI SETTER PER CONFIGURARE IL CONTESTO
 
-        if (stocks.isEmpty() && !query.trim().isEmpty()) {
-        	//prodottiContainer è il cotnenitore grafico di tipo FlowPane
-            prodottiContainer.getChildren().add(ProductView.createNoProductView(query, this::mostraDistributoriAlternativiByName));
-        } else {
-            aggiornaProdotti(stocks);
-        }
-    }
+	/**
+	 * Imposta il distributore corrente.
+	 * 
+	 * @param distributore il distributore selezionato
+	 */
+	public void setDistributoreCorrente(Distributore distributore) {
+		this.distributoreCorrente = distributore;
 
-    /**
-     * aggiornaProdotti: È responsabile esclusivamente di aggiornare il container grafico (ad esempio, il FlowPane) con la lista di prodotti fornita, creando le visualizzazioni appropriate per ogni prodotto.
-     * 
-     * @param stocks la lista di prodotti disponibili
-     */
+		if (distributore != null) {
+			// SALVIAMO comunque l'idInventario, perché serve a "cercaProdotti(...)"
+			this.idInventario = distributore.getIdInventario();
 
-    private void aggiornaProdotti(List<Stock> stocks) {
-        prodottiContainer.getChildren().clear();
-        if (stocks.isEmpty()) {
-            prodottiContainer.getChildren().add(ProductView.createNoProductView("Nessun prodotto trovato.", null));
-        } else {
-            for (Stock stock : stocks) {
-                prodottiContainer.getChildren().add(ProductView.createProductView(
-                    stock,
-                    modalitaVisualizzazione,
-                    this::handleSelect,   // stocks -> this.handleSelect(Stock)
-                    s -> mostraDistributoriAlternativiByName(s.getProdotto().getNome())
-                ));
-            }
-        }
-    }
+			// IN BASE AL TIPO, DECIDIAMO SE MOSTRARE LO ZUCCHERO
+			if ("Bevande Calde".equalsIgnoreCase(distributore.getTipo())) {
+				sugarControls.setVisible(true);
+			} else {
+				sugarControls.setVisible(false);
+			}
 
-    
-    
-    //Questo metodo implementa la logica che deve essere eseguita quando un prodotto viene selezionato.
-    /** @author Davide **/
-    
-    public void handleSelect(Stock stock) {
-        System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
+			// INFINE CARICHIAMO I PRODOTTI
+			caricaProdotti(""); // carica i prodotti del sitributore con query vuota in modo da mostrali tutti
+								// query vuota per indicare che non si sta effettuando alcun filtro
+		}
+	}
 
-        // Ottieni lo Stage attuale
-        Stage stageAttuale = (Stage) prodottiContainer.getScene().getWindow();
+	// versione non estendibile
 
-        // Crea una nuova finestra per la schermata di dettaglio
-        Stage newStage = new Stage();
+	/*
+	 * public void setIdInventario(int idInventario) { this.idInventario =
+	 * idInventario; if (idInventario == 1 || idInventario == 3 || idInventario ==
+	 * 5) { sugarControls.setVisible(true); } else {
+	 * sugarControls.setVisible(false); } caricaProdotti(""); }
+	 */
 
-        // Crea il controller dell'acquisto e gli passa il prodotto selezionato
-        AcquistoController acquistoController = new AcquistoController(stageAttuale, newStage);
-        acquistoController.setStockSelezionato(stock);
+	/**
+	 * il metodo consente di cambiare la modalità di visualizzazione e,
+	 * contestualmente, di aggiornare la lista dei prodotti mostrati in base al
+	 * testo presente nella barra di ricerca.
+	 * 
+	 * @param visualizza
+	 */
+	public void setModalitaVisualizzazione(boolean visualizza) {
+		this.modalitaVisualizzazione = visualizza;
+		caricaProdotti(searchField.getText());
+	}
 
-        // Mostra la schermata con il prodotto selezionato
-        acquistoController.mostraInterfaccia(stock);
+	public void setSearchQuery(String query) {
+		searchField.setText(query); // impostiamo la serarchField con la query(inserita dall'utente) e poi
+									// carichiamo i prodotti
+		caricaProdotti(query);
+	}
 
-        // Nasconde la finestra attuale per simulare il cambio schermata
-        stageAttuale.hide();
-    }
-    
+	// METODI PER LA LOGICA PRINCIPALE
 
+	/**
+	 * caricaProdotti: Recupera i dati (gli stock) e decide, in base ai risultati e
+	 * alla query, se mostrare un messaggio di "nessun prodotto trovato" o
+	 * aggiornare l'interfaccia con i prodotti trovati.
+	 * 
+	 * @param query la query di ricerca
+	 */
+	public void caricaProdotti(String query) {
+		List<Stock> stocks = ricercaFacade.cercaProdotti(query, idInventario);
+		prodottiContainer.getChildren().clear(); // pulisce tutto ciò che era presente in precedenza nel FlowPane
 
-    
-    //METODI DI GESTIONE DEGLI EVENTI
-    
-    @FXML
-    public void handleFilter(ActionEvent event) {
-        filterPanel.setVisible(!filterPanel.isVisible());
-    }
+		if (stocks.isEmpty() && !query.trim().isEmpty()) {
+			// prodottiContainer è il cotnenitore grafico di tipo FlowPane
+			prodottiContainer.getChildren()
+					.add(ProductView.createNoProductView(query, this::mostraDistributoriAlternativiByName));
+		} else {
+			aggiornaProdotti(stocks);
+		}
+	}
 
-    @FXML
-    public void applyFilters() {
-        String searchQuery = searchField.getText();
-        String selectedCategory = categoryFilter.getValue();
-        boolean availability = availabilityFilter.isSelected();
-        boolean sortAsc = priceAsc.isSelected();
-        boolean sortDesc = priceDesc.isSelected();
+	/**
+	 * aggiornaProdotti: È responsabile esclusivamente di aggiornare il container
+	 * grafico (ad esempio, il FlowPane) con la lista di prodotti fornita, creando
+	 * le visualizzazioni appropriate per ogni prodotto.
+	 * 
+	 * @param stocks la lista di prodotti disponibili
+	 */
 
-        List<Stock> stocks = ricercaFacade.applicaFiltri(idInventario, searchQuery, selectedCategory, availability, sortAsc, sortDesc);
-        aggiornaProdotti(stocks);
-    }
+	private void aggiornaProdotti(List<Stock> stocks) {
+		prodottiContainer.getChildren().clear();
+		if (stocks.isEmpty()) {
+			prodottiContainer.getChildren().add(ProductView.createNoProductView("Nessun prodotto trovato.", null));
+		} else {
+			for (Stock stock : stocks) {
+				prodottiContainer.getChildren()
+						.add(ProductView.createProductView(stock, modalitaVisualizzazione, this::handleSelect, // stocks
+																												// ->
+																												// this.handleSelect(Stock)
+								s -> mostraDistributoriAlternativiByName(s.getProdotto().getNome())));
+			}
+		}
+	}
 
-    
-    //METODI DI SUPPORTO
-    private void handleSugarMinus() {
-        if (currentSugar > 0) {
-            currentSugar--;
-            sugarLevel.setText(String.valueOf(currentSugar));
-        }
-    }
+	// Questo metodo implementa la logica che deve essere eseguita quando un
+	// prodotto viene selezionato.
+	/** @author Davide **/
 
-    private void handleSugarPlus() {
-        if (currentSugar < 5) {
-            currentSugar++;
-            sugarLevel.setText(String.valueOf(currentSugar));
-        }
-    }
-    
-   
-    //METODI PER LA GESTIONE DELLE ALTERNATIVE
-    
-    /**
-     * Mostra i distributori alternativi che offrono il prodotto richiesto.
-     * 
-     * @param nomeProdotto il nome del prodotto cercato
-     */
-   
-    public void mostraDistributoriAlternativiByName(String nomeProdotto) {
-        if (distributoreCorrente == null) {
-            System.err.println("distributoreCorrente è null! Assicurati di impostarlo correttamente.");
-            return;
-        }
-        List<Distributore> distributori = ricercaFacade.cercaDistributoriConProdotto(distributoreCorrente.getIdDistr(), nomeProdotto);
-        if (distributori.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);  
-            alert.setTitle("Prodotto non disponibile");
-            alert.setHeaderText(null);
-            alert.setContentText("Non ci sono distributori alternativi disponibili per questo prodotto.");
-            alert.showAndWait();
-        } else {
-        	DistributoriAlternativiController controller = ViewManager.getInstance()
-        	        .showStageWithController("/it/unipv/ingsfw/bitebyte/view/fxml/distributoriAlternativi.fxml", 800, 600, "Distributori Alternativi");
-        	//passo il contesto
-        	controller.setSearchQuery(nomeProdotto);
-        	controller.setDistributori(distributoreCorrente.getIdDistr(), nomeProdotto);
+	public void handleSelect(Stock stock) {
+		System.out.println("Prodotto selezionato: " + stock.getProdotto().getNome());
 
-        }
-    }
+		// Ottieni lo Stage attuale
+		Stage stageAttuale = (Stage) prodottiContainer.getScene().getWindow();
 
-   
+		// Crea una nuova finestra per la schermata di dettaglio
+		Stage newStage = new Stage();
+
+		// Crea il controller dell'acquisto e gli passa il prodotto selezionato
+		AcquistoController acquistoController = new AcquistoController(stageAttuale, newStage);
+		acquistoController.setStockSelezionato(stock);
+
+		// Mostra la schermata con il prodotto selezionato
+		acquistoController.mostraInterfaccia(stock);
+
+		// Nasconde la finestra attuale per simulare il cambio schermata
+		stageAttuale.hide();
+	}
+
+	// METODI DI GESTIONE DEGLI EVENTI
+
+	@FXML
+	public void handleFilter(ActionEvent event) {
+		filterPanel.setVisible(!filterPanel.isVisible());
+	}
+
+	@FXML
+	public void applyFilters() {
+		String searchQuery = searchField.getText();
+		String selectedCategory = categoryFilter.getValue();
+		boolean availability = availabilityFilter.isSelected();
+		boolean sortAsc = priceAsc.isSelected();
+		boolean sortDesc = priceDesc.isSelected();
+
+		List<Stock> stocks = ricercaFacade.applicaFiltri(idInventario, searchQuery, selectedCategory, availability,
+				sortAsc, sortDesc);
+		aggiornaProdotti(stocks);
+	}
+
+	// METODI DI SUPPORTO
+	private void handleSugarMinus() {
+		if (currentSugar > 0) {
+			currentSugar--;
+			sugarLevel.setText(String.valueOf(currentSugar));
+		}
+	}
+
+	private void handleSugarPlus() {
+		if (currentSugar < 5) {
+			currentSugar++;
+			sugarLevel.setText(String.valueOf(currentSugar));
+		}
+	}
+
+	// METODI PER LA GESTIONE DELLE ALTERNATIVE
+
+	/**
+	 * Mostra i distributori alternativi che offrono il prodotto richiesto.
+	 * 
+	 * @param nomeProdotto il nome del prodotto cercato
+	 */
+
+	public void mostraDistributoriAlternativiByName(String nomeProdotto) {
+		if (distributoreCorrente == null) {
+			System.err.println("distributoreCorrente è null! Assicurati di impostarlo correttamente.");
+			return;
+		}
+		List<Distributore> distributori = ricercaFacade.cercaDistributoriConProdotto(distributoreCorrente.getIdDistr(),
+				nomeProdotto);
+		if (distributori.isEmpty()) {
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setTitle("Prodotto non disponibile");
+			alert.setHeaderText(null);
+			alert.setContentText("Non ci sono distributori alternativi disponibili per questo prodotto.");
+			alert.showAndWait();
+		} else {
+			DistributoriAlternativiController controller = ViewManager.getInstance().showStageWithController(
+					"/it/unipv/ingsfw/bitebyte/view/fxml/distributoriAlternativi.fxml", 800, 600,
+					"Distributori Alternativi");
+			// passo il contesto
+			controller.setSearchQuery(nomeProdotto);
+			controller.setDistributori(distributoreCorrente.getIdDistr(), nomeProdotto);
+
+		}
+	}
+
 }
-
-  
